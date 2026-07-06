@@ -264,7 +264,7 @@ const Editor = {
         const type = this.OBJ_LIST[this.objIdx];
         const obj = { type, x: t.x, y: t.y };
         if (type === 'chest') {
-          const c = window.prompt('Chest contents (rupees N | key | bosskey | dungeon_map | compass | bow | lantern | master_sword | heart_container | potion | bombs N | arrows N | shield):', 'rupees 20');
+          const c = window.prompt('Chest contents (rupees N | key | bosskey | dungeon_map | compass | bow | lantern | master_sword | heart_container | potion | bombs N | arrows N | shield | boomerang | fire_rod | flippers | big_quiver | lure):', 'rupees 20');
           if (!c) return;
           const [ct, amt] = c.trim().split(/\s+/);
           obj.contents = { type: ct, amount: amt ? Number(amt) : undefined };
@@ -275,12 +275,12 @@ const Editor = {
           obj.text = txt;
         }
         if (type === 'boss_trigger') {
-          const bs = window.prompt('Boss (gloomspore | magmadon | wraithlord | shade):', 'gloomspore');
+          const bs = window.prompt('Boss (gloomspore | magmadon | wraithlord | frostmaw | pharaghast | shade):', 'gloomspore');
           if (!bs) return;
           obj.boss = bs.trim();
           obj.w = 8; obj.h = 8;
         }
-        if (type === 'locked_door' || type === 'boss_door' || type === 'shard_gate' || type === 'crypt_gate') { obj.w = 2; obj.h = 1; }
+        if (type === 'locked_door' || type === 'boss_door' || type === 'shard_gate' || type === 'crypt_gate' || type === 'tomb_gate') { obj.w = 2; obj.h = 1; }
         if (type === 'switch_crystal') obj.id = 'switch_' + Date.now().toString(36);
         this.map.objects.push(obj);
         AudioSys.sfx('select');

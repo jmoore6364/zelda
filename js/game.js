@@ -112,7 +112,8 @@ const Game = {
     this.playtest = true;
     this.data = SaveSys.defaultData();
     const p = this.data.player;
-    p.hasSword = true; p.hasBow = true; p.hasBombs = true; p.hasLantern = true; p.hasShield = true;
+    p.hasSword = true; p.hasMasterSword = true; p.hasBow = true; p.hasBombs = true; p.hasLantern = true; p.hasShield = true;
+    p.hasBoomerang = true; p.hasFireRod = true; p.hasFlippers = true;
     p.bombs = 20; p.arrows = 30; p.maxHearts = 10; p.hearts = 10; p.rupees = 100; p.potions = 2;
     const copy = MapBuilder.deserialize(JSON.stringify(mapData));
     this.loadMap(copy, copy.respawn.x, copy.respawn.y);
