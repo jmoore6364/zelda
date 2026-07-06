@@ -1,0 +1,104 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  background: #0a0a12;
+  overflow: hidden;
+  font-family: 'Segoe UI', monospace;
+}
+#wrap {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#game {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+  max-width: min(100vw, calc(100vh * 1152 / 720));
+  aspect-ratio: 1152 / 720;
+  box-shadow: 0 0 80px rgba(80, 120, 60, 0.25), 0 0 200px rgba(0,0,0,0.8);
+  outline: none;
+  cursor: default;
+  touch-action: none;
+}
+
+/* ---------- touch controls ---------- */
+#touch-ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  font-family: 'Segoe UI Symbol', 'Segoe UI Emoji', monospace;
+  -webkit-user-select: none;
+  user-select: none;
+}
+#touch-ui > * {
+  pointer-events: auto;
+  touch-action: none;
+}
+#tpad {
+  position: absolute;
+  left: max(12px, env(safe-area-inset-left));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  width: clamp(110px, 22vmin, 160px);
+  height: clamp(110px, 22vmin, 160px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(30,32,60,0.35) 0%, rgba(20,22,44,0.55) 100%);
+  border: 2px solid rgba(200,200,230,0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#tpad-nub {
+  width: 38%;
+  height: 38%;
+  border-radius: 50%;
+  background: rgba(210,215,240,0.35);
+  border: 2px solid rgba(230,235,255,0.4);
+  transition: transform 0.05s linear;
+}
+.tbtn {
+  position: absolute;
+  width: clamp(44px, 9.5vmin, 64px);
+  height: clamp(44px, 9.5vmin, 64px);
+  border-radius: 50%;
+  background: rgba(20,22,44,0.5);
+  border: 2px solid rgba(200,200,230,0.3);
+  color: #dde0f0;
+  font-size: clamp(16px, 4vmin, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.tbtn.held {
+  background: rgba(120,110,50,0.6);
+  border-color: rgba(248,224,128,0.8);
+}
+/* action cluster, bottom-right */
+.tbtn-sword {
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  width: clamp(56px, 13vmin, 80px);
+  height: clamp(56px, 13vmin, 80px);
+  font-size: clamp(22px, 5.5vmin, 32px);
+}
+.tbtn-talk { right: calc(max(16px, env(safe-area-inset-right)) + clamp(62px, 14.5vmin, 90px)); bottom: max(14px, env(safe-area-inset-bottom)); }
+.tbtn-bow  { right: calc(max(16px, env(safe-area-inset-right)) + clamp(62px, 14.5vmin, 90px)); bottom: calc(max(14px, env(safe-area-inset-bottom)) + clamp(52px, 11vmin, 74px)); }
+.tbtn-bomb { right: max(16px, env(safe-area-inset-right)); bottom: calc(max(20px, env(safe-area-inset-bottom)) + clamp(66px, 15vmin, 94px)); }
+.tbtn-rang { right: calc(max(16px, env(safe-area-inset-right)) + clamp(118px, 27vmin, 172px)); bottom: max(14px, env(safe-area-inset-bottom)); }
+.tbtn-rod  { right: calc(max(16px, env(safe-area-inset-right)) + clamp(118px, 27vmin, 172px)); bottom: calc(max(14px, env(safe-area-inset-bottom)) + clamp(52px, 11vmin, 74px)); }
+/* system row, top-right */
+.tbtn-menu, .tbtn-bag, .tbtn-map {
+  top: max(10px, env(safe-area-inset-top));
+  width: clamp(36px, 7.5vmin, 48px);
+  height: clamp(36px, 7.5vmin, 48px);
+  font-size: clamp(14px, 3.2vmin, 18px);
+  opacity: 0.85;
+}
+.tbtn-menu { right: max(12px, env(safe-area-inset-right)); }
+.tbtn-bag  { right: calc(max(12px, env(safe-area-inset-right)) + clamp(44px, 9vmin, 58px)); }
+.tbtn-map  { right: calc(max(12px, env(safe-area-inset-right)) + clamp(88px, 18vmin, 116px)); }
