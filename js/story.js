@@ -66,6 +66,18 @@ const Story = {
           }
         }, 900);
         break;
+      case 'thalassa':
+        this.set('d7_done');
+        Game.pickups.push(new Pickup(x, y, 'fairy'));
+        Game.pickups.push(new Pickup(x - 12, y + 6, 'rupee20'));
+        Game.pickups.push(new Pickup(x + 14, y + 6, 'rupee20'));
+        Game.pickups.push(new Pickup(x + 2, y + 14, 'rupee20'));
+        setTimeout(() => {
+          if (Game.state === 'play') {
+            Dialogue.start({ pages: ['The choir falls silent, voice by voice, until only the water is singing. Somewhere far above, a bell you never heard stops tolling.'] });
+          }
+        }, 900);
+        break;
       case 'karstag':
         this.set('d6_done');
         Game.pickups.push(new Pickup(x, y, 'heart_container'));
@@ -415,8 +427,17 @@ const Story = {
           };
         }
         if (F.flag('flippers_given')) {
-          if (F.flag('lorelei_met')) return { speaker: 'Odon', portrait: 'npc_fisher', pages: ['So you\'ve met HER. The lady in the lake. Grandfather swore she was real and everyone laughed at him. Nobody\'s laughing now, are they.'] };
-          return { speaker: 'Odon', portrait: 'npc_fisher', pages: ['Swim out to the island sometime. On still nights I\'ve seen a light out there — not a lantern. Softer. Like the lake is dreaming.'] };
+          const pages = F.flag('lorelei_met')
+            ? ['So you\'ve met HER. The lady in the lake. Grandfather swore she was real and everyone laughed at him. Nobody\'s laughing now, are they. Fancy a cast while you\'re here?']
+            : ['Swim out to the island sometime. On still nights I\'ve seen a light out there — not a lantern. Softer. Like the lake is dreaming. ...Fancy a cast while you\'re here?'];
+          return {
+            speaker: 'Odon', portrait: 'npc_fisher',
+            pages,
+            choices: [
+              { label: 'Go fishing', cb: () => Game.startFishing() },
+              { label: 'Not now', cb: () => {} }
+            ]
+          };
         }
         if (F.flag('lure_quest')) return { speaker: 'Odon', portrait: 'npc_fisher', pages: ['The lure snagged and snapped off somewhere along the east river — check the shallows past the bridge. Red and white, smiling face. You\'ll know her.'] };
         return {
@@ -447,6 +468,8 @@ const Story = {
         }
         let hint = 'The dusk sits heavy on the water. Finish what you began, hero.';
         if (F.flag('game_complete')) hint = 'The sun on the water... I had forgotten. Thank you for giving the lake back its mirror.';
+        else if (p.hasPearl && !F.flag('d7_done')) hint = 'You carry the Pearl now — then hear what every lake hears: a drowned bell tolling in the deep heart of the Shattered Sea. A cathedral sank there, choir and all. They are still singing. Someone should let them stop.';
+        else if (F.flag('d7_done')) hint = 'The bell under the sea is quiet. Every water in Hyrule sleeps easier — and so, I think, do the singers.';
         else if (!F.flag('d5_done') && F.flag('d4_done')) hint = 'The sand to the south-east whispers of a king who refused to stay buried. Bring flame, if you go. The dead there remember fearing it.';
         else if (Items.shardCount() >= 3) hint = 'Three lights in your pack, bright enough to see from the lakebed. The old castle is waiting.';
         return {

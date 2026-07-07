@@ -38,7 +38,7 @@ sword, talk, bow, bomb, boomerang, fire rod, plus pause/inventory/map up top.
 
 ## The World
 
-A 192×184-tile overworld — four times the land it launched with — plus six
+A 192×184-tile overworld — four times the land it launched with — plus seven
 dungeons, caves, interiors, and an archipelago served by ferry (and, with the
 Pearl of the Deep, swimmable end to end).
 
@@ -80,6 +80,14 @@ Pearl of the Deep, swimmable end to end).
 - **Terrors of the Wilds** — three named roaming minibosses with banner names and
   guaranteed spoils: the **Direwolf Alpha** (deep Elderwood), the **Dune Tyrant**
   (eastern sands), and the **Highland Ogre** (the crag road)
+- **The Drowned Cathedral** (a spire in the deep heart of the Shattered Sea —
+  Pearl required to swim there) — flooded aisles, a dark nave, and the singing
+  dead → boss: **THALASSA, the Drowned Choir**. The sacristy holds the
+  **Tideplate**: armor that halves damage again, stacking with the shield
+- **Fishing with Odon** — once you've earned the flippers, borrow the rod at
+  Lake Hylia: a timing minigame with minnows, lunkers, and one Golden Carp
+- **A bestiary** — the journal's second tab tracks every foe you've felled,
+  from Octoroks to the named Terrors
 - **The Great Trade** — a seven-hop trading sequence spanning the whole world,
   from a boy's shell wish on the Isle of Winds to the lighthouse keeper's final
   gift: the **Hero's Charm** (at full hearts your sword fires a blade of light)
@@ -99,7 +107,7 @@ Pearl of the Deep, swimmable end to end).
 
 18 enemy types — Octorok, Moblin, Keese, Stalfos, Chu, Leever, Wizzrobe, Darknut,
 Peahat, Zora, Armos, Poe, Wolfos, Freezard, Blade Trap, Gibdo, Vulture, Sandwurm —
-each with its own AI, plus 3 named elites and 7 bosses.
+each with its own AI, plus 3 named elites and 8 bosses.
 
 ## Features
 

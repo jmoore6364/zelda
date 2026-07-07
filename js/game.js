@@ -113,7 +113,7 @@ const Game = {
     this.data = SaveSys.defaultData();
     const p = this.data.player;
     p.hasSword = true; p.hasMasterSword = true; p.hasBow = true; p.hasBombs = true; p.hasLantern = true; p.hasShield = true;
-    p.hasBoomerang = true; p.hasFireRod = true; p.hasFlippers = true; p.hasPearl = true; p.hasCharm = true;
+    p.hasBoomerang = true; p.hasFireRod = true; p.hasFlippers = true; p.hasPearl = true; p.hasCharm = true; p.hasTideplate = true;
     p.bombs = 20; p.arrows = 30; p.maxHearts = 10; p.hearts = 10; p.rupees = 100; p.potions = 2;
     const copy = MapBuilder.deserialize(JSON.stringify(mapData));
     this.loadMap(copy, copy.respawn.x, copy.respawn.y);
@@ -507,6 +507,7 @@ const Game = {
       case 'pause': UI.updatePause(dt); break;
       case 'inventory': UI.updateInventory(dt); break;
       case 'journal': UI.updateJournal(dt); break;
+      case 'fishing': UI.updateFishing(dt); break;
       case 'map': UI.updateMapScreen(dt); break;
       case 'gameover': UI.updateGameOver(dt); break;
       case 'ending': UI.updateEnding(dt); break;
@@ -685,6 +686,13 @@ const Game = {
     };
   },
 
+  // Odon's rod — a quiet afternoon on Lake Hylia
+  startFishing() {
+    this.fishing = { phase: 'cast', t: 0, msg: '', biteWindow: 0, castsLeft: Infinity };
+    this.state = 'fishing';
+    AudioSys.sfx('splash');
+  },
+
   // Wake's ferry — sail (fade) to another dock on the same map
   ferryTo(tx, ty) {
     AudioSys.sfx('splash');
@@ -747,6 +755,7 @@ const Game = {
       case 'pause': UI.drawPause(ctx); break;
       case 'inventory': UI.drawInventory(ctx); break;
       case 'journal': UI.drawJournal(ctx); break;
+      case 'fishing': UI.drawFishing(ctx); break;
       case 'map': UI.drawMapScreen(ctx); break;
       case 'bossintro':
         if (this.boss) UI.drawBossBanner(ctx, this.boss, this.bossIntroT);

@@ -38,7 +38,8 @@ const Items = {
     wool:            { name: 'Soft Wool', sprite: 'wool', msg: 'A skein of SOFT WOOL, spun by Granny Lu. "For hands that still work a loom."' },
     sailcloth:       { name: 'Fine Sailcloth', sprite: 'sailcloth', msg: 'FINE SAILCLOTH with a red stripe, woven by Lila. "For an old man who dreams in canvas."' },
     spyglass:        { name: 'Captain\'s Spyglass', sprite: 'spyglass', msg: 'The CAPTAIN\'S SPYGLASS, polished by forty years of squinting. "For the fellow who watches the sea for all of us."' },
-    hero_charm:      { name: 'Hero\'s Charm', sprite: 'hero_charm', msg: 'The HERO\'S CHARM! While your hearts are full, your sword looses a blade of light with every swing!' }
+    hero_charm:      { name: 'Hero\'s Charm', sprite: 'hero_charm', msg: 'The HERO\'S CHARM! While your hearts are full, your sword looses a blade of light with every swing!' },
+    tideplate:       { name: 'Tideplate', sprite: 'tideplate', msg: 'The TIDEPLATE! Armor of the drowned choir — the sea\'s own scales turn half of every blow.' }
   },
 
   // grant an item to the player. contents: {type, amount}
@@ -137,6 +138,7 @@ const Items = {
         p.hasCharm = true;
         AudioSys.sfx('item');
         break;
+      case 'tideplate': p.hasTideplate = true; AudioSys.sfx('item'); break;
     }
 
     if (msg && !opts.silent) {

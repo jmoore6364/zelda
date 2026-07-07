@@ -2914,6 +2914,96 @@ Sprites.def('sword_beam', { W: '#f8f8ff', B: '#a8c8f8', b: '#6890e0' }, [
   ]
 ]);
 
+// Boss: THALASSA — the Drowned Choir (sea-wraith of the cathedral)
+Sprites.def('boss_thalassa', { B: '#78b8d8', b: '#4884a8', W: '#e8f6fc', w: '#b0d4e4', E: '#e8f0a0', K: '#1c3444', G: '#a8e8d8' }, [
+  [
+    '.............WWWWWW.............',
+    '...........WWWWWWWWWW...........',
+    '..........WWBBBBBBBBWW..........',
+    '.........WWBBWWWWWWBBWW.........',
+    '.........WBBWEEWWEEWBBW.........',
+    '.........WBBWEEWWEEWBBW.........',
+    '.........WBBWWWWWWWWBBW.........',
+    '.........WBBWWKKKKWWBBW.........',
+    '..........WBWWKKKKWWBW..........',
+    '.......BBWWBBWWWWWWBBWWBB.......',
+    '......BBBBWBBBBBBBBBBWBBBB......',
+    '.....BBGBBBBBBBBBBBBBBBBGBB.....',
+    '.....BBBBBBBWWBBBBWWBBBBBBB.....',
+    '....BBbBBBBWWWWBBWWWWBBBBbBB....',
+    '....BBbBBBBWWWWBBWWWWBBBBbBB....',
+    '....BbBBBBBBWWBBBBWWBBBBBBbB....',
+    '....BbBBBBBBBBBBBBBBBBBBBBbB....',
+    '....BbBBGBBBBBBBBBBBBBBGBBbB....',
+    '.....BbBBBBBBBBBBBBBBBBBBbB.....',
+    '.....BbbBBBBBBBBBBBBBBBBbbB.....',
+    '......BbbBBBBBBBBBBBBBBbbB......',
+    '......BBbbBBBBBBBBBBBBbbBB......',
+    '.......BBbbbBBBBBBBBbbbBB.......',
+    '........BBbbbbBBBBbbbbBB........',
+    '.........BBbbbbbbbbbbBB.........',
+    '..........BB.bb..bb.BB..........',
+    '................................',
+    '................................',
+    '................................',
+    '................................',
+    '................................',
+    '................................'
+  ],
+  [
+    '.............WWWWWW.............',
+    '...........WWWWWWWWWW...........',
+    '..........WWBBBBBBBBWW..........',
+    '.........WWBBWWWWWWBBWW.........',
+    '.........WBBWEEWWEEWBBW.........',
+    '.........WBBWEEWWEEWBBW.........',
+    '.........WBBWWWWWWWWBBW.........',
+    '.........WBBWWKKKKWWBBW.........',
+    '..........WBWWKKKKWWBW..........',
+    '......BBWWBBWWWWWWWWBBWWBB......',
+    '.....BBBBWBBBBBBBBBBBBWBBBB.....',
+    '.....BBGBBBBBBBBBBBBBBBBGBB.....',
+    '.....BBBBBBBWWBBBBWWBBBBBBB.....',
+    '....BBbBBBBWWWWBBWWWWBBBBbBB....',
+    '....BBbBBBBWWWWBBWWWWBBBBbBB....',
+    '....BbBBBBBBWWBBBBWWBBBBBBbB....',
+    '....BbBBBBBBBBBBBBBBBBBBBBbB....',
+    '....BbBBGBBBBBBBBBBBBBBGBBbB....',
+    '.....BbBBBBBBBBBBBBBBBBBBbB.....',
+    '.....BbbBBBBBBBBBBBBBBBBbbB.....',
+    '......BbbBBBBBBBBBBBBBBbbB......',
+    '......BBbbBBBBBBBBBBBBbbBB......',
+    '.......BBbbbBBBBBBBBbbbBB.......',
+    '........BBbbbbBBBBbbbbBB........',
+    '..........BBbbbbbbbbBB..........',
+    '.........BB..bb..bb..BB.........',
+    '................................',
+    '................................',
+    '................................',
+    '................................',
+    '................................',
+    '................................'
+  ]
+]);
+
+// Tideplate — armor of the drowned choir
+Sprites.def('tideplate', { T: '#4884a8', t: '#2c5878', W: '#a8d8e8', G: '#a8e8d8' }, [
+  [
+    '................',
+    '...TT.....TT....',
+    '..TTTTTTTTTT....',
+    '..TTWTTTTWTT....',
+    '..TTTTTTTTTT....',
+    '...TTTGGTTT.....',
+    '...TTGWWGTT.....',
+    '...TTTGGTTT.....',
+    '...TTTTTTTT.....',
+    '...tTTTTTTt.....',
+    '....tttttt......',
+    '................'
+  ]
+]);
+
 // Elite aliases — the editor and tools look sprites up by enemy type name
 Sprites.defs.direwolf = Sprites.defs.wolfos;
 Sprites.defs.dunetyrant = Sprites.defs.sandwurm;

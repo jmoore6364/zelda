@@ -405,12 +405,28 @@ const UI = {
     ctx.textAlign = 'left';
   },
 
-  // ---------------- QUEST JOURNAL ----------------
+  // ---------------- QUEST JOURNAL (+ bestiary tab) ----------------
+  journalTab: 0, // 0 = quests, 1 = bestiary
+
   updateJournal(dt) {
+    if (Input.menuLeft() || Input.menuRight()) {
+      this.journalTab = 1 - this.journalTab;
+      AudioSys.sfx('menu');
+      return;
+    }
     if (Input.journal() || Input.cancel() || Input.confirm() || Input.pause()) {
       Game.state = 'play';
       AudioSys.sfx('menu');
     }
+  },
+
+  ENEMY_NAMES: {
+    octorok: 'Octorok', moblin: 'Moblin', keese: 'Keese', stalfos: 'Stalfos',
+    chu: 'Chu', leever: 'Leever', wizzrobe: 'Wizzrobe', darknut: 'Darknut',
+    peahat: 'Peahat', zora: 'Zora', armos: 'Armos', poe: 'Poe',
+    wolfos: 'Wolfos', freezard: 'Freezard', blade_trap: 'Blade Trap',
+    gibdo: 'Gibdo', vulture: 'Vulture', sandwurm: 'Sandwurm',
+    direwolf: 'Direwolf Alpha', dunetyrant: 'Dune Tyrant', ogre: 'Highland Ogre'
   },
 
   drawJournal(ctx) {
@@ -418,10 +434,23 @@ const UI = {
     ctx.fillRect(0, 0, 384, 240);
     ctx.textAlign = 'center';
     ctx.font = 'bold 12px monospace';
-    ctx.fillStyle = '#e8c860';
-    ctx.fillText('QUESTS', 192, 22);
+    ctx.fillStyle = this.journalTab === 0 ? '#e8c860' : '#706848';
+    ctx.fillText('QUESTS', 150, 22);
+    ctx.fillStyle = this.journalTab === 1 ? '#e8c860' : '#706848';
+    ctx.fillText('BESTIARY', 236, 22);
     ctx.textAlign = 'left';
 
+    if (this.journalTab === 0) this.drawQuestList(ctx);
+    else this.drawBestiary(ctx);
+
+    ctx.textAlign = 'center';
+    ctx.font = '7px monospace';
+    ctx.fillStyle = '#605878';
+    ctx.fillText('left/right: tab   j/esc: close', 192, 232);
+    ctx.textAlign = 'left';
+  },
+
+  drawQuestList(ctx) {
     const quests = Story.quests();
     let y = 38;
     for (const q of quests) {
@@ -434,15 +463,143 @@ const UI = {
       ctx.fillStyle = done ? '#5a7a5a' : '#a8a8c0';
       const lines = U.wrapText(ctx, q.hint, 320);
       ctx.fillText(lines[0] || '', 40, y + 9);
-      y += lines[0] && lines[1] ? 0 : 0;
       if (lines[1]) { ctx.fillText(lines[1], 40, y + 17); y += 8; }
       y += 19;
     }
+  },
+
+  drawBestiary(ctx) {
+    const kills = Game.data.kills || {};
+    const keys = Object.keys(this.ENEMY_NAMES);
+    const total = keys.reduce((s, k) => s + (kills[k] || 0), 0);
+    ctx.font = '7px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#a8a8c0';
+    ctx.fillText(`${total} foes felled`, 192, 36);
+    ctx.textAlign = 'left';
+    const cols = 2, colW = 170, x0 = 26, y0 = 50, rowH = 17;
+    keys.forEach((k, i) => {
+      const x = x0 + (i % cols) * colW, y = y0 + Math.floor(i / cols) * rowH;
+      const n = kills[k] || 0;
+      const seen = n > 0;
+      const cv = seen ? Sprites.get(k, 0) : null;
+      if (cv) ctx.drawImage(cv, x, y - 9, 12, 12);
+      ctx.font = 'bold 7px monospace';
+      ctx.fillStyle = seen ? '#e8e0d0' : '#484858';
+      ctx.fillText(seen ? this.ENEMY_NAMES[k] : '?????', x + 16, y);
+      if (seen) {
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#c8a860';
+        ctx.fillText('x' + n, x + colW - 24, y);
+        ctx.textAlign = 'left';
+      }
+    });
+  },
+
+  // ---------------- FISHING (Odon's rod, Lake Hylia) ----------------
+  updateFishing(dt) {
+    const f = Game.fishing;
+    if (!f) { Game.state = 'play'; return; }
+    f.t += dt;
+    if (Input.cancel()) { Game.state = 'play'; AudioSys.sfx('menu'); return; }
+
+    switch (f.phase) {
+      case 'cast':
+        if (f.t > 0.6) {
+          f.phase = 'wait';
+          f.t = 0;
+          f.waitFor = U.rand(1.2, 3.5);
+          AudioSys.sfx('splash');
+        }
+        break;
+      case 'wait':
+        if (Input.confirm()) { f.phase = 'early'; f.t = 0; break; } // jumped the gun
+        if (f.t >= f.waitFor) {
+          f.phase = 'bite';
+          f.t = 0;
+          AudioSys.sfx('switch');
+        }
+        break;
+      case 'bite':
+        if (Input.confirm()) {
+          f.phase = 'caught';
+          f.t = 0;
+          const p = Game.data.player;
+          const r = Math.random();
+          if (!Story.flag('golden_fish') && r < 0.04) {
+            Story.set('golden_fish');
+            f.msg = 'THE GOLDEN CARP!! Odon goes pale. "Grandfather chased that fish his whole life." (+100 rupees)';
+            p.rupees = Math.min(999, p.rupees + 100);
+            AudioSys.sfx('item');
+          } else if (r < 0.3) { f.msg = 'A minnow. It looks personally offended. (+5 rupees)'; p.rupees = Math.min(999, p.rupees + 5); AudioSys.sfx('rupee'); }
+          else if (r < 0.62) { f.msg = 'A decent perch! Odon nods approvingly. (+10 rupees)'; p.rupees = Math.min(999, p.rupees + 10); AudioSys.sfx('rupee'); }
+          else if (r < 0.87) { f.msg = 'A fat lake bass! (+20 rupees)'; p.rupees = Math.min(999, p.rupees + 20); AudioSys.sfx('rupee'); }
+          else { f.msg = 'A LUNKER! Odon whistles low. (+40 rupees)'; p.rupees = Math.min(999, p.rupees + 40); AudioSys.sfx('chest'); }
+        } else if (f.t > 0.55) {
+          f.phase = 'missed';
+          f.t = 0;
+        }
+        break;
+      case 'early':
+      case 'missed':
+      case 'caught':
+        if (f.t > 0.8 && Input.confirm()) {
+          f.phase = 'cast';
+          f.t = 0;
+          f.msg = '';
+        }
+        break;
+    }
+  },
+
+  drawFishing(ctx) {
+    const f = Game.fishing;
+    if (!f) return;
+    // dusk water
+    const g = ctx.createLinearGradient(0, 0, 0, 240);
+    g.addColorStop(0, '#1a2a4a');
+    g.addColorStop(0.45, '#2a4a7a');
+    g.addColorStop(1, '#173a68');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 384, 240);
+    // ripple lines
+    for (let i = 0; i < 14; i++) {
+      const y = 60 + i * 13 + Math.sin(f.t * 1.5 + i) * 2;
+      ctx.globalAlpha = 0.12 + 0.05 * Math.sin(f.t + i * 2);
+      ctx.fillStyle = '#a8d0f0';
+      ctx.fillRect(20 + (i * 37) % 200, y, 60 + (i * 23) % 80, 1);
+    }
+    ctx.globalAlpha = 1;
+    // line + bobber
+    const bobY = 120 + Math.sin(f.t * 2.2) * 3 + (f.phase === 'bite' ? Math.sin(f.t * 40) * 4 : 0);
+    ctx.strokeStyle = '#d8d8e0';
+    ctx.beginPath(); ctx.moveTo(310, 30); ctx.lineTo(192, bobY - 4); ctx.stroke();
+    ctx.fillStyle = '#e84848';
+    ctx.beginPath(); ctx.arc(192, bobY, 4, 0, 7); ctx.fill();
+    ctx.fillStyle = '#f0f0f0';
+    ctx.beginPath(); ctx.arc(192, bobY - 3, 2.5, 0, 7); ctx.fill();
 
     ctx.textAlign = 'center';
+    ctx.font = 'bold 10px monospace';
+    ctx.fillStyle = '#e8c860';
+    ctx.fillText('~ LAKE HYLIA ~', 192, 24);
+    ctx.font = '8px monospace';
+    ctx.fillStyle = '#e8e0d0';
+    if (f.phase === 'cast') ctx.fillText('You cast the line...', 192, 200);
+    else if (f.phase === 'wait') ctx.fillText('...waiting...', 192, 200);
+    else if (f.phase === 'bite') {
+      ctx.font = 'bold 14px monospace';
+      ctx.fillStyle = '#f8e060';
+      ctx.fillText('! ! !   HOOK IT   ! ! !', 192, 200);
+    } else if (f.phase === 'early') ctx.fillText('Too eager. The fish laugh quietly.', 192, 200);
+    else if (f.phase === 'missed') ctx.fillText('It spat the hook. Odon pretends not to see.', 192, 200);
+    else if (f.phase === 'caught') {
+      const lines = U.wrapText(ctx, f.msg, 320);
+      lines.forEach((l, i) => ctx.fillText(l, 192, 196 + i * 11));
+    }
     ctx.font = '7px monospace';
-    ctx.fillStyle = '#605878';
-    ctx.fillText('j/esc: close', 192, 232);
+    ctx.fillStyle = '#8898b8';
+    ctx.fillText(f.phase === 'bite' ? 'enter/space: hook!' : 'enter/space: cast again   esc: done', 192, 228);
     ctx.textAlign = 'left';
   },
 
@@ -472,6 +629,7 @@ const UI = {
     if (p.hasPearl) list.push({ spr: 'pearl', name: 'Pearl of the Deep', desc: 'The open ocean is yours — deep water no longer bars you.' });
     if (p.hasLantern) list.push({ spr: 'lantern', name: 'Lantern', desc: 'Lights dark places automatically.' });
     if (p.hasShield) list.push({ spr: 'shield_item', name: 'Knight\'s Shield', desc: 'Halves all damage taken.' });
+    if (p.hasTideplate) list.push({ spr: 'tideplate', name: 'Tideplate', desc: 'Armor of the drowned choir. Halves damage again.' });
     if (p.potions > 0) list.push({
       spr: 'potion', name: `Red Potion x${p.potions}`, desc: 'ENTER to drink: restores all hearts.',
       use: () => {
@@ -766,6 +924,7 @@ const UI = {
     ['Frostmaw', 'Glacier Hollow'],
     ['Pharaghast', 'Sandsear Tomb'],
     ['Karstag', 'The Seventh Barrow'],
+    ['Thalassa', 'The Drowned Cathedral'],
     ['The Shade', 'Shadow Keep'],
     ['', ''],
     ['Made with the MapBuilder engine', ''],

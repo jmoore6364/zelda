@@ -48,6 +48,11 @@ class Enemy extends Entity {
       color: ['#f8f8ff', '#8888a0', '#38384a'], life: 0.5, speedMax: 80
     });
     rollDrop(this.cx(), this.cy());
+    // bestiary
+    if (this.typeName && Game.data) {
+      Game.data.kills = Game.data.kills || {};
+      Game.data.kills[this.typeName] = (Game.data.kills[this.typeName] || 0) + 1;
+    }
   }
 
   baseUpdate(dt) {
@@ -872,5 +877,7 @@ const ENEMY_TYPES = {
 function spawnEnemy(type, tx, ty) {
   const Cls = ENEMY_TYPES[type];
   if (!Cls) return null;
-  return new Cls(tx * 16 + 2, ty * 16 + 2);
+  const e = new Cls(tx * 16 + 2, ty * 16 + 2);
+  e.typeName = type;
+  return e;
 }

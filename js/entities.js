@@ -303,6 +303,7 @@ class Player extends Entity {
   damage(amount, source) {
     if (this.invuln > 0 || this.falling > 0 || Game.state !== 'play') return;
     if (this.data.hasShield) amount = Math.max(0.5, amount * 0.5);
+    if (this.data.hasTideplate) amount = Math.max(0.25, amount * 0.5);
     this.data.hearts -= amount;
     this.invuln = 1.0;
     AudioSys.sfx('hurt');

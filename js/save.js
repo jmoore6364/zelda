@@ -15,7 +15,7 @@ const SaveSys = {
       hasLantern: false, hasShield: false, hasBombs: false,
       hasBoomerang: false, hasFireRod: false, hasFlippers: false, hasPearl: false,
       potions: 0, letter: false, soup: false, lure: false,
-      tradeItem: null, hasCharm: false,
+      tradeItem: null, hasCharm: false, hasTideplate: false,
       shards: { emerald: false, ruby: false, sapphire: false },
       keys: {}, bosskeys: {}, dmaps: {}, dcompass: {}
     };
@@ -25,6 +25,7 @@ const SaveSys = {
     return {
       player: this.defaultPlayer(),
       flags: {},
+      kills: {},
       mapId: 'overworld',
       px: 16 * 16, py: 57 * 16,
       playTime: 0,
@@ -58,6 +59,7 @@ const SaveSys = {
       d.player = Object.assign(def.player, d.player);
       d.player.shards = Object.assign({ emerald: false, ruby: false, sapphire: false }, d.player.shards);
       d.flags = d.flags || {};
+      d.kills = d.kills || {};
       d.slot = slot;
       return d;
     } catch (e) {

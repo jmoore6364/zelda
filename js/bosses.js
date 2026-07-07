@@ -723,7 +723,95 @@ class Karstag extends Boss {
 }
 
 // ------------------------------------------------------------
-const BOSS_TYPES = { gloomspore: Gloomspore, magmadon: Magmadon, wraithlord: Wraithlord, shade: Shade, frostmaw: Frostmaw, pharaghast: Pharaghast, karstag: Karstag };
+// THALASSA — the Drowned Choir (optional boss, the Drowned Cathedral)
+// ------------------------------------------------------------
+class Thalassa extends Boss {
+  constructor(x, y) {
+    super(x, y, {
+      id: 'thalassa', name: 'THALASSA', title: 'The Drowned Choir',
+      sprite: 'boss_thalassa', hp: 40, touchDmg: 1.5, w: 28, h: 26
+    });
+    this.mode = 'drift';
+    this.stateT = 2;
+    this.alpha = 1;
+  }
+
+  invulnerable() { return this.alpha < 0.4; }
+
+  update(dt) {
+    if (!this.baseUpdate(dt)) { this.alpha = 1; return; }
+    this.stateT -= dt;
+    switch (this.mode) {
+      case 'drift':
+        this.alpha = U.approach(this.alpha, 1, dt * 2);
+        this.moveToward(this.angleToPlayer(), 26, dt);
+        this.flip = Game.player.cx() < this.cx();
+        if (Math.random() < 0.06) Particles.spawn(this.cx() + U.rand(-10, 10), this.y + this.h, { vx: 0, vy: 10, g: 0, life: 0.5, color: '#78b8d8', size: 1.5 });
+        if (this.stateT <= 0) {
+          const r = Math.random();
+          const chorus = Game.enemies.filter(e => !e.dead).length;
+          if (r < 0.3) { this.mode = 'hymn'; this.stateT = 0.6; AudioSys.sfx('charge'); }
+          else if (r < 0.55) { this.mode = 'wave'; this.stateT = 0.5; AudioSys.sfx('charge'); }
+          else if (r < 0.72 && chorus < 2) { this.mode = 'summon'; this.stateT = 0.8; }
+          else { this.mode = 'sink'; this.stateT = 1.7; }
+        }
+        break;
+      case 'hymn': // two counter-rotating rings — the choir sings
+        if (this.stateT <= 0) {
+          this.shootRing(7, 85, 'magic_bolt', this.animT * 2);
+          this.shootRing(7, 60, 'magic_bolt', -this.animT * 2 + 0.4);
+          AudioSys.sfx('fire');
+          Particles.burst(this.cx(), this.cy(), 12, { color: ['#78b8d8', '#e8f6fc'], life: 0.6 });
+          this.mode = 'drift';
+          this.stateT = U.rand(1.6, 2.4);
+        }
+        break;
+      case 'wave':
+        if (this.stateT <= 0) {
+          this.shootSpread(5, 125, 'ice_proj', 0.28);
+          AudioSys.sfx('splash');
+          this.mode = 'drift';
+          this.stateT = U.rand(1.2, 2);
+        }
+        break;
+      case 'summon':
+        if (this.stateT <= 0) {
+          const tx = Math.floor(this.cx() / 16) + (Math.random() < 0.5 ? -2 : 2);
+          const ty = Math.floor(this.cy() / 16) + 1;
+          const e = spawnEnemy('zora', tx, ty);
+          if (e) Game.enemies.push(e);
+          Particles.burst(this.cx(), this.y + this.h, 12, { color: ['#78a8e8', '#b8d8f8'], life: 0.5 });
+          AudioSys.sfx('splash');
+          this.mode = 'drift';
+          this.stateT = U.rand(1.6, 2.6);
+        }
+        break;
+      case 'sink': // slips beneath the flood, resurfaces at your back
+        this.alpha = U.approach(this.alpha, 0.1, dt * 3);
+        if (this.stateT <= 0) {
+          const pl = Game.player;
+          const a = U.rand(0, Math.PI * 2);
+          const nx = pl.cx() + Math.cos(a) * 55 - this.w / 2;
+          const ny = pl.cy() + Math.sin(a) * 55 - this.h / 2;
+          if (!Game.solidAtRect({ x: nx, y: ny, w: this.w, h: this.h })) { this.x = nx; this.y = ny; }
+          AudioSys.sfx('splash');
+          Particles.burst(this.cx(), this.y + this.h, 14, { color: ['#78b8d8', '#e8f6fc'], life: 0.5 });
+          this.mode = 'wave';
+          this.stateT = 0.4;
+        }
+        break;
+    }
+  }
+
+  draw(ctx) {
+    ctx.globalAlpha = U.clamp(this.alpha, 0.1, 1);
+    this.drawSprite(ctx, Math.floor(this.animT * 3) % 2);
+    ctx.globalAlpha = 1;
+  }
+}
+
+// ------------------------------------------------------------
+const BOSS_TYPES = { gloomspore: Gloomspore, magmadon: Magmadon, wraithlord: Wraithlord, shade: Shade, frostmaw: Frostmaw, pharaghast: Pharaghast, karstag: Karstag, thalassa: Thalassa };
 
 function spawnBoss(id, arenaRect) {
   const Cls = BOSS_TYPES[id];

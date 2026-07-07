@@ -476,6 +476,14 @@ function buildOverworld() {
   b.enemy('keese', 130, 132); b.enemy('keese', 140, 138); b.enemy('armos', 138, 140);
   b.enemy('sandwurm', 130, 140); b.enemy('vulture', 141, 130);
 
+  // --- THE DROWNED CATHEDRAL — a spire breaking the deep swell (Pearl required) ---
+  b.blob(100, 150, 4, T.WATER, [T.DEEPWATER]);
+  b.blob(100, 150, 2, T.FLOOR_STONE, [T.WATER, T.DEEPWATER]);
+  b.set(100, 149, T.PILLAR); b.set(99, 151, T.PILLAR); b.set(101, 151, T.PILLAR);
+  b.set(100, 150, T.STAIRS_DOWN);
+  b.portal(100, 150, 1, 1, 'dungeon7', 20, 30, 'up', { sfx: 'stairs' });
+  b.object('sign', 100, 152, { text: 'A bell tolls below, slow as a sleeping heart. The steps are worn by feet that never came back up.' });
+
   // --- deep-sea secrets, for those who hold the Pearl ---
   b.blob(170, 155, 2, T.SAND, [T.WATER, T.SHALLOWS, T.DEEPWATER]);
   b.chest(170, 155, { type: 'rupees', amount: 200 });
@@ -1267,6 +1275,81 @@ function buildDungeon6() {
 }
 
 // ------------------------------------------------------------
+// DUNGEON 7 — THE DROWNED CATHEDRAL  (tideplate, Thalassa — optional,
+// reachable only by swimming the deep sea with the Pearl)
+// ------------------------------------------------------------
+function buildDungeon7() {
+  const b = new MapBuilder('dungeon7', 42, 34, T.WALL_STONE, {
+    name: 'The Drowned Cathedral', music: 'sea', ambient: 'dungeon', dark: true, seed: 808,
+    respawn: { x: 20, y: 30 }
+  });
+
+  // narthex
+  b.rect(16, 25, 9, 7, T.FLOOR_STONE);
+  b.set(20, 31, T.STAIRS_UP);
+  b.portal(20, 31, 1, 1, 'overworld', 100, 151, 'down', { sfx: 'stairs' });
+  b.object('torch', 17, 26); b.object('torch', 23, 26);
+  b.object('sign', 18, 30, { text: 'The Drowned Cathedral. The congregation never left. Mind the flooded aisles.' });
+
+  // the flooded nave — pews of stone, aisles of seawater
+  b.rect(13, 13, 16, 9, T.FLOOR_STONE);
+  b.rect(14, 15, 14, 2, T.SHALLOWS);
+  b.rect(14, 19, 14, 1, T.SHALLOWS);
+  b.set(14, 14, T.PILLAR); b.set(27, 14, T.PILLAR);
+  b.set(14, 20, T.PILLAR); b.set(27, 20, T.PILLAR);
+  b.set(18, 18, T.GRAVE); b.set(23, 18, T.GRAVE);
+  b.rect(20, 22, 2, 3, T.FLOOR_STONE); // corridor from the narthex
+  b.enemy('zora', 16, 15); b.enemy('zora', 25, 16);
+  b.enemy('gibdo', 19, 17); b.enemy('poe', 23, 20);
+  b.chest(26, 21, { type: 'key' });
+
+  // west transept — the choir stalls
+  b.rect(4, 13, 8, 8, T.FLOOR_STONE);
+  b.rect(12, 17, 2, 2, T.FLOOR_STONE);
+  b.rect(5, 14, 6, 1, T.SHALLOWS);
+  b.enemy('poe', 6, 16); b.enemy('wizzrobe', 9, 18);
+  b.chest(5, 20, { type: 'key' });
+  b.chest(10, 20, { type: 'dungeon_map' });
+
+  // east transept — the reliquary
+  b.rect(30, 13, 8, 8, T.FLOOR_STONE);
+  b.rect(28, 17, 2, 2, T.FLOOR_STONE);
+  b.rect(31, 14, 6, 1, T.SHALLOWS);
+  b.enemy('wizzrobe', 33, 16); b.enemy('gibdo', 35, 19);
+  b.chest(36, 14, { type: 'bosskey' });
+  b.chest(32, 20, { type: 'compass' });
+  b.object('pot', 31, 20); b.object('pot', 37, 20);
+
+  // north-west — the TIDEPLATE sacristy (locked)
+  b.rect(5, 3, 8, 8, T.FLOOR_STONE);
+  b.rect(8, 11, 2, 3, T.FLOOR_STONE);
+  b.object('locked_door', 8, 12, { w: 2, h: 1 });
+  b.rect(7, 4, 4, 1, T.CARPET);
+  b.enemy('darknut', 7, 6); b.enemy('blade_trap', 10, 8);
+  b.chest(8, 4, { type: 'tideplate' }, { big: true });
+  b.object('torch', 6, 4); b.object('torch', 11, 4);
+
+  // north-east — the offertory (locked)
+  b.rect(29, 3, 8, 8, T.FLOOR_STONE);
+  b.rect(32, 11, 2, 3, T.FLOOR_STONE);
+  b.object('locked_door', 32, 12, { w: 2, h: 1 });
+  b.enemy('poe', 33, 6); b.enemy('keese', 31, 5);
+  b.chest(34, 4, { type: 'rupees', amount: 100 });
+  b.chest(30, 4, { type: 'potion' });
+  b.object('pot', 30, 8); b.object('pot', 36, 8);
+
+  // the bell chamber — Thalassa sings here
+  b.rect(17, 3, 8, 8, T.FLOOR_STONE);
+  b.rect(18, 5, 6, 1, T.SHALLOWS);
+  b.rect(20, 11, 2, 2, T.FLOOR_STONE);
+  b.object('boss_door', 20, 12, { w: 2, h: 1 });
+  b.object('boss_trigger', 17, 3, { w: 8, h: 8, boss: 'thalassa' });
+  b.object('torch', 18, 4); b.object('torch', 23, 4);
+
+  registerMap(b.build());
+}
+
+// ------------------------------------------------------------
 // SHADOW KEEP — final dungeon
 // ------------------------------------------------------------
 function buildKeep() {
@@ -1326,5 +1409,6 @@ function buildWorld() {
   buildDungeon4();
   buildDungeon5();
   buildDungeon6();
+  buildDungeon7();
   buildKeep();
 }

@@ -264,7 +264,7 @@ const Editor = {
         const type = this.OBJ_LIST[this.objIdx];
         const obj = { type, x: t.x, y: t.y };
         if (type === 'chest') {
-          const c = window.prompt('Chest contents (rupees N | key | bosskey | dungeon_map | compass | bow | lantern | master_sword | heart_container | potion | bombs N | arrows N | shield | boomerang | fire_rod | flippers | big_quiver | bomb_bag | lure | pearl):', 'rupees 20');
+          const c = window.prompt('Chest contents (rupees N | key | bosskey | dungeon_map | compass | bow | lantern | master_sword | heart_container | potion | bombs N | arrows N | shield | boomerang | fire_rod | flippers | big_quiver | bomb_bag | lure | pearl | tideplate):', 'rupees 20');
           if (!c) return;
           const [ct, amt] = c.trim().split(/\s+/);
           obj.contents = { type: ct, amount: amt ? Number(amt) : undefined };
@@ -275,7 +275,7 @@ const Editor = {
           obj.text = txt;
         }
         if (type === 'boss_trigger') {
-          const bs = window.prompt('Boss (gloomspore | magmadon | wraithlord | frostmaw | pharaghast | karstag | shade):', 'gloomspore');
+          const bs = window.prompt('Boss (gloomspore | magmadon | wraithlord | frostmaw | pharaghast | karstag | thalassa | shade):', 'gloomspore');
           if (!bs) return;
           obj.boss = bs.trim();
           obj.w = 8; obj.h = 8;
