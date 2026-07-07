@@ -713,6 +713,29 @@ const UI = {
   },
 
   // ---------------- MAP SCREEN ----------------
+  LOCATIONS: [
+    { key: 'elden', name: 'Elden Village', x: 16, y: 57 },
+    { key: 'bramblewick', name: 'Bramblewick Town', x: 48, y: 18 },
+    { key: 'ranch', name: 'Meadowbrook Ranch', x: 24, y: 32 },
+    { key: 'lake', name: 'Lake Hylia', x: 47, y: 45 },
+    { key: 'frostpeak', name: 'Frostpeak Hollow', x: 8, y: 34 },
+    { key: 'glacier', name: 'Glacier Hollow', x: 7, y: 26 },
+    { key: 'temple', name: 'Verdant Temple', x: 85, y: 36 },
+    { key: 'cindertop', name: 'Mt. Cindertop', x: 77, y: 11 },
+    { key: 'crypt', name: 'Sunken Crypt', x: 46, y: 64 },
+    { key: 'keep', name: 'Shadow Keep', x: 16, y: 12 },
+    { key: 'dunes', name: 'Sunspear Dunes', x: 67, y: 63 },
+    { key: 'tomb', name: 'Sandsear Tomb', x: 86, y: 63 },
+    { key: 'saltmere', name: 'Saltmere Strand', x: 32, y: 75 },
+    { key: 'lighthouse', name: 'Saltmere Light', x: 61, y: 76 },
+    { key: 'gladehollow', name: 'Gladehollow', x: 113, y: 34 },
+    { key: 'waystation', name: 'Rosa\'s Waystation', x: 121, y: 16 },
+    { key: 'stones', name: 'The Standing Stones', x: 151, y: 8 },
+    { key: 'windfall', name: 'Windfall Village', x: 45, y: 119 },
+    { key: 'emberisle', name: 'Ember Isle', x: 135, y: 133 },
+    { key: 'cathedral', name: 'The Drowned Cathedral', x: 100, y: 150 }
+  ],
+
   updateMapScreen(dt) {
     if (Input.mapKey() || Input.cancel() || Input.confirm()) { Game.state = 'play'; AudioSys.sfx('menu'); }
   },
@@ -772,6 +795,29 @@ const UI = {
         }
       }
     }
+    // discovered places + awakened waystones (overworld chart only)
+    if (map.id === 'overworld') {
+      let nearest = null, nearestD = 1e9;
+      const ptx = Game.player.tileX(), pty = Game.player.tileY();
+      for (const L of this.LOCATIONS) {
+        if (!Story.flag('seen:' + L.key)) continue;
+        ctx.fillStyle = '#f8d030';
+        ctx.fillRect(mx + L.x * scale - 1, my + L.y * scale - 1, 3, 3);
+        const d = Math.abs(L.x - ptx) + Math.abs(L.y - pty);
+        if (d < nearestD) { nearestD = d; nearest = L; }
+      }
+      for (const o of Game.objects) {
+        if (o.type === 'waystone' && o.active) {
+          ctx.fillStyle = '#68d8f0';
+          ctx.fillRect(mx + o.x * scale - 1, my + o.y * scale - 1, 3, 3);
+        }
+      }
+      if (nearest) {
+        ctx.font = '7px monospace';
+        ctx.fillStyle = '#e8d8a0';
+        ctx.fillText('near: ' + nearest.name, 192, 220);
+      }
+    }
     // player
     if (Math.floor(performance.now() / 300) % 2) {
       ctx.fillStyle = '#fff';
@@ -780,7 +826,7 @@ const UI = {
     }
     ctx.font = '7px monospace';
     ctx.fillStyle = '#605878';
-    ctx.fillText('m/esc: close', 192, 228);
+    ctx.fillText('m/esc: close   gold: places   blue: waystones', 192, 228);
     ctx.textAlign = 'left';
   },
 

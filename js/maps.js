@@ -501,6 +501,17 @@ function buildOverworld() {
   b.object('sign', 85, 153, { text: 'Gull Rocks. The gulls found it first. The gulls share reluctantly.' });
   b.enemy('zora', 78, 155); b.enemy('zora', 92, 154); b.enemy('vulture', 85, 158);
 
+  // ============ THE WAYSTONE NETWORK ============
+  // eight sleeping stones; touch one to wake it, then walk the old roads
+  b.object('waystone', 19, 60, { id: 'elden', label: 'Elden Village', tx: 19, ty: 61 });
+  b.object('waystone', 52, 22, { id: 'bramblewick', label: 'Bramblewick Town', tx: 52, ty: 23 });
+  b.object('waystone', 12, 42, { id: 'frostpeak', label: 'Frostpeak Hollow', tx: 12, ty: 43 });
+  b.object('waystone', 72, 66, { id: 'dunes', label: 'Sunspear Dunes', tx: 72, ty: 67 });
+  b.object('waystone', 32, 73, { id: 'saltmere', label: 'Saltmere Strand', tx: 32, ty: 74 });
+  b.object('waystone', 118, 37, { id: 'gladehollow', label: 'Gladehollow', tx: 118, ty: 38 });
+  b.object('waystone', 126, 16, { id: 'highlands', label: 'The Auran Highlands', tx: 126, ty: 17 });
+  b.object('waystone', 50, 122, { id: 'windfall', label: 'Windfall Village', tx: 50, ty: 123 });
+
   // ============ field enemies ============
   b.enemy('octorok', 34, 40); b.enemy('octorok', 26, 42); b.enemy('octorok', 52, 30);
   b.enemy('octorok', 36, 24); b.enemy('octorok', 24, 44);

@@ -96,6 +96,10 @@ Pearl of the Deep, swimmable end to end).
 - A **quest journal** (J, or from the pause menu) tracks every thread, and the
   overworld music changes with the region — sea shanties on the strand, wind on
   the high moor, something old and patient under the Elderwood
+- **The Waystone network** — eight sleeping stones scattered across Hyrule.
+  Touch one to wake it; wake two and the old roads open between them (fast
+  travel). The world map (M) charts every place you've discovered in gold and
+  every awakened waystone in blue
 - **The Shattered Sea** — the entire southern half of the world is ocean. Pay
   **Wake the Ferryman** 5 rupees at any dock and sail between **Saltmere Pier**,
   **Windfall Village** on the Isle of Winds (Mayor Palm owes you for that beacon…),

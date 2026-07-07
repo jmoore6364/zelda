@@ -181,6 +181,7 @@ const Game = {
       if (r.type === 'shard_gate') r.open = Story.flag('gate_open');
       if (r.type === 'crypt_gate') r.open = Story.flag('crypt_open');
       if (r.type === 'tomb_gate') r.open = Story.flag('tomb_open');
+      if (r.type === 'waystone') r.active = Story.flag('waystone:' + r.id);
       if (r.type === 'shopitem' && r.item === 'heart_container') r.soldOut = Story.flag('shop_hc_bought');
       if (r.type === 'shopitem' && r.item === 'bomb_bag') r.soldOut = Story.flag('shop_bb_bought');
       return r;
@@ -269,6 +270,7 @@ const Game = {
       case 'shard_gate': return !o.open;
       case 'crypt_gate': return !o.open;
       case 'tomb_gate': return !o.open;
+      case 'waystone': return true;
       case 'switch_crystal': return true;
       default: return false;
     }
@@ -414,6 +416,30 @@ const Game = {
         case 'shopitem':
           this.tryBuy(o);
           return;
+        case 'waystone': {
+          if (!o.active) {
+            o.active = true;
+            Story.set('waystone:' + o.id);
+            AudioSys.sfx('secret');
+            this.shake(2, 0.3);
+            Particles.burst(o.x * 16 + 8, o.y * 16 + 6, 16, { color: ['#68d8f0', '#a8ecf8', '#fff'], life: 0.8 });
+            Dialogue.start({ pages: [`The waystone wakes at your touch, runes brimming with pale light. ${o.label} is now part of the old network.`] });
+            return;
+          }
+          const others = this.objects.filter(w => w.type === 'waystone' && w.active && w !== o);
+          if (!others.length) {
+            Dialogue.start({ pages: ['The stone hums alone. Wake its kin across Hyrule, and the old roads will open between them.'] });
+            return;
+          }
+          Dialogue.start({
+            pages: ['The waystone hums, waiting. Where does the road go today?'],
+            choices: [
+              ...others.map(w => ({ label: w.label, cb: () => { AudioSys.sfx('warp'); this.ferryTo(w.tx, w.ty); } })),
+              { label: 'Stay', cb: () => {} }
+            ]
+          });
+          return;
+        }
       }
     }
   },
@@ -652,7 +678,17 @@ const Game = {
     this._musT = (this._musT || 0) - dt;
     if (this._musT <= 0) {
       this._musT = 0.5;
-      if (this.map.id === 'overworld' && this.audioReady) AudioSys.play(this.overworldTrack());
+      if (this.map.id === 'overworld') {
+        if (this.audioReady) AudioSys.play(this.overworldTrack());
+        // chart discovered places
+        const ptx = this.player.tileX(), pty = this.player.tileY();
+        for (const L of UI.LOCATIONS) {
+          if (!Story.flag('seen:' + L.key) && Math.abs(ptx - L.x) < 10 && Math.abs(pty - L.y) < 8) {
+            Story.set('seen:' + L.key);
+            FloatText.add(this.player.cx(), this.player.y - 10, L.name, '#a8ecf8');
+          }
+        }
+      }
     }
 
     // chimney smoke — every hearth on screen breathes
@@ -825,6 +861,17 @@ const Game = {
           if (!o.open) for (let i = 0; i < (o.w || 1); i++) Sprites.draw(ctx, 'door_boss', 0, ox + i * 16, oy);
           break;
         case 'switch_crystal': Sprites.draw(ctx, 'switch_crystal', o.hit ? 1 : 0, ox, oy + 3); break;
+        case 'waystone': {
+          Sprites.draw(ctx, 'waystone', o.active ? 1 : 0, ox, oy + 3);
+          if (o.active) {
+            const wg = ctx.createRadialGradient(ox + 8, oy + 8, 1, ox + 8, oy + 8, 16 + Math.sin(Tiles.animTime * 4 + o.x) * 2);
+            wg.addColorStop(0, 'rgba(104,216,240,0.25)');
+            wg.addColorStop(1, 'rgba(104,216,240,0)');
+            ctx.fillStyle = wg;
+            ctx.fillRect(ox - 12, oy - 12, 40, 40);
+          }
+          break;
+        }
         case 'beacon': {
           // the lighthouse flame — burns only once the keeper's beacon is lit
           if (!Story.flag('beacon_lit')) break;

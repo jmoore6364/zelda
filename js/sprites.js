@@ -3004,6 +3004,38 @@ Sprites.def('tideplate', { T: '#4884a8', t: '#2c5878', W: '#a8d8e8', G: '#a8e8d8
   ]
 ]);
 
+// Waystone — the old fast-travel network (frame 1 = awakened)
+Sprites.def('waystone', { S: '#8a8a9a', s: '#5c5c6c', R: '#48485a', G: '#68d8f0', g: '#a8ecf8' }, [
+  [
+    '.....SSSSS......',
+    '....SSSSSSS.....',
+    '...SSSRRSSS.....',
+    '...SSRSSRSS.....',
+    '...SSSRRSSS.....',
+    '...SSRSSRSS.....',
+    '...SSSRRSSS.....',
+    '...sSSSSSSs.....',
+    '...sSSSSSSs.....',
+    '..ssSSSSSSss....',
+    '..sssssssss.....',
+    '................'
+  ],
+  [
+    '.....SSSSS......',
+    '....SSSSSSS.....',
+    '...SSSGGSSS.....',
+    '...SSGSSGSS.....',
+    '...SSSGGSSS.....',
+    '...SSGSSgSS.....',
+    '...SSSggSSS.....',
+    '...sSSSSSSs.....',
+    '...sSSSSSSs.....',
+    '..ssSSSSSSss....',
+    '..sssssssss.....',
+    '................'
+  ]
+]);
+
 // Elite aliases — the editor and tools look sprites up by enemy type name
 Sprites.defs.direwolf = Sprites.defs.wolfos;
 Sprites.defs.dunetyrant = Sprites.defs.sandwurm;
