@@ -634,7 +634,7 @@ class NPC extends Entity {
       salt_nan: 'npc_woman', salt_tide: 'npc_man', keeper_elio: 'npc_elder', kid_shell: 'npc_kid',
       ferryman_wake: 'npc_fisher', waykeeper_rosa: 'npc_rancher', mayor_palm: 'npc_man',
       isle_lila: 'npc_woman', isle_koa: 'npc_kid',
-      druid_ash: 'npc_hermit', herbalist_fern: 'npc_woman'
+      druid_ash: 'npc_hermit', herbalist_fern: 'npc_woman', hunter_vey: 'npc_guard'
     }[id] || 'npc_man';
     this.wanders = !['shopkeep', 'innkeep', 'elder', 'fairy', 'guard_bex', 'princess', 'hermit_yeta', 'lorelei', 'fisherman_odon', 'trader_sami', 'keeper_elio', 'ferryman_wake', 'herbalist_fern'].includes(id);
   }

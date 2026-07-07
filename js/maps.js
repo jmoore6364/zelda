@@ -14,7 +14,7 @@ function registerMap(m) { WORLD[m.id] = m; }
 // Shattered Sea — ferry country.
 // ------------------------------------------------------------
 function buildOverworld() {
-  const b = new MapBuilder('overworld', 192, 184, T.GRASS, {
+  const b = new MapBuilder('overworld', 240, 184, T.GRASS, {
     name: 'Hyrule Field', music: 'overworld', ambient: 'day', seed: 42,
     respawn: { x: 16, y: 57 }
   });
@@ -293,26 +293,26 @@ function buildOverworld() {
 
   // ============ S: SALTMERE STRAND (now running the full width of the world) ============
   // the old border ridge, breached in five places
-  b.rect(2, 70, 188, 2, T.MOUNTAIN);
+  b.rect(2, 70, 234, 2, T.MOUNTAIN);
   b.rect(15, 70, 3, 2, T.PATH);   // west pass, below Elden
   b.rect(53, 70, 3, 2, T.MARSH);  // center pass, out of the marsh
   b.rect(74, 70, 2, 2, T.PATH);   // pass below the dunes
   b.rect(120, 70, 3, 2, T.PATH);  // Gilded Meadow pass
   b.rect(160, 70, 3, 2, T.PATH);  // far-east pass
   // the strand: meadow, beach, shallows, open sea
-  b.rect(2, 72, 188, 6, T.GRASS);
-  b.scatter(T.FLOWERS, 0.05, { x: 2, y: 72, w: 188, h: 6 }, [T.GRASS]);
-  b.scatter(T.TALLGRASS, 0.06, { x: 2, y: 72, w: 188, h: 6 }, [T.GRASS]);
-  b.scatter(T.BUSH, 0.02, { x: 2, y: 72, w: 188, h: 6 }, [T.GRASS]);
-  b.rect(2, 78, 188, 4, T.SAND);
-  b.rect(2, 82, 188, 2, T.SHALLOWS);
-  b.rect(2, 84, 188, 3, T.WATER);
-  b.rect(2, 87, 188, 3, T.DEEPWATER);
+  b.rect(2, 72, 234, 6, T.GRASS);
+  b.scatter(T.FLOWERS, 0.05, { x: 2, y: 72, w: 234, h: 6 }, [T.GRASS]);
+  b.scatter(T.TALLGRASS, 0.06, { x: 2, y: 72, w: 234, h: 6 }, [T.GRASS]);
+  b.scatter(T.BUSH, 0.02, { x: 2, y: 72, w: 234, h: 6 }, [T.GRASS]);
+  b.rect(2, 78, 234, 4, T.SAND);
+  b.rect(2, 82, 234, 2, T.SHALLOWS);
+  b.rect(2, 84, 234, 3, T.WATER);
+  b.rect(2, 87, 234, 3, T.DEEPWATER);
   // a ragged, natural waterline
-  b.scatter(T.SAND, 0.4, { x: 2, y: 82, w: 188, h: 1 }, [T.SHALLOWS]);
-  b.scatter(T.SHALLOWS, 0.4, { x: 2, y: 84, w: 188, h: 1 }, [T.WATER]);
-  b.scatter(T.PALM, 0.04, { x: 2, y: 78, w: 188, h: 3 }, [T.SAND]);
-  b.scatter(T.ROCK, 0.02, { x: 2, y: 78, w: 188, h: 3 }, [T.SAND]);
+  b.scatter(T.SAND, 0.4, { x: 2, y: 82, w: 234, h: 1 }, [T.SHALLOWS]);
+  b.scatter(T.SHALLOWS, 0.4, { x: 2, y: 84, w: 234, h: 1 }, [T.WATER]);
+  b.scatter(T.PALM, 0.04, { x: 2, y: 78, w: 234, h: 3 }, [T.SAND]);
+  b.scatter(T.ROCK, 0.02, { x: 2, y: 78, w: 234, h: 3 }, [T.SAND]);
   // roads down through the passes
   b.path([[16, 62], [16, 74], [28, 74]], T.PATH, 2);
   b.path([[54, 68], [54, 74]], T.DIRT, 2);
@@ -382,6 +382,9 @@ function buildOverworld() {
   b.set(172, 18, T.GRASS);
   b.portal(172, 17, 1, 1, 'cave_highland', 6, 8, 'up', { sfx: 'stairs', hidden: true });
   b.object('sign', 174, 18, { text: 'The crag here rings hollow when the wind hits it. Or when anything else does.' });
+  // a prospector's trail from the high road to the crag face
+  b.path([[150, 18], [170, 18]], T.DIRT, 1);
+  b.rect(170, 18, 4, 2, T.GRASS);
   b.enemy('vulture', 104, 8); b.enemy('vulture', 160, 14); b.enemy('octorok', 112, 18);
   b.enemy('moblin', 130, 8); b.enemy('moblin', 155, 20); b.enemy('armos', 150, 7);
   b.enemy('peahat', 168, 6); b.enemy('wolfos', 182, 16);
@@ -441,8 +444,8 @@ function buildOverworld() {
   b.enemy('octorok', 100, 56); b.enemy('octorok', 170, 60); b.enemy('chu', 155, 66);
 
   // ============ THE SHATTERED SEA (y90-181) ============
-  b.rect(2, 90, 188, 92, T.DEEPWATER);
-  b.rect(2, 90, 188, 2, T.WATER); // near-shore swimming strip
+  b.rect(2, 90, 234, 92, T.DEEPWATER);
+  b.rect(2, 90, 234, 2, T.WATER); // near-shore swimming strip
 
   // --- ISLE OF WINDS — the village across the water ---
   b.blob(45, 120, 14, T.WATER, [T.DEEPWATER]);
@@ -501,8 +504,36 @@ function buildOverworld() {
   b.object('sign', 85, 153, { text: 'Gull Rocks. The gulls found it first. The gulls share reluctantly.' });
   b.enemy('zora', 78, 155); b.enemy('zora', 92, 154); b.enemy('vulture', 85, 158);
 
+  // ============ FAR EAST: THE GLOAMWOOD ============
+  // where the dusk went to grow teeth — trees that watch, and worse
+  b.rect(189, 2, 49, 68, T.GRASS);
+  b.scatter(T.GLOOMTREE, 0.42, { x: 189, y: 2, w: 49, h: 68 }, [T.GRASS]);
+  b.scatter(T.DEADTREE, 0.1, { x: 189, y: 2, w: 49, h: 68 }, [T.GRASS]);
+  b.scatter(T.TALLGRASS, 0.05, { x: 189, y: 2, w: 49, h: 68 }, [T.GRASS]);
+  b.scatter(T.GRAVE, 0.015, { x: 189, y: 2, w: 49, h: 68 }, [T.GRASS]);
+  // one pale road through the dark
+  b.path([[186, 45], [200, 45], [200, 20], [220, 20], [220, 50], [232, 50]], T.DIRT, 2);
+  b.object('sign', 190, 44, { text: 'The GLOAMWOOD. The trees here are hungry and the dark has teeth. Walk loud, stranger.' });
+  // Vey the vampire hunter's lodge
+  b.rect(197, 15, 9, 7, T.GRASS);
+  b.house(198, 16, 5, 4, { to: 'hunter_cabin', tx: 6, ty: 8, style: 'snow', chimney: true });
+  b.object('sign', 204, 19, { text: 'VEY\'S LODGE. Garlic on the sill, stakes by the door. Knock like you mean it.' });
+  // the gloam hoard, hidden under a bush off the road
+  b.path([[221, 20], [226, 20], [226, 35]], T.GRASS, 1);
+  b.set(226, 36, T.BUSH);
+  b.set(226, 37, T.GRASS); b.set(225, 36, T.GRASS);
+  b.portal(226, 36, 1, 1, 'cave_gloam', 6, 8, 'up', { sfx: 'stairs', hidden: true, underBush: true });
+  // waystone by the crossroads
+  b.object('waystone', 201, 21, { id: 'gloamwood', label: 'The Gloamwood', tx: 201, ty: 22 });
+  // the wood's teeth
+  b.enemy('grimroot', 195, 40); b.enemy('grimroot', 205, 30); b.enemy('grimroot', 214, 22);
+  b.enemy('grimroot', 218, 44); b.enemy('grimroot', 228, 52);
+  b.enemy('vampire', 198, 25); b.enemy('vampire', 212, 40); b.enemy('vampire', 224, 28);
+  b.enemy('poe', 206, 50); b.enemy('poe', 226, 12); b.enemy('wolfos', 192, 12);
+  b.enemy('keese', 210, 8); b.enemy('keese', 230, 60);
+
   // ============ THE WAYSTONE NETWORK ============
-  // eight sleeping stones; touch one to wake it, then walk the old roads
+  // nine sleeping stones; touch one to wake it, then walk the old roads
   b.object('waystone', 19, 60, { id: 'elden', label: 'Elden Village', tx: 19, ty: 61 });
   b.object('waystone', 52, 22, { id: 'bramblewick', label: 'Bramblewick Town', tx: 52, ty: 23 });
   b.object('waystone', 12, 42, { id: 'frostpeak', label: 'Frostpeak Hollow', tx: 12, ty: 43 });
@@ -720,6 +751,19 @@ function buildInteriors() {
     b.chest(10, 7, { type: 'rupees', amount: 20 });
   });
 
+  // Vey's lodge — the Gloamwood
+  interior('hunter_cabin', 'Vey\'s Lodge', 13, 10, b => {
+    b.map.music = 'cave';
+    b.set(6, 9, T.HOUSE_DOOR);
+    b.portal(6, 9, 1, 1, 'overworld', 200, 20, 'down', { sfx: 'door' });
+    b.set(2, 2, T.SHELF); b.set(3, 2, T.SHELF); b.set(9, 2, T.SHELF);
+    b.set(9, 5, T.TABLE);
+    b.rect(5, 3, 3, 2, T.CARPET);
+    b.npc('hunter_vey', 6, 4);
+    b.object('torch', 2, 6); b.object('torch', 10, 6);
+    b.chest(10, 7, { type: 'arrows', amount: 15 });
+  });
+
   // Rosa's waystation — Auran Highlands
   interior('waystation', 'Rosa\'s Waystation', 15, 11, b => {
     b.map.music = 'town';
@@ -845,6 +889,17 @@ function buildCaves() {
     b.set(6, 4, T.FLOOR_STONE);
     b.npc('fairy', 6, 4);
     b.object('torch', 2, 3); b.object('torch', 10, 3);
+  });
+
+  // Gloamwood — the hoard under the hungry trees
+  cave('cave_gloam', 'Gloam Hoard', 13, 11, b => {
+    b.set(6, 9, T.STAIRS_UP);
+    b.portal(6, 9, 1, 1, 'overworld', 226, 37, 'down', { sfx: 'stairs' });
+    b.scatter(T.CAVE_WALL, 0.07, { x: 2, y: 2, w: 9, h: 6 }, [T.CAVE_FLOOR]);
+    b.chest(4, 3, { type: 'rupees', amount: 100 });
+    b.chest(8, 3, { type: 'potion' });
+    b.object('torch', 4, 5); b.object('torch', 8, 5);
+    b.enemy('keese', 3, 6); b.enemy('poe', 9, 6);
   });
 
   // Ember Isle — the smoking mountain's hoard

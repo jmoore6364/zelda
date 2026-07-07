@@ -38,7 +38,7 @@ sword, talk, bow, bomb, boomerang, fire rod, plus pause/inventory/map up top.
 
 ## The World
 
-A 192×184-tile overworld — four times the land it launched with — plus seven
+A 240×184-tile overworld — four times the land it launched with — plus seven
 dungeons, caves, interiors, and an archipelago served by ferry (and, with the
 Pearl of the Deep, swimmable end to end).
 
@@ -111,7 +111,7 @@ Pearl of the Deep, swimmable end to end).
 
 18 enemy types — Octorok, Moblin, Keese, Stalfos, Chu, Leever, Wizzrobe, Darknut,
 Peahat, Zora, Armos, Poe, Wolfos, Freezard, Blade Trap, Gibdo, Vulture, Sandwurm —
-each with its own AI, plus 3 named elites and 8 bosses.
+each with its own AI, plus 3 named elites and 8 bosses. Beyond the Elderwood lies the GLOAMWOOD: a dark forest where some trees are Grimroots in disguise and Vampires ride the bat-swarms - only solid, and only killable, in the moment between appearing and feeding. Vey the hunter's lodge has the survival notes.
 
 ## Features
 

@@ -21,8 +21,8 @@ const Editor = {
   loadIdx: 0,
   brush: 1,
 
-  ENEMY_LIST: ['octorok', 'moblin', 'keese', 'stalfos', 'chu', 'leever', 'wizzrobe', 'darknut', 'peahat', 'zora', 'armos', 'poe', 'wolfos', 'freezard', 'blade_trap', 'gibdo', 'vulture', 'sandwurm', 'direwolf', 'dunetyrant', 'ogre'],
-  NPC_LIST: ['elder', 'marin', 'shopkeep', 'innkeep', 'traveler_finn', 'guard_bex', 'oldman_sage', 'scholar_ivo', 'townwoman_ella', 'townman_dole', 'kid_pip', 'kid_nell', 'mother_ana', 'granny_lu', 'villager_meg', 'villager_tomm', 'fairy', 'princess', 'hermit_yeta', 'fisherman_odon', 'nomad_zaffa', 'digger_dan', 'lorelei', 'rancher_elda', 'cucco_pella', 'fisher_bjorn', 'trader_sami', 'harbor_brine', 'salt_nan', 'salt_tide', 'keeper_elio', 'kid_shell', 'ferryman_wake', 'waykeeper_rosa', 'mayor_palm', 'isle_lila', 'isle_koa', 'druid_ash', 'herbalist_fern'],
+  ENEMY_LIST: ['octorok', 'moblin', 'keese', 'stalfos', 'chu', 'leever', 'wizzrobe', 'darknut', 'peahat', 'zora', 'armos', 'poe', 'wolfos', 'freezard', 'blade_trap', 'gibdo', 'vulture', 'sandwurm', 'direwolf', 'dunetyrant', 'ogre', 'grimroot', 'vampire'],
+  NPC_LIST: ['elder', 'marin', 'shopkeep', 'innkeep', 'traveler_finn', 'guard_bex', 'oldman_sage', 'scholar_ivo', 'townwoman_ella', 'townman_dole', 'kid_pip', 'kid_nell', 'mother_ana', 'granny_lu', 'villager_meg', 'villager_tomm', 'fairy', 'princess', 'hermit_yeta', 'fisherman_odon', 'nomad_zaffa', 'digger_dan', 'lorelei', 'rancher_elda', 'cucco_pella', 'fisher_bjorn', 'trader_sami', 'harbor_brine', 'salt_nan', 'salt_tide', 'keeper_elio', 'kid_shell', 'ferryman_wake', 'waykeeper_rosa', 'mayor_palm', 'isle_lila', 'isle_koa', 'druid_ash', 'herbalist_fern', 'hunter_vey'],
   OBJ_LIST: ['chest', 'pot', 'sign', 'torch', 'locked_door', 'boss_door', 'switch_crystal', 'boss_trigger', 'shard_gate', 'crypt_gate', 'tomb_gate', 'beacon', 'waystone'],
   CUSTOM_KEY: 'zelda2_custom_maps',
   OVERRIDE_KEY: 'zelda2_map_overrides',

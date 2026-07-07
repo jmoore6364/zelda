@@ -40,7 +40,8 @@ const T = {
   DUNGEON_BLOCK: 40, HOLE: 41, SHALLOWS: 42, SNOWY: 43, COUNTER: 44,
   ICE: 45, ICE_WALL: 46, CACTUS: 47, PALM: 48,
   SNOW_ROOF: 49, SNOW_ROOF_EDGE: 50, ADOBE_WALL: 51, ADOBE_ROOF: 52, AWNING: 53,
-  CHIMNEY: 54, BALCONY: 55, WINDOW_FLOWER: 56, DOCK: 57, ROOF_BLUE: 58, ROOF_BLUE_EDGE: 59
+  CHIMNEY: 54, BALCONY: 55, WINDOW_FLOWER: 56, DOCK: 57, ROOF_BLUE: 58, ROOF_BLUE_EDGE: 59,
+  GLOOMTREE: 60
 };
 
 const TILE_DEFS = {}; // id -> {name, solid, water?, damage?, anim?, variants, canvases[[frame][variant]], minimap}
@@ -459,6 +460,21 @@ defTile(T.WATERFALL, 'Waterfall', { solid: true, water: true, frames: 3, minimap
   }
   c.fillStyle = '#b8d8f8';
   for (let i = 0; i < 3; i++) px(c, (i * 6 + 2) % 16, (i * 8 + f * 5 + 3) % 16, '#b8d8f8');
+});
+
+defTile(T.GLOOMTREE, 'Gloomtree', { solid: true, variants: 3, minimap: '#2a1e38' }, (c, rng) => {
+  speckle(c, rng, '#2e2438', ['#282034', '#342a42'], 16);
+  // twisted violet-black canopy
+  c.fillStyle = '#3a2a50';
+  c.beginPath(); c.arc(8, 6, 6.5, 0, 7); c.fill();
+  c.fillStyle = '#4a3662';
+  c.beginPath(); c.arc(6, 5, 3.5, 0, 7); c.fill();
+  px(c, 5, 4, '#5c4478'); px(c, 10, 7, '#5c4478');
+  // pale watching knots
+  px(c, 7, 6, '#c8b8d8'); px(c, 10, 5, '#c8b8d8');
+  // gnarled trunk
+  c.fillStyle = '#241a2e'; c.fillRect(6, 11, 4, 4);
+  c.fillStyle = '#100a18'; c.fillRect(6, 11, 1, 4); c.fillRect(9, 11, 1, 4);
 });
 
 defTile(T.SNOWY, 'Snowy Grass', { variants: 3, minimap: '#d8e0e8' }, (c, rng) => {

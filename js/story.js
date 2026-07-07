@@ -689,6 +689,20 @@ const Story = {
         if (p.hasFlippers) return { speaker: 'Shell', portrait: 'npc_kid', pages: ['You can SWIM?! In the actual SEA?! Okay okay okay — if you find a shell bigger than my head, I saw it first. That\'s the rule. I made it up but it\'s still the rule.'] };
         return { speaker: 'Shell', portrait: 'npc_kid', pages: ['I\'ve got sixty-one shells! Mama says stop bringing them inside so now they live in the pots. Don\'t tell her. Don\'t SMASH them either!!'] };
 
+      case 'hunter_vey': {
+        const bites = (Game.data.kills && Game.data.kills.vampire) || 0;
+        if (bites >= 5) return { speaker: 'Vey', portrait: 'npc_guard', pages: [`FIVE of the pale ones put down? I\'ve hunted this wood twenty years for half that tally. Hang your hat here any time, hero — and take the good arrows on your way out.`] };
+        if (bites > 0) return { speaker: 'Vey', portrait: 'npc_guard', pages: [`So you\'ve met them — and lived to track mud into my lodge about it. ${bites} down. They only bleed while they\'re solid, you understand? Appear, bite, mist. Strike in the middle beat. It\'s a rhythm. Miss it and you\'re the meal.`] };
+        return {
+          speaker: 'Vey', portrait: 'npc_guard',
+          pages: [
+            'Shut the door. SHUT it. Good. You walked the Gloamwood at dusk and knocked with both hands still attached — that makes you lucky or dangerous.',
+            'Two rules out there. One: some of those trees aren\'t trees. If it has eyes, it has roots, and it spits. Keep off the soft ground.',
+            'Two: the pale ones ride the bat-swarms. They\'re only flesh in the moment between appearing and feeding — that\'s your window. Before and after, your sword cuts fog.'
+          ]
+        };
+      }
+
       case 'druid_ash':
         if (F.flag('d6_done')) return { speaker: 'Ash', portrait: 'npc_hermit', pages: ['The wood is lighter since the Barrow went still. Six stones keeping honest watch, and the seventh finally sleeping. You did a green and gentle thing down there, whatever it looked like at the time.'] };
         return {

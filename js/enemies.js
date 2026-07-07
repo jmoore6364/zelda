@@ -773,6 +773,109 @@ class Sandwurm extends Enemy {
 }
 
 // ------------------------------------------------------------
+// 19. GRIMROOT — a tree that was always watching; rooted, spits seeds
+// ------------------------------------------------------------
+class Grimroot extends Enemy {
+  constructor(x, y) {
+    super(x, y, { hp: 5, touchDmg: 1, sprite: 'grimroot', speed: 0, w: 13, h: 14 });
+    this.awake = false;
+    this.seedT = U.rand(1, 2);
+  }
+  hurt(dmg, source) {
+    if (!this.awake) this.wake();
+    super.hurt(dmg, source);
+  }
+  wake() {
+    if (this.awake) return;
+    this.awake = true;
+    AudioSys.sfx('boss_roar');
+    Game.shake(2, 0.2);
+    Particles.burst(this.cx(), this.y + this.h, 10, { color: ['#3a2a50', '#241a2e', '#5c4478'], life: 0.5 });
+  }
+  update(dt) {
+    this.noContact = !this.awake;
+    this.baseUpdate(dt);
+    if (!this.awake) {
+      if (this.distToPlayer() < 26) this.wake();
+      return;
+    }
+    this.seedT -= dt;
+    if (this.seedT <= 0 && this.distToPlayer() < 140) {
+      this.seedT = U.rand(1.6, 2.6);
+      const base = this.angleToPlayer();
+      for (let i = -1; i <= 1; i += 2) {
+        const a = base + i * 0.18;
+        Game.projectiles.push(new Projectile(this.cx(), this.cy() - 2, Math.cos(a) * 115, Math.sin(a) * 115, {
+          sprite: 'rock_proj', owner: 'enemy', damage: 1
+        }));
+      }
+      AudioSys.sfx('hit');
+    }
+  }
+  draw(ctx) {
+    this.drawSprite(ctx, this.awake ? 1 : 0, { oy: -2 });
+  }
+}
+
+// ------------------------------------------------------------
+// 20. VAMPIRE — materializes from bats, bites, dissolves to mist.
+// Feeding on the hero knits its wounds closed.
+// ------------------------------------------------------------
+class Vampire extends Enemy {
+  constructor(x, y) {
+    super(x, y, { hp: 5, touchDmg: 1.5, sprite: 'vampire', speed: 78, flying: true, w: 12, h: 13 });
+    this.state = 'hidden';
+    this.stateT = U.rand(0.8, 2);
+    this.homeX = x; this.homeY = y;
+  }
+  invulnerable() { return this.state !== 'hunt'; }
+  update(dt) {
+    this.animT += dt;
+    if (this.hurtT > 0) this.hurtT -= dt;
+    this.stateT -= dt;
+    this.noContact = this.state !== 'hunt';
+    this.baseUpdate(0);
+    const pl = Game.player;
+    if (this.state === 'hidden') {
+      if (this.stateT <= 0 && this.distToPlayer() < 170) {
+        // wings out of the dark
+        const a = U.rand(0, Math.PI * 2);
+        const nx = pl.cx() + Math.cos(a) * U.rand(45, 70) - this.w / 2;
+        const ny = pl.cy() + Math.sin(a) * U.rand(45, 70) - this.h / 2;
+        if (!Game.solidAtRect({ x: nx, y: ny, w: this.w, h: this.h })) { this.x = nx; this.y = ny; }
+        this.state = 'materialize';
+        this.stateT = 0.45;
+        Particles.burst(this.cx(), this.cy(), 12, { color: ['#1c1424', '#2e2438', '#802030'], life: 0.5, speedMax: 60 });
+        AudioSys.sfx('charge');
+      }
+    } else if (this.state === 'materialize') {
+      if (this.stateT <= 0) { this.state = 'hunt'; this.stateT = 1.7; }
+    } else if (this.state === 'hunt') {
+      const a = this.angleToPlayer();
+      this.move(Math.cos(a) * this.speed * dt, Math.sin(a) * this.speed * dt, dt);
+      // feeding closes old wounds
+      if (pl && U.overlap(this.rect(), pl.rect()) && this.hp < this.maxHp) {
+        this.hp = Math.min(this.maxHp, this.hp + 2 * dt);
+      }
+      if (this.stateT <= 0) {
+        this.state = 'mist';
+        this.stateT = 0.4;
+        Particles.burst(this.cx(), this.cy(), 10, { color: ['#c8c8d8', '#8888a0'], life: 0.6, speedMax: 30 });
+      }
+    } else { // mist
+      if (this.stateT <= 0) { this.state = 'hidden'; this.stateT = U.rand(1.2, 2.4); }
+    }
+  }
+  draw(ctx) {
+    if (this.state === 'hidden') return;
+    const alpha = this.state === 'materialize' ? 0.5 : this.state === 'mist' ? 0.25 : 1;
+    if (alpha < 1) ctx.globalAlpha = alpha;
+    this.drawSprite(ctx, this.state === 'materialize' ? 1 : Math.floor(this.animT * 4) % 2);
+    if (alpha < 1) ctx.globalAlpha = 1;
+  }
+}
+
+// ------------------------------------------------------------
 // ELITES — named minibosses that roam the wilds. Bigger, meaner,
 // and they always pay out.
 // ------------------------------------------------------------
@@ -871,7 +974,8 @@ const ENEMY_TYPES = {
   peahat: Peahat, zora: Zora, armos: Armos, poe: Poe,
   wolfos: Wolfos, freezard: Freezard, blade_trap: BladeTrap,
   gibdo: Gibdo, vulture: Vulture, sandwurm: Sandwurm,
-  direwolf: Direwolf, dunetyrant: Dunetyrant, ogre: Ogre
+  direwolf: Direwolf, dunetyrant: Dunetyrant, ogre: Ogre,
+  grimroot: Grimroot, vampire: Vampire
 };
 
 function spawnEnemy(type, tx, ty) {

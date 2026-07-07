@@ -3036,6 +3036,70 @@ Sprites.def('waystone', { S: '#8a8a9a', s: '#5c5c6c', R: '#48485a', G: '#68d8f0'
   ]
 ]);
 
+// Grimroot — a tree that was always watching (frame 0 = disguised)
+Sprites.def('grimroot', { T: '#3a2a50', t: '#241a2e', B: '#4a3662', E: '#e8d040', M: '#802030', W: '#d8c8e8' }, [
+  [
+    '.....TTTTT......',
+    '....TTTTTTT.....',
+    '...TTBTTTBTT....',
+    '...TTTTTTTTT....',
+    '...TBTTTTTBT....',
+    '....TTTTTTT.....',
+    '.....TTTTT......',
+    '......ttt.......',
+    '......ttt.......',
+    '.....tttt.......',
+    '....tt..tt......',
+    '...tt....tt.....'
+  ],
+  [
+    '.....TTTTT......',
+    '....TTTTTTT.....',
+    '...TTETTTETT....',
+    '...TTTTTTTTT....',
+    '...TBMMMMMBT....',
+    '....TMWMWMT.....',
+    '.....MMMMM......',
+    '......ttt.......',
+    '.....ttttt......',
+    '....tt.t.tt.....',
+    '...tt..t..tt....',
+    '..tt...t...tt...'
+  ]
+]);
+
+// Vampire — arrives on wings, leaves as mist
+Sprites.def('vampire', { K: '#1c1424', k: '#2e2438', S: '#e8e0e8', E: '#e83048', W: '#f8f8ff', R: '#802030' }, [
+  [
+    '....KKKKKK......',
+    '...KKKKKKKK.....',
+    '...KSSSSSSK.....',
+    '...KSESSESK.....',
+    '...KSSSSSSK.....',
+    '....SSWWSS......',
+    '...KKSWWSKK.....',
+    '..KKKKKKKKKK....',
+    '..KKRKKKKRKK....',
+    '..KKKKKKKKKK....',
+    '...KKKKKKKK.....',
+    '....KK..KK......'
+  ],
+  [
+    '.KK..........KK.',
+    '.KKK.KKKKKK.KKK.',
+    '..KKKKSSSSKKKK..',
+    '...KKSESSESKK...',
+    '...KKSSSSSSKK...',
+    '....KSSWWSSK....',
+    '....KKSWWSKK....',
+    '...KKKKKKKKKK...',
+    '...KKRKKKKRKK...',
+    '....KKKKKKKK....',
+    '.....KKKKKK.....',
+    '......K..K......'
+  ]
+]);
+
 // Elite aliases — the editor and tools look sprites up by enemy type name
 Sprites.defs.direwolf = Sprites.defs.wolfos;
 Sprites.defs.dunetyrant = Sprites.defs.sandwurm;

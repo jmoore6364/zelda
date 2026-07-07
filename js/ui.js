@@ -426,7 +426,8 @@ const UI = {
     peahat: 'Peahat', zora: 'Zora', armos: 'Armos', poe: 'Poe',
     wolfos: 'Wolfos', freezard: 'Freezard', blade_trap: 'Blade Trap',
     gibdo: 'Gibdo', vulture: 'Vulture', sandwurm: 'Sandwurm',
-    direwolf: 'Direwolf Alpha', dunetyrant: 'Dune Tyrant', ogre: 'Highland Ogre'
+    direwolf: 'Direwolf Alpha', dunetyrant: 'Dune Tyrant', ogre: 'Highland Ogre',
+    grimroot: 'Grimroot', vampire: 'Vampire'
   },
 
   drawJournal(ctx) {
@@ -733,7 +734,8 @@ const UI = {
     { key: 'stones', name: 'The Standing Stones', x: 151, y: 8 },
     { key: 'windfall', name: 'Windfall Village', x: 45, y: 119 },
     { key: 'emberisle', name: 'Ember Isle', x: 135, y: 133 },
-    { key: 'cathedral', name: 'The Drowned Cathedral', x: 100, y: 150 }
+    { key: 'cathedral', name: 'The Drowned Cathedral', x: 100, y: 150 },
+    { key: 'gloamwood', name: 'The Gloamwood', x: 200, y: 45 }
   ],
 
   updateMapScreen(dt) {

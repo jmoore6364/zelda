@@ -238,6 +238,7 @@ const Game = {
     const px = this.player.tileX(), py = this.player.tileY();
     if (py >= 70) return 'sea';                            // coast, ocean, isles
     if (px < 15 && py >= 5 && py < 47) return 'glacier';   // Frostpeak Hollow
+    if (px >= 189 && py < 70) return 'elderwood';   // the Gloamwood
     if (px >= 94 && py < 25) return 'highlands';           // Auran Highlands
     if (px >= 94 && py < 53) return 'elderwood';           // the Elderwood
     return 'overworld';
