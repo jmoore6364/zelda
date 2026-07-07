@@ -37,21 +37,32 @@ sword, talk, bow, bomb, boomerang, fire rod, plus pause/inventory/map up top.
 
 ## The World
 
-- **Elden Village** — your home; Elder Rowan starts your quest and gives you the sword
-- **Bramblewick Town** — shop (bombs, arrows, potions, a heart vessel), inn (rest 10r), NPCs with hints
+- **Elden Village** — your home; Elder Rowan starts your quest and gives you the sword.
+  Cottages with smoking chimneys and flower-box windows
+- **Bramblewick Town** — slate-blue roofs and iron balconies; shop (bombs, arrows,
+  potions, a heart vessel), inn (rest 10r), NPCs with hints
+- Every region builds in its own style: snow-shrugging slate in Frostpeak, striped
+  awnings and adobe in the dunes, salt-worn blue shingle on the coast — and every
+  chimney in Hyrule actually smokes
 - **Verdant Temple** (east woods) — keys, locked doors, the **Hero's Bow** → boss: **GLOOMSPORE**
 - **Ember Depths** (NE mountain, bomb the cracked wall) — lava, the **Lantern** → boss: **MAGMADON**
 - **Sunken Crypt** (south marsh, shoot the crystal switch) — pitch dark, the **Master Sword** → boss: **WRAITHLORD**
 - **Frostpeak Hollow** (west, past Elden) — an optional snowbound region where the winter
-  never ends: wolves in the pines, a hermit's cabin, and the **Glacier Hollow** dungeon —
+  never ends: wolves in the pines, a hermit's cabin, Bjorn's ice-fishing hut on the frozen
+  pond, the wolf-guarded Northern Reaches, and the **Glacier Hollow** dungeon —
   blade traps, the **Boomerang** → boss: **FROSTMAW**
 - **Sunspear Dunes** (south past the woods) — an optional desert: vultures, sandwurms,
-  a nomad camp, and the **Sandsear Tomb** (ring the crystal across the pit field to enter) —
+  an adobe nomad outpost with **Sami's Trading Post** (cheap potions + the **Big Bomb Bag**),
+  a Great Fairy oasis, and the **Sandsear Tomb** (ring the crystal across the pit field) —
   gibdos that fear flame, the **Fire Rod** → boss: **PHARAGHAST, the Hollow King**
 - **Lake Hylia** — help Fisherman Odon recover his Lucky Lure and earn the
   **Zora Flippers**: swim open water out to the spirit Lorelei's island shrine
 - **Meadowbrook Ranch** (center-west) — Rancher Elda's prize cucco fled into the
   snows; carry her home for the **Big Quiver** (50 arrows)
+- **Saltmere Strand** (south, through the breached ridge) — a whole coastline: a
+  blue-roofed fishing hamlet, a pier over the sea, Old Tide's sandbar treasure
+  (swimmers only), and **Saltmere Light** — bring the Fire Rod and relight the
+  beacon for Keeper Elio
 - **Shadow Keep** (NW ruins, needs all 3 shards) — final boss: **THE SHADE** (two phases)
 - Plus: a fairy spring under a bush, secret rupee caves behind cracked walls, a heart
   vessel grotto, a love-letter side quest that earns you the Knight's Shield, and a

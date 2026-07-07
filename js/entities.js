@@ -620,9 +620,11 @@ class NPC extends Entity {
       villager_tomm: 'npc_man', fairy: 'npc_fairy', princess: 'npc_princess',
       hermit_yeta: 'npc_hermit',
       fisherman_odon: 'npc_fisher', nomad_zaffa: 'npc_nomad', digger_dan: 'npc_man',
-      lorelei: 'npc_spirit', rancher_elda: 'npc_rancher', cucco_pella: 'npc_cucco'
+      lorelei: 'npc_spirit', rancher_elda: 'npc_rancher', cucco_pella: 'npc_cucco',
+      fisher_bjorn: 'npc_fisher', trader_sami: 'npc_nomad', harbor_brine: 'npc_man',
+      salt_nan: 'npc_woman', salt_tide: 'npc_man', keeper_elio: 'npc_elder', kid_shell: 'npc_kid'
     }[id] || 'npc_man';
-    this.wanders = !['shopkeep', 'innkeep', 'elder', 'fairy', 'guard_bex', 'princess', 'hermit_yeta', 'lorelei', 'fisherman_odon'].includes(id);
+    this.wanders = !['shopkeep', 'innkeep', 'elder', 'fairy', 'guard_bex', 'princess', 'hermit_yeta', 'lorelei', 'fisherman_odon', 'trader_sami', 'keeper_elio'].includes(id);
   }
 
   update(dt) {

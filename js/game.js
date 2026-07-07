@@ -182,6 +182,7 @@ const Game = {
       if (r.type === 'crypt_gate') r.open = Story.flag('crypt_open');
       if (r.type === 'tomb_gate') r.open = Story.flag('tomb_open');
       if (r.type === 'shopitem' && r.item === 'heart_container') r.soldOut = Story.flag('shop_hc_bought');
+      if (r.type === 'shopitem' && r.item === 'bomb_bag') r.soldOut = Story.flag('shop_bb_bought');
       return r;
     });
 
@@ -405,13 +406,15 @@ const Game = {
   },
 
   tryBuy(o) {
+    const vendor = o.vendor || 'Rusl';
+    const portrait = o.vendorPortrait || 'npc_shopkeep';
     if (o.soldOut) {
-      Dialogue.start({ speaker: 'Rusl', portrait: 'npc_shopkeep', pages: ['Sold out, friend! You bought my only one.'] });
+      Dialogue.start({ speaker: vendor, portrait, pages: ['Sold out, friend! You bought my only one.'] });
       return;
     }
     const p = this.data.player;
     Dialogue.start({
-      speaker: 'Rusl', portrait: 'npc_shopkeep',
+      speaker: vendor, portrait,
       pages: [`${o.label} — ${o.price} rupees. A fine choice. Buying?`],
       choices: [
         { label: `Buy (${o.price}r)`, cb: () => {
@@ -420,7 +423,7 @@ const Game = {
             AudioSys.sfx('buy');
             if (o.item === 'bombs') Items.grant({ type: 'bombs', amount: 5 });
             else if (o.item === 'arrows') {
-              if (!p.hasBow) { Items.grant({ type: 'arrows', amount: 10 }); Dialogue.start({ speaker: 'Rusl', pages: ['...You do know these need a bow, yes? Rumor says one lies in the Verdant Temple.'] }); }
+              if (!p.hasBow) { Items.grant({ type: 'arrows', amount: 10 }); Dialogue.start({ speaker: vendor, pages: ['...You do know these need a bow, yes? Rumor says one lies in the Verdant Temple.'] }); }
               else Items.grant({ type: 'arrows', amount: 10 });
             }
             else if (o.item === 'potion') Items.grant({ type: 'potion' });
@@ -429,9 +432,14 @@ const Game = {
               Story.set('shop_hc_bought');
               Items.grant({ type: 'heart_container' });
             }
+            else if (o.item === 'bomb_bag') {
+              o.soldOut = true;
+              Story.set('shop_bb_bought');
+              Items.grant({ type: 'bomb_bag' });
+            }
           } else {
             AudioSys.sfx('error');
-            Dialogue.start({ speaker: 'Rusl', portrait: 'npc_shopkeep', pages: ['Your purse says otherwise, friend. Come back richer.'] });
+            Dialogue.start({ speaker: vendor, portrait, pages: ['Your purse says otherwise, friend. Come back richer.'] });
           }
         } },
         { label: 'Cancel', cb: () => {} }
@@ -617,11 +625,29 @@ const Game = {
       });
     }
     // falling snow in Frostpeak Hollow (west overworld)
-    if (this.map.id === 'overworld' && this.player.cx() < 15 * 16 && this.player.cy() > 19 * 16 && this.player.cy() < 47 * 16 && Math.random() < 0.3) {
+    if (this.map.id === 'overworld' && this.player.cx() < 15 * 16 && this.player.cy() > 5 * 16 && this.player.cy() < 47 * 16 && Math.random() < 0.3) {
       Particles.spawn(this.camX + U.rand(0, VIEW_W), this.camY - 4, {
         vx: U.rand(-10, 4), vy: U.rand(16, 30), g: 0, life: U.rand(2, 3.5),
         color: U.pick(['#eef4fa', '#d8e4f0']), size: U.rand(1, 2)
       });
+    }
+
+    // chimney smoke — every hearth on screen breathes
+    this._smokeT = (this._smokeT || 0) - dt;
+    if (this._smokeT <= 0) {
+      this._smokeT = 0.12;
+      const sx0 = Math.max(0, Math.floor(this.camX / 16) - 1), sy0 = Math.max(0, Math.floor(this.camY / 16) - 1);
+      const sx1 = Math.min(this.map.w - 1, sx0 + 26), sy1 = Math.min(this.map.h - 1, sy0 + 17);
+      for (let j = sy0; j <= sy1; j++) {
+        for (let i = sx0; i <= sx1; i++) {
+          if (this.map.tiles[j * this.map.w + i] === T.CHIMNEY && Math.random() < 0.35) {
+            Particles.spawn(i * 16 + 8 + U.rand(-2, 2), j * 16 + 2, {
+              vx: U.rand(2, 9), vy: U.rand(-14, -7), g: -8,
+              life: U.rand(1.2, 2.2), color: U.pick(['#b0b0b8', '#9a9aa4', '#c4c4cc']), size: U.rand(1.5, 2.5)
+            });
+          }
+        }
+      }
     }
 
     this.updateCamera();
@@ -750,9 +776,20 @@ const Game = {
           if (!o.open) for (let i = 0; i < (o.w || 1); i++) Sprites.draw(ctx, 'door_boss', 0, ox + i * 16, oy);
           break;
         case 'switch_crystal': Sprites.draw(ctx, 'switch_crystal', o.hit ? 1 : 0, ox, oy + 3); break;
+        case 'beacon': {
+          // the lighthouse flame — burns only once the keeper's beacon is lit
+          if (!Story.flag('beacon_lit')) break;
+          Sprites.draw(ctx, 'torch', animF % 2, ox, oy + 3);
+          const bg = ctx.createRadialGradient(ox + 8, oy + 6, 2, ox + 8, oy + 6, 30 + Math.sin(Tiles.animTime * 5 + o.x) * 3);
+          bg.addColorStop(0, 'rgba(255,200,80,0.35)');
+          bg.addColorStop(1, 'rgba(255,200,80,0)');
+          ctx.fillStyle = bg;
+          ctx.fillRect(ox - 24, oy - 24, 64, 64);
+          break;
+        }
         case 'shopitem': {
           if (o.soldOut) break;
-          const spr = { bombs: 'bomb_item', arrows: 'arrow_item', potion: 'potion', heart_container: 'heart_container' }[o.item];
+          const spr = { bombs: 'bomb_item', arrows: 'arrow_item', potion: 'potion', heart_container: 'heart_container', bomb_bag: 'bombbag' }[o.item];
           if (spr) Sprites.draw(ctx, spr, 0, ox, oy);
           ctx.font = '6px monospace';
           ctx.textAlign = 'center';

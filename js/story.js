@@ -402,6 +402,75 @@ const Story = {
         }
         return { speaker: 'Pella', portrait: 'npc_cucco', pages: ['BWOK. The cucco stares through you with the confidence of a creature that has never once been wrong.'] };
 
+      case 'fisher_bjorn':
+        if (F.flag('d4_done')) return { speaker: 'Bjorn', portrait: 'npc_fisher', pages: ['Pond\'s thawing at the edges since the glacier went quiet. The fish are confused. So am I. Good work, probably!'] };
+        return {
+          speaker: 'Bjorn', portrait: 'npc_fisher',
+          pages: [
+            'Odon fishes the lake, I fish the ICE. We do not speak of which is harder. (It is mine.)',
+            'A tip for you: things drop through the ice and just... sit there. I\'ve seen a glint out on the pond for weeks. My auger\'s too short and my courage shorter.'
+          ]
+        };
+
+      case 'trader_sami':
+        return {
+          speaker: 'Sami', portrait: 'npc_nomad',
+          pages: ['Zaffa\'s cousin, best prices in the sand — which is easy, being the ONLY prices in the sand. Step to the counter and press E on what you fancy. The big bomb bag? Dug it out of a dune myself. Barely haunted.']
+        };
+
+      case 'harbor_brine':
+        if (F.flag('beacon_lit')) return { speaker: 'Brine', portrait: 'npc_man', pages: ['The Light\'s burning again! First time in three years I can see the end of my own pier at night. When the dusk lifts for good, the trade ships will find their way back. I can feel it.'] };
+        return {
+          speaker: 'Brine', portrait: 'npc_man',
+          pages: [
+            'Harbormaster Brine — harbormaster of no ships, lately. The dusk swallowed the trade routes and the Light went cold, and no captain sails toward a dark shore.',
+            'Old Elio still keeps the tower. If anyone could get a true flame up there again, the sea roads would open. Flint won\'t do it. It wants REAL fire.'
+          ]
+        };
+
+      case 'salt_nan':
+        if (Items.shardCount() >= 1) return { speaker: 'Nan', portrait: 'npc_woman', pages: ['That glow in your pack — sunstone, isn\'t it? My gran used to say the sea remembers the sun better than the sky does. Go show the water. See if it doesn\'t shine back.'] };
+        return { speaker: 'Nan', portrait: 'npc_woman', pages: ['Mind the tide, dear. It comes in faster than it used to. Everything\'s in a hurry since the dusk — everything except the fish.'] };
+
+      case 'salt_tide':
+        return {
+          speaker: 'Old Tide', portrait: 'npc_man',
+          pages: [
+            'Forty years on the water, and I\'ll tell you the sea\'s one true secret: gulls never circle nothing.',
+            'They\'ve been wheeling over a sandbar east of the pier for a month now. If you can swim like a Zora, there\'s something out there worth getting wet for.'
+          ]
+        };
+
+      case 'keeper_elio':
+        if (F.flag('beacon_lit')) return { speaker: 'Keeper Elio', portrait: 'npc_elder', pages: ['Hear it? That soft roar up top — that\'s her burning. Three years I climbed those stairs to polish a cold lamp, because a keeper keeps. Tonight I\'ll climb them just to watch her shine.'] };
+        if (p.hasFireRod) {
+          return {
+            speaker: 'Keeper Elio', portrait: 'npc_elder',
+            pages: [
+              'Three years the lamp\'s been cold. Flint, oil, prayers — the dusk drinks every spark before it catches.',
+              '...Wait. That rod on your belt. That\'s TRUE flame, that is — old flame, tomb flame. Child, would you? Would you light her?',
+              'You raise the Fire Rod... the lamp catches with a WHUMP, and gold light rolls out across the water for the first time in three years!'
+            ],
+            onEnd: () => {
+              F.set('beacon_lit');
+              AudioSys.sfx('secret');
+              Game.shake(3, 0.4);
+              Items.grant({ type: 'rupees', amount: 100 });
+            }
+          };
+        }
+        return {
+          speaker: 'Keeper Elio', portrait: 'npc_elder',
+          pages: [
+            'Saltmere Light\'s been dark three years. The dusk drinks any spark I strike before the wick catches. Flint\'s no good. Lantern\'s no good.',
+            'It wants a TRUE flame — the old kind. They say the desert kings were buried with fire that never dies. Fat lot of good it does anyone down there.'
+          ]
+        };
+
+      case 'kid_shell':
+        if (p.hasFlippers) return { speaker: 'Shell', portrait: 'npc_kid', pages: ['You can SWIM?! In the actual SEA?! Okay okay okay — if you find a shell bigger than my head, I saw it first. That\'s the rule. I made it up but it\'s still the rule.'] };
+        return { speaker: 'Shell', portrait: 'npc_kid', pages: ['I\'ve got sixty-one shells! Mama says stop bringing them inside so now they live in the pots. Don\'t tell her. Don\'t SMASH them either!!'] };
+
       case 'fairy':
         return {
           speaker: 'Great Fairy', portrait: 'npc_fairy',

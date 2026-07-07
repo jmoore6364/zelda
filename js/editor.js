@@ -22,8 +22,8 @@ const Editor = {
   brush: 1,
 
   ENEMY_LIST: ['octorok', 'moblin', 'keese', 'stalfos', 'chu', 'leever', 'wizzrobe', 'darknut', 'peahat', 'zora', 'armos', 'poe', 'wolfos', 'freezard', 'blade_trap', 'gibdo', 'vulture', 'sandwurm'],
-  NPC_LIST: ['elder', 'marin', 'shopkeep', 'innkeep', 'traveler_finn', 'guard_bex', 'oldman_sage', 'scholar_ivo', 'townwoman_ella', 'townman_dole', 'kid_pip', 'kid_nell', 'mother_ana', 'granny_lu', 'villager_meg', 'villager_tomm', 'fairy', 'princess', 'hermit_yeta', 'fisherman_odon', 'nomad_zaffa', 'digger_dan', 'lorelei', 'rancher_elda', 'cucco_pella'],
-  OBJ_LIST: ['chest', 'pot', 'sign', 'torch', 'locked_door', 'boss_door', 'switch_crystal', 'boss_trigger', 'shard_gate', 'crypt_gate', 'tomb_gate'],
+  NPC_LIST: ['elder', 'marin', 'shopkeep', 'innkeep', 'traveler_finn', 'guard_bex', 'oldman_sage', 'scholar_ivo', 'townwoman_ella', 'townman_dole', 'kid_pip', 'kid_nell', 'mother_ana', 'granny_lu', 'villager_meg', 'villager_tomm', 'fairy', 'princess', 'hermit_yeta', 'fisherman_odon', 'nomad_zaffa', 'digger_dan', 'lorelei', 'rancher_elda', 'cucco_pella', 'fisher_bjorn', 'trader_sami', 'harbor_brine', 'salt_nan', 'salt_tide', 'keeper_elio', 'kid_shell'],
+  OBJ_LIST: ['chest', 'pot', 'sign', 'torch', 'locked_door', 'boss_door', 'switch_crystal', 'boss_trigger', 'shard_gate', 'crypt_gate', 'tomb_gate', 'beacon'],
   CUSTOM_KEY: 'zelda2_custom_maps',
   OVERRIDE_KEY: 'zelda2_map_overrides',
 

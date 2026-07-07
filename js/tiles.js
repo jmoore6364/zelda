@@ -38,7 +38,9 @@ const T = {
   MARSH: 30, DEADTREE: 31, GRAVE: 32, CRACKED_WALL: 33, WATERFALL: 34,
   TABLE: 35, SHELF: 36, ROOF_EDGE: 37, DUNGEON_FLOOR: 38, DUNGEON_WALL: 39,
   DUNGEON_BLOCK: 40, HOLE: 41, SHALLOWS: 42, SNOWY: 43, COUNTER: 44,
-  ICE: 45, ICE_WALL: 46, CACTUS: 47, PALM: 48
+  ICE: 45, ICE_WALL: 46, CACTUS: 47, PALM: 48,
+  SNOW_ROOF: 49, SNOW_ROOF_EDGE: 50, ADOBE_WALL: 51, ADOBE_ROOF: 52, AWNING: 53,
+  CHIMNEY: 54, BALCONY: 55, WINDOW_FLOWER: 56, DOCK: 57, ROOF_BLUE: 58, ROOF_BLUE_EDGE: 59
 };
 
 const TILE_DEFS = {}; // id -> {name, solid, water?, damage?, anim?, variants, canvases[[frame][variant]], minimap}
@@ -462,6 +464,135 @@ defTile(T.WATERFALL, 'Waterfall', { solid: true, water: true, frames: 3, minimap
 defTile(T.SNOWY, 'Snowy Grass', { variants: 3, minimap: '#d8e0e8' }, (c, rng) => {
   speckle(c, rng, '#d8e0e8', ['#ccd6e0', '#e4ecf2', '#c2ccd8'], 22);
   px(c, 4, 6, '#a8c0a8'); px(c, 11, 12, '#a8c0a8');
+});
+
+// ============================================================
+// regional architecture
+// ============================================================
+defTile(T.SNOW_ROOF, 'Snow Roof', { solid: true, variants: 2, minimap: '#8a98b0' }, (c, rng) => {
+  speckle(c, rng, '#4a5468', ['#414a5c', '#535e74'], 14);
+  c.fillStyle = '#38404e';
+  c.fillRect(0, 4, 16, 1); c.fillRect(0, 9, 16, 1); c.fillRect(0, 14, 16, 1);
+  // snow drifts caught on the slates
+  c.fillStyle = '#e8eef4';
+  c.fillRect(0, 0, 16, 2);
+  c.fillRect(2, 5, 5, 1); c.fillRect(10, 5, 4, 1);
+  c.fillRect(5, 10, 6, 1); c.fillRect(1, 10, 2, 1);
+  c.fillStyle = '#c8d4e0';
+  c.fillRect(0, 2, 16, 1);
+});
+
+defTile(T.SNOW_ROOF_EDGE, 'Snow Eave', { solid: true, minimap: '#6a7488' }, (c, rng) => {
+  speckle(c, rng, '#4a5468', ['#414a5c'], 10);
+  c.fillStyle = '#2c3440'; c.fillRect(0, 11, 16, 5);
+  c.fillStyle = '#e8eef4'; c.fillRect(0, 0, 16, 2);
+  // icicles
+  c.fillStyle = '#b8d8f0';
+  c.fillRect(2, 11, 1, 4); c.fillRect(6, 11, 1, 3); c.fillRect(9, 11, 1, 5); c.fillRect(13, 11, 1, 3);
+  c.fillStyle = '#e8f6fc';
+  px(c, 2, 11, '#e8f6fc'); px(c, 9, 11, '#e8f6fc');
+});
+
+defTile(T.ADOBE_WALL, 'Adobe Wall', { solid: true, variants: 2, minimap: '#d0a878' }, (c, rng) => {
+  speckle(c, rng, '#dcb488', ['#d0a878', '#e6c098'], 16);
+  // protruding beam ends
+  c.fillStyle = '#8a5a30';
+  c.fillRect(2, 2, 3, 2); c.fillRect(11, 2, 3, 2);
+  c.fillStyle = '#6a4222';
+  c.fillRect(2, 3, 3, 1); c.fillRect(11, 3, 3, 1);
+  c.fillStyle = '#c09468';
+  c.fillRect(0, 14, 16, 2);
+});
+
+defTile(T.ADOBE_ROOF, 'Adobe Roof', { solid: true, variants: 2, minimap: '#c89060' }, (c, rng) => {
+  speckle(c, rng, '#c89868', ['#bc8c5c', '#d4a474'], 18);
+  c.fillStyle = '#a87848';
+  c.fillRect(0, 0, 16, 1); c.fillRect(0, 15, 16, 1);
+  c.fillStyle = '#dcb488';
+  c.fillRect(1, 1, 14, 1);
+  px(c, 4, 6, '#a87848'); px(c, 11, 10, '#a87848');
+});
+
+defTile(T.AWNING, 'Awning', { solid: true, minimap: '#c86848' }, (c, rng) => {
+  // striped canopy with scalloped hem
+  for (let i = 0; i < 16; i += 4) {
+    c.fillStyle = '#d86848'; c.fillRect(i, 0, 2, 12);
+    c.fillStyle = '#f0e0c0'; c.fillRect(i + 2, 0, 2, 12);
+  }
+  c.fillStyle = '#b04c30';
+  for (let i = 0; i < 16; i += 4) c.fillRect(i, 10, 2, 2);
+  c.fillStyle = '#00000033';
+  c.fillRect(0, 12, 16, 1);
+  c.fillStyle = '#dcb488';
+  c.fillRect(0, 13, 16, 3);
+});
+
+defTile(T.CHIMNEY, 'Chimney', { solid: true, minimap: '#8a8a96' }, (c, rng) => {
+  speckle(c, rng, '#5a4444', ['#523c3c', '#63504c'], 12);
+  // stone stack
+  c.fillStyle = '#8a8a96';
+  c.fillRect(4, 3, 8, 12);
+  c.fillStyle = '#a2a2ae';
+  c.fillRect(3, 1, 10, 3);
+  c.fillStyle = '#6a6a76';
+  c.fillRect(4, 4, 8, 1); c.fillRect(7, 5, 1, 9); c.fillRect(4, 9, 8, 1);
+  // dark flue
+  c.fillStyle = '#1c1c26';
+  c.fillRect(5, 1, 6, 2);
+});
+
+defTile(T.BALCONY, 'Balcony', { solid: true, minimap: '#a8845a' }, (c, rng) => {
+  speckle(c, rng, '#d0b088', ['#c4a47c', '#dcbc94'], 12);
+  // shuttered door behind the railing
+  c.fillStyle = '#6a4828';
+  c.fillRect(5, 0, 6, 9);
+  c.fillStyle = '#84603a';
+  c.fillRect(6, 1, 4, 3);
+  // wooden railing
+  c.fillStyle = '#a8845a';
+  c.fillRect(1, 8, 14, 2);
+  c.fillRect(1, 14, 14, 2);
+  c.fillStyle = '#8a6a40';
+  c.fillRect(2, 10, 1, 4); c.fillRect(5, 10, 1, 4); c.fillRect(8, 10, 1, 4); c.fillRect(11, 10, 1, 4); c.fillRect(13, 10, 1, 4);
+});
+
+defTile(T.WINDOW_FLOWER, 'Flower Window', { solid: true, minimap: '#a8c8e8' }, (c, rng) => {
+  speckle(c, rng, '#d0b088', ['#c4a47c'], 12);
+  c.fillStyle = '#5a4630'; c.fillRect(3, 1, 10, 9);
+  c.fillStyle = '#88b8e0'; c.fillRect(4, 2, 8, 7);
+  c.fillStyle = '#b8d8f0'; c.fillRect(4, 2, 3, 3);
+  c.fillStyle = '#5a4630'; c.fillRect(7, 2, 1, 7); c.fillRect(4, 5, 8, 1);
+  // window box with flowers
+  c.fillStyle = '#8a5a30'; c.fillRect(2, 10, 12, 3);
+  c.fillStyle = '#4a8c3a';
+  c.fillRect(3, 9, 2, 1); c.fillRect(7, 9, 2, 1); c.fillRect(11, 9, 2, 1);
+  px(c, 3, 8, '#e84848'); px(c, 8, 8, '#f0d030'); px(c, 12, 8, '#e88ab8');
+});
+
+defTile(T.DOCK, 'Dock', { variants: 2, minimap: '#9a7850' }, (c, rng) => {
+  // weathered planks over the sea
+  speckle(c, rng, '#9a7850', ['#8e6c46', '#a6845c'], 14);
+  c.fillStyle = '#3868c8';
+  c.fillRect(0, 3, 16, 1); c.fillRect(0, 11, 16, 1);
+  c.fillStyle = '#7a5c38';
+  c.fillRect(0, 4, 16, 1); c.fillRect(0, 12, 16, 1);
+  // mooring posts
+  c.fillStyle = '#5c4224';
+  c.fillRect(1, 6, 2, 4); c.fillRect(13, 13, 2, 3);
+});
+
+defTile(T.ROOF_BLUE, 'Slate Roof', { solid: true, variants: 2, minimap: '#4868a8' }, (c, rng) => {
+  speckle(c, rng, '#4868a8', ['#40609c', '#5474b4'], 16);
+  c.fillStyle = '#38538a';
+  c.fillRect(0, 3, 16, 1); c.fillRect(0, 8, 16, 1); c.fillRect(0, 13, 16, 1);
+  c.fillStyle = '#6a8cc8';
+  c.fillRect(0, 0, 16, 1);
+});
+
+defTile(T.ROOF_BLUE_EDGE, 'Slate Eave', { solid: true, minimap: '#324a78' }, (c, rng) => {
+  speckle(c, rng, '#38538a', ['#324a78', '#40609c'], 14);
+  c.fillStyle = '#243858'; c.fillRect(0, 12, 16, 4);
+  c.fillStyle = '#6a8cc8'; c.fillRect(0, 0, 16, 1);
 });
 
 // ============================================================

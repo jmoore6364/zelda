@@ -8,10 +8,11 @@ const WORLD = {}; // id -> map data
 function registerMap(m) { WORLD[m.id] = m; }
 
 // ------------------------------------------------------------
-// OVERWORLD — 96 x 72
+// OVERWORLD — 96 x 92 (the southern coast was uncovered when the
+// old border ridge was breached — see SALTMERE STRAND below)
 // ------------------------------------------------------------
 function buildOverworld() {
-  const b = new MapBuilder('overworld', 96, 72, T.GRASS, {
+  const b = new MapBuilder('overworld', 96, 92, T.GRASS, {
     name: 'Hyrule Field', music: 'overworld', ambient: 'day', seed: 42,
     respawn: { x: 16, y: 57 }
   });
@@ -56,9 +57,9 @@ function buildOverworld() {
   b.scatter(T.FLOWERS, 0.09, { x: 8, y: 48, w: 22, h: 18 }, [T.GRASS]);
   b.path([[16, 56], [16, 62], [22, 62]], T.PATH, 2);
   b.hline(10, 26, 56, T.PATH, 2);
-  // houses
-  b.house(11, 51, 5, 4, { to: 'elder_house', tx: 7, ty: 8 });   // door (13/14?,54) -> set below
-  b.house(20, 52, 5, 4, { to: 'marin_house', tx: 6, ty: 7 });
+  // houses — cozy cottages with smoking chimneys and window boxes
+  b.house(11, 51, 5, 4, { to: 'elder_house', tx: 7, ty: 8, flowers: true });   // door (13/14?,54) -> set below
+  b.house(20, 52, 5, 4, { to: 'marin_house', tx: 6, ty: 7, flowers: true });
   b.house(11, 59, 5, 4, { to: 'kid_house', tx: 6, ty: 7 });
   // fences and decor
   b.hline(9, 14, 65, T.FENCE); b.hline(18, 28, 65, T.FENCE);
@@ -77,13 +78,13 @@ function buildOverworld() {
   // fountain
   b.rect(46, 18, 3, 3, T.SHALLOWS);
   b.outline(45, 17, 5, 5, T.FLOOR_STONE);
-  // buildings
-  b.house(39, 10, 6, 4, { to: 'shop', tx: 8, ty: 9 });
+  // buildings — the town wears slate-blue roofs and iron balconies
+  b.house(39, 10, 6, 4, { to: 'shop', tx: 8, ty: 9, style: 'blue', balcony: 'left' });
   b.object('sign', 38, 13, { text: 'RUSL\'S GOODS — bombs, arrows, and more!' });
-  b.house(50, 10, 7, 4, { to: 'inn', tx: 8, ty: 9 });
+  b.house(50, 10, 7, 4, { to: 'inn', tx: 8, ty: 9, style: 'blue', balcony: true, flowers: true });
   b.object('sign', 58, 13, { text: 'The Drowsy Cucco Inn. Rest your weary bones!' });
-  b.house(39, 20, 5, 4, { to: 'town_house1', tx: 7, ty: 8 });
-  b.house(53, 20, 5, 4, { to: 'town_house2', tx: 7, ty: 8 });
+  b.house(39, 20, 5, 4, { to: 'town_house1', tx: 7, ty: 8, flowers: true });
+  b.house(53, 20, 5, 4, { to: 'town_house2', tx: 7, ty: 8, style: 'blue' });
   // town walls + gate
   b.hline(37, 44, 26, T.FENCE); b.hline(48, 62, 26, T.FENCE);
   b.vline(37, 8, 26, T.FENCE); b.vline(62, 8, 26, T.FENCE);
@@ -202,7 +203,7 @@ function buildOverworld() {
   b.scatter(T.FLOWERS, 0.12, { x: 20, y: 28, w: 8, h: 8 }, [T.GRASS]);
   b.outline(20, 28, 8, 8, T.FENCE);
   b.rect(23, 35, 2, 1, T.PATH); // gate gap
-  b.house(21, 29, 4, 3, { to: 'ranch_house', tx: 6, ty: 8 });
+  b.house(21, 29, 4, 3, { to: 'ranch_house', tx: 6, ty: 8, flowers: true });
   b.npc('rancher_elda', 24, 32);
   b.object('pot', 26, 30);
   b.object('sign', 25, 36, { text: 'Meadowbrook Ranch — eggs, feathers, and one (1) escaped cucco.' });
@@ -210,17 +211,29 @@ function buildOverworld() {
 
   // ============ SE: SUNSPEAR DUNES ============
   b.rect(62, 59, 32, 11, T.SAND);
-  b.scatter(T.CACTUS, 0.05, { x: 62, y: 59, w: 32, h: 11 }, [T.SAND]);
+  // the woods thin into drifting sand — a wide, walkable transition band
+  b.scatter(T.SAND, 0.72, { x: 62, y: 55, w: 32, h: 4 }, [T.GRASS, T.TREE, T.PINE, T.FLOWERS, T.TALLGRASS, T.BUSH]);
+  b.scatter(T.DEADTREE, 0.03, { x: 62, y: 55, w: 32, h: 4 }, [T.SAND]);
+  b.scatter(T.CACTUS, 0.05, { x: 62, y: 55, w: 32, h: 15 }, [T.SAND]);
   b.scatter(T.PALM, 0.03, { x: 62, y: 59, w: 32, h: 11 }, [T.SAND]);
-  b.scatter(T.ROCK, 0.02, { x: 62, y: 59, w: 32, h: 11 }, [T.SAND]);
+  b.scatter(T.ROCK, 0.02, { x: 62, y: 55, w: 32, h: 15 }, [T.SAND]);
+  b.enemy('vulture', 68, 57); b.enemy('leever', 88, 56);
   // road south from the woods
   b.path([[74, 47], [74, 62]], T.PATH, 2);
   b.object('sign', 72, 57, { text: 'SOUTH: Sunspear Dunes. Travel by shade. Respect the sand.' });
-  // nomad camp
-  b.house(64, 60, 5, 4, { to: 'nomad_tent', tx: 6, ty: 8 });
+  // nomad camp — sun-baked adobe with striped awnings
+  b.house(64, 60, 5, 4, { to: 'nomad_tent', tx: 6, ty: 8, style: 'adobe' });
+  b.house(70, 59, 4, 3, { to: 'adobe_house', tx: 6, ty: 8, style: 'adobe' });
   b.npc('digger_dan', 70, 63);
   b.object('pot', 63, 65); b.object('pot', 69, 61);
   b.object('sign', 67, 64, { text: 'Zaffa\'s Caravan Rest. Water, shade, gossip — in that order.' });
+  b.object('sign', 74, 60, { text: 'SAMI\'S TRADING POST — everything the desert buried, dug up and priced.' });
+  // the oasis — a real spring, and something older living in it
+  b.blob(78, 66, 3, T.SHALLOWS, [T.SAND]);
+  b.set(75, 64, T.PALM); b.set(81, 64, T.PALM); b.set(76, 68, T.PALM); b.set(80, 68, T.PALM);
+  b.npc('fairy', 78, 66);
+  b.chest(75, 63, { type: 'potion' });
+  b.object('sign', 81, 67, { text: 'The Last Oasis. Drink deep, speak softly.' });
   // the Sandsear Tomb
   b.rect(82, 61, 8, 4, T.WALL_STONE);
   b.rect(85, 62, 2, 3, T.FLOOR_STONE);
@@ -234,15 +247,29 @@ function buildOverworld() {
   b.object('switch_crystal', 90, 67, { id: 'tomb_switch' });
   // dunes dwellers
   b.enemy('vulture', 78, 62); b.enemy('vulture', 88, 60);
-  b.enemy('sandwurm', 72, 65); b.enemy('sandwurm', 80, 66); b.enemy('sandwurm', 86, 68);
+  b.enemy('sandwurm', 72, 66); b.enemy('sandwurm', 84, 68); b.enemy('sandwurm', 79, 60);
   b.enemy('leever', 66, 67); b.enemy('gibdo', 84, 66);
 
   // ============ W: FROSTPEAK HOLLOW ============
   // the snow that never melts — home of the hermit and the Glacier Hollow
   b.rect(2, 20, 13, 27, T.SNOWY);
+  // northern reaches — a wind-scoured shelf beneath the castle crags
+  b.rect(2, 6, 4, 14, T.SNOWY);
+  b.scatter(T.PINE, 0.16, { x: 2, y: 6, w: 4, h: 14 }, [T.SNOWY]);
+  b.scatter(T.ROCK, 0.06, { x: 2, y: 6, w: 4, h: 14 }, [T.SNOWY]);
+  b.rect(3, 8, 2, 3, T.SNOWY); // clearing around the prize
+  b.chest(3, 8, { type: 'heart_container' }, { big: true });
+  b.enemy('wolfos', 3, 11); b.enemy('wolfos', 4, 16);
+  b.object('sign', 4, 19, { text: 'The Northern Reaches. Whatever you\'re looking for up there, the wolves found it first.' });
   b.scatter(T.PINE, 0.16, { x: 2, y: 20, w: 13, h: 27 }, [T.SNOWY]);
   b.scatter(T.ROCK, 0.05, { x: 2, y: 20, w: 13, h: 27 }, [T.SNOWY]);
   b.scatter(T.DEADTREE, 0.03, { x: 2, y: 20, w: 13, h: 27 }, [T.SNOWY]);
+  // the frozen pond + Bjorn's ice-fishing hut
+  b.blob(11, 33, 3, T.ICE, [T.SNOWY, T.PINE, T.ROCK, T.DEADTREE]);
+  b.chest(11, 33, { type: 'rupees', amount: 50 });
+  b.house(3, 29, 4, 3, { to: 'ice_hut', tx: 6, ty: 8, style: 'snow' });
+  b.set(5, 32, T.SNOWY);
+  b.object('sign', 6, 31, { text: 'Bjorn\'s Ice Hole. The fish are biting. The frostbite, more so.' });
   // trail in from the village road
   b.path([[14, 44], [8, 44], [8, 34]], T.DIRT, 2);
   // glacier mouth — entrance to the Glacier Hollow
@@ -251,8 +278,8 @@ function buildOverworld() {
   b.set(7, 26, T.SNOWY); b.set(8, 26, T.SNOWY);
   b.portal(7, 25, 1, 1, 'dungeon4', 20, 30, 'up', { sfx: 'stairs' });
   b.object('sign', 8, 27, { text: 'Glacier Hollow. The winter that would not end begins here.' });
-  // Yeta's cabin
-  b.house(9, 38, 5, 4, { to: 'hermit_cabin', tx: 6, ty: 8 });
+  // Yeta's cabin — steep slate roof shrugging off the snow
+  b.house(9, 38, 5, 4, { to: 'hermit_cabin', tx: 6, ty: 8, style: 'snow' });
   b.set(11, 42, T.SNOWY);
   b.object('sign', 13, 42, { text: 'Smoke from the chimney. Someone still lives out here.' });
   b.object('sign', 18, 44, { text: 'WEST: Frostpeak Hollow — the snow that never melts.' });
@@ -260,6 +287,57 @@ function buildOverworld() {
   b.enemy('freezard', 11, 26); b.enemy('keese', 4, 28);
   // Pella, Meadowbrook's escaped prize cucco, sulking in the snow
   b.npc('cucco_pella', 6, 36);
+
+  // ============ S: SALTMERE STRAND ============
+  // the old border ridge, breached in three places
+  b.rect(2, 70, 92, 2, T.MOUNTAIN);
+  b.rect(15, 70, 3, 2, T.PATH);   // west pass, below Elden
+  b.rect(53, 70, 3, 2, T.MARSH);  // center pass, out of the marsh
+  b.rect(74, 70, 2, 2, T.PATH);   // east pass, down from the dunes
+  // the strand: meadow, beach, shallows, open sea
+  b.rect(2, 72, 92, 6, T.GRASS);
+  b.scatter(T.FLOWERS, 0.05, { x: 2, y: 72, w: 92, h: 6 }, [T.GRASS]);
+  b.scatter(T.TALLGRASS, 0.06, { x: 2, y: 72, w: 92, h: 6 }, [T.GRASS]);
+  b.scatter(T.BUSH, 0.02, { x: 2, y: 72, w: 92, h: 6 }, [T.GRASS]);
+  b.rect(2, 78, 92, 4, T.SAND);
+  b.rect(2, 82, 92, 2, T.SHALLOWS);
+  b.rect(2, 84, 92, 3, T.WATER);
+  b.rect(2, 87, 92, 3, T.DEEPWATER);
+  // a ragged, natural waterline
+  b.scatter(T.SAND, 0.4, { x: 2, y: 82, w: 92, h: 1 }, [T.SHALLOWS]);
+  b.scatter(T.SHALLOWS, 0.4, { x: 2, y: 84, w: 92, h: 1 }, [T.WATER]);
+  b.scatter(T.PALM, 0.04, { x: 2, y: 78, w: 92, h: 3 }, [T.SAND]);
+  b.scatter(T.ROCK, 0.02, { x: 2, y: 78, w: 92, h: 3 }, [T.SAND]);
+  // roads down through the passes
+  b.path([[16, 62], [16, 74], [28, 74]], T.PATH, 2);
+  b.path([[54, 68], [54, 74]], T.DIRT, 2);
+  b.path([[74, 62], [74, 75]], T.PATH, 2);
+
+  // --- SALTMERE hamlet: blue slate, balconies, salt wind ---
+  b.house(26, 72, 5, 4, { to: 'salt_house1', tx: 6, ty: 8, style: 'blue', flowers: true });
+  b.house(34, 72, 6, 5, { to: 'salt_house2', tx: 6, ty: 8, style: 'blue', balcony: true });
+  b.object('sign', 32, 77, { text: 'Saltmere Strand — where Hyrule runs out of land and keeps going anyway.' });
+  b.npc('kid_shell', 30, 78);
+  b.npc('harbor_brine', 34, 79);
+  b.object('pot', 25, 76); b.object('pot', 41, 76);
+  // the pier
+  b.rect(37, 80, 2, 6, T.DOCK);
+  b.object('sign', 35, 80, { text: 'Saltmere pier. Watch for Zoras. They watch for you.' });
+  // the lighthouse — dark since the dusk came
+  b.rect(60, 73, 4, 5, T.WALL_STONE);
+  b.set(61, 77, T.HOUSE_DOOR);
+  b.portal(61, 77, 1, 1, 'lighthouse', 6, 8, 'up', { sfx: 'door' });
+  b.object('beacon', 61, 72); b.object('beacon', 62, 72);
+  b.object('sign', 58, 78, { text: 'Saltmere Light. Cold these three years. The keeper still climbs the stairs anyway.' });
+  // a sandbar for strong swimmers — ringed by open water, no wading out
+  b.rect(81, 83, 7, 5, T.WATER);
+  b.blob(84, 85, 2, T.SAND, [T.WATER, T.SHALLOWS, T.DEEPWATER]);
+  b.chest(84, 85, { type: 'rupees', amount: 100 });
+  // shore dwellers
+  b.enemy('octorok', 20, 75); b.enemy('octorok', 48, 74); b.enemy('chu', 44, 78);
+  b.enemy('leever', 56, 79); b.enemy('leever', 68, 79); b.enemy('leever', 12, 79);
+  b.enemy('zora', 42, 84); b.enemy('zora', 28, 85); b.enemy('zora', 70, 84); b.enemy('zora', 84, 83);
+  b.enemy('peahat', 80, 75); b.enemy('vulture', 88, 77);
 
   // ============ field enemies ============
   b.enemy('octorok', 34, 40); b.enemy('octorok', 26, 42); b.enemy('octorok', 52, 30);
@@ -378,6 +456,69 @@ function buildInteriors() {
     b.rect(5, 4, 3, 2, T.CARPET);
     b.object('pot', 2, 7); b.object('pot', 10, 7);
     b.chest(10, 2, { type: 'rupees', amount: 15 });
+  });
+
+  // Bjorn's ice-fishing hut — Frostpeak Hollow
+  interior('ice_hut', 'Bjorn\'s Hut', 13, 10, b => {
+    b.map.music = 'cave';
+    b.set(6, 9, T.HOUSE_DOOR);
+    b.portal(6, 9, 1, 1, 'overworld', 5, 32, 'down', { sfx: 'door' });
+    b.set(2, 2, T.SHELF); b.set(9, 3, T.TABLE);
+    b.rect(5, 4, 3, 2, T.CARPET);
+    b.object('torch', 2, 6); b.object('torch', 10, 6);
+    b.object('pot', 10, 7);
+    b.npc('fisher_bjorn', 6, 4);
+    b.chest(2, 7, { type: 'arrows', amount: 10 });
+  });
+
+  // Sami's Trading Post — Sunspear Dunes (the desert's own shop)
+  interior('adobe_house', 'Sami\'s Trading Post', 15, 11, b => {
+    b.map.music = 'town';
+    b.set(7, 10, T.HOUSE_DOOR);
+    b.portal(7, 10, 1, 1, 'overworld', 72, 62, 'down', { sfx: 'door' });
+    b.hline(3, 11, 4, T.COUNTER);
+    b.set(2, 2, T.SHELF); b.set(3, 2, T.SHELF); b.set(11, 2, T.SHELF); b.set(12, 2, T.SHELF);
+    b.npc('trader_sami', 7, 2);
+    b.object('shopitem', 4, 6, { item: 'potion', price: 30, label: 'Red Potion', vendor: 'Sami', vendorPortrait: 'npc_nomad' });
+    b.object('shopitem', 6, 6, { item: 'bombs', price: 25, label: 'Bombs x5', vendor: 'Sami', vendorPortrait: 'npc_nomad' });
+    b.object('shopitem', 8, 6, { item: 'arrows', price: 15, label: 'Arrows x10', vendor: 'Sami', vendorPortrait: 'npc_nomad' });
+    b.object('shopitem', 10, 6, { item: 'bomb_bag', price: 120, label: 'Big Bomb Bag', vendor: 'Sami', vendorPortrait: 'npc_nomad' });
+    b.object('torch', 2, 8); b.object('torch', 12, 8);
+    b.object('pot', 2, 5);
+  });
+
+  // Saltmere Strand — the fishing hamlet
+  interior('salt_house1', 'Nan\'s Cottage', 13, 10, b => {
+    b.set(6, 9, T.HOUSE_DOOR);
+    b.portal(6, 9, 1, 1, 'overworld', 28, 76, 'down', { sfx: 'door' });
+    b.set(2, 2, T.SHELF); b.set(9, 3, T.TABLE);
+    b.rect(5, 4, 3, 2, T.CARPET);
+    b.npc('salt_nan', 6, 4);
+    b.object('pot', 2, 7); b.object('pot', 10, 7);
+  });
+
+  interior('salt_house2', 'The Gull\'s Rest', 13, 10, b => {
+    b.set(6, 9, T.HOUSE_DOOR);
+    b.portal(6, 9, 1, 1, 'overworld', 37, 77, 'down', { sfx: 'door' });
+    b.set(2, 2, T.SHELF); b.set(3, 2, T.SHELF); b.set(9, 2, T.SHELF);
+    b.set(3, 5, T.TABLE); b.set(9, 5, T.TABLE);
+    b.npc('salt_tide', 8, 4);
+    b.chest(10, 2, { type: 'rupees', amount: 25 });
+    b.object('torch', 2, 6); b.object('torch', 10, 6);
+  });
+
+  // Saltmere Light — the keeper's lonely tower
+  interior('lighthouse', 'Saltmere Light', 11, 12, b => {
+    b.map.music = 'cave';
+    b.set(5, 11, T.HOUSE_DOOR);
+    b.portal(5, 11, 1, 1, 'overworld', 61, 78, 'down', { sfx: 'door' });
+    b.set(2, 2, T.STAIRS_UP); b.set(8, 2, T.STAIRS_UP); // the long climb (scenery)
+    b.set(5, 2, T.TABLE);
+    b.rect(4, 4, 3, 2, T.CARPET);
+    b.npc('keeper_elio', 5, 5);
+    b.chest(2, 8, { type: 'rupees', amount: 30 });
+    b.object('torch', 2, 5); b.object('torch', 8, 5);
+    b.object('pot', 8, 9);
   });
 
   // Hermit Yeta's cabin — Frostpeak Hollow

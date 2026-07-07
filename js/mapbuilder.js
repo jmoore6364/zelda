@@ -114,16 +114,34 @@ class MapBuilder {
   }
 
   // ---- stamps -------------------------------------------------
-  // house: roof rows + wall row with door; door position dx (offset from x)
+  // house: roof rows + wall row with door; door position dx (offset from x).
+  // opts.style: 'wood' (default) | 'blue' | 'snow' | 'adobe'
+  // opts.chimney: force on/off (default: on for pitched roofs, off for adobe)
+  // opts.balcony: true | 'left' | 'right' — railing on the eave row
+  // opts.flowers: window boxes instead of plain windows
   house(x, y, w, h, opts = {}) {
+    const STYLES = {
+      wood:  { roof: T.HOUSE_ROOF, edge: T.ROOF_EDGE, wall: T.HOUSE_WALL, chimney: true },
+      blue:  { roof: T.ROOF_BLUE, edge: T.ROOF_BLUE_EDGE, wall: T.HOUSE_WALL, chimney: true },
+      snow:  { roof: T.SNOW_ROOF, edge: T.SNOW_ROOF_EDGE, wall: T.HOUSE_WALL, chimney: true },
+      adobe: { roof: T.ADOBE_ROOF, edge: T.AWNING, wall: T.ADOBE_WALL, chimney: false }
+    };
+    const S = STYLES[opts.style] || STYLES.wood;
     const roofH = Math.max(1, h - 1);
-    this.rect(x, y, w, roofH, T.HOUSE_ROOF);
-    this.rect(x, y + roofH - 1, w, 1, T.ROOF_EDGE);
-    this.rect(x, y + roofH, w, 1, T.HOUSE_WALL);
+    this.rect(x, y, w, roofH, S.roof);
+    this.rect(x, y + roofH - 1, w, 1, S.edge);
+    this.rect(x, y + roofH, w, 1, S.wall);
     const dx = opts.dx !== undefined ? opts.dx : Math.floor(w / 2);
     if (opts.window !== false && w >= 4) {
-      this.set(x + 1, y + roofH, T.HOUSE_WINDOW);
-      this.set(x + w - 2, y + roofH, T.HOUSE_WINDOW);
+      const winT = opts.flowers ? T.WINDOW_FLOWER : T.HOUSE_WINDOW;
+      this.set(x + 1, y + roofH, winT);
+      this.set(x + w - 2, y + roofH, winT);
+    }
+    const chimney = opts.chimney !== undefined ? opts.chimney : (S.chimney && w >= 4 && roofH >= 2);
+    if (chimney) this.set(x + w - 2, y, T.CHIMNEY);
+    if (opts.balcony && w >= 5 && roofH >= 2) {
+      if (opts.balcony === true || opts.balcony === 'left') this.set(x + 1, y + roofH - 1, T.BALCONY);
+      if (opts.balcony === true || opts.balcony === 'right') this.set(x + w - 2, y + roofH - 1, T.BALCONY);
     }
     this.set(x + dx, y + roofH, T.HOUSE_DOOR);
     if (opts.to) {

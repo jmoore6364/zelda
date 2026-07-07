@@ -2484,6 +2484,24 @@ Sprites.def('quiver', { B: '#a8814e', b: '#7a5830', S: '#c8c8d8', F: '#e84848', 
   ]
 ]);
 
+// Big Bomb Bag
+Sprites.def('bombbag', { B: '#6a5038', b: '#4c3824', K: '#26262e', F: '#e8a030', W: '#f0e0c0' }, [
+  [
+    '......KK........',
+    '.....KKKK.......',
+    '....F.KK........',
+    '...BBBBBBBB.....',
+    '..BBBBBBBBBB....',
+    '..BBWBBBBBBB....',
+    '..BBWBBBBBBB....',
+    '..BBBBBBBBBB....',
+    '..BBBBBBBBBB....',
+    '..bBBBBBBBBb....',
+    '...bbBBBBbb.....',
+    '.....bbbb.......'
+  ]
+]);
+
 // Fisherman Odon — bucket hat and better days
 Sprites.def('npc_fisher', { H: '#5a8a4a', h: '#3f6a34', S: '#f2c894', E: '#1c1c2e', B: '#4878c8', b: '#2c54a0', W: '#f0f0f0', R: '#8a5a2b' }, [
   [
