@@ -600,7 +600,130 @@ class Pharaghast extends Boss {
 }
 
 // ------------------------------------------------------------
-const BOSS_TYPES = { gloomspore: Gloomspore, magmadon: Magmadon, wraithlord: Wraithlord, shade: Shade, frostmaw: Frostmaw, pharaghast: Pharaghast };
+// KARSTAG — the Seventh Stone (optional boss, the Seventh Barrow)
+// Cycles between a rampaging active form and an invulnerable
+// stone form that raises armos servants.
+// ------------------------------------------------------------
+class Karstag extends Boss {
+  constructor(x, y) {
+    super(x, y, {
+      id: 'karstag', name: 'KARSTAG', title: 'The Seventh Stone',
+      sprite: 'boss_karstag', hp: 36, touchDmg: 1.5, w: 30, h: 26
+    });
+    this.form = 'active';
+    this.formT = 7;
+    this.mode = 'stalk';
+    this.stateT = 2;
+    this.chargeA = 0;
+  }
+
+  invulnerable() { return this.form === 'stone'; }
+
+  update(dt) {
+    if (!this.baseUpdate(dt)) return;
+    this.formT -= dt;
+
+    if (this.form === 'stone') {
+      // dormant megalith — grinding, waiting
+      if (Math.random() < 0.08) Particles.spawn(this.cx() + U.rand(-12, 12), this.y + this.h, { vx: 0, vy: -8, g: 0, life: 0.5, color: '#9a9aa8', size: 1.5 });
+      if (this.formT <= 0) {
+        this.form = 'active';
+        this.formT = 7;
+        this.mode = 'stalk';
+        this.stateT = 0.8;
+        AudioSys.sfx('boss_roar');
+        Game.shake(5, 0.4);
+      }
+      return;
+    }
+
+    // active form
+    if (this.formT <= 0) {
+      this.form = 'stone';
+      this.formT = 2.6;
+      AudioSys.sfx('secret');
+      Particles.burst(this.cx(), this.cy(), 14, { color: ['#9a9aa8', '#6e6e7c'], life: 0.6 });
+      // the stones raise their servants
+      const servants = Game.enemies.filter(e => !e.dead).length;
+      if (servants < 2) {
+        const tx = Math.floor(this.cx() / 16) + (Math.random() < 0.5 ? -2 : 2);
+        const ty = Math.floor(this.cy() / 16) + 1;
+        const e = spawnEnemy('armos', tx, ty);
+        if (e && Game.solidAtRect(e.rect())) {
+          const spot = Game.findFreeTile(tx, ty, 3);
+          if (spot) { e.x = spot.x * 16 + 2; e.y = spot.y * 16 + 2; }
+        }
+        if (e) { e.wake(); Game.enemies.push(e); }
+      }
+      return;
+    }
+
+    this.stateT -= dt;
+    switch (this.mode) {
+      case 'stalk':
+        this.moveToward(this.angleToPlayer(), 18, dt);
+        this.flip = Game.player.cx() < this.cx();
+        if (this.stateT <= 0) {
+          const r = Math.random();
+          if (r < 0.35) { this.mode = 'slam'; this.stateT = 0.7; AudioSys.sfx('charge'); }
+          else if (r < 0.6) { this.mode = 'volley'; this.stateT = 0.5; AudioSys.sfx('charge'); }
+          else { this.mode = 'windup'; this.stateT = 0.7; AudioSys.sfx('boss_roar'); }
+        }
+        break;
+      case 'slam': // ground-shaking ring of shards
+        if (this.stateT <= 0) {
+          this.shootRing(10, 85, 'rock_proj', this.animT);
+          Game.shake(7, 0.4);
+          AudioSys.sfx('explosion');
+          Particles.burst(this.cx(), this.y + this.h, 16, { color: ['#9a9aa8', '#6e6e7c', '#4a4a58'], life: 0.6, speedMax: 100 });
+          this.mode = 'stalk';
+          this.stateT = U.rand(1.4, 2.2);
+        }
+        break;
+      case 'volley':
+        if (this.stateT <= 0) {
+          this.shootSpread(4, 115, 'rock_proj', 0.35);
+          AudioSys.sfx('fire');
+          this.mode = 'stalk';
+          this.stateT = U.rand(1.2, 2);
+        }
+        break;
+      case 'windup':
+        if (Math.floor(this.stateT * 10) % 2) Particles.spawn(this.cx() + U.rand(-10, 10), this.y + this.h, { color: '#9a9aa8', life: 0.3, vy: -16, g: 0 });
+        if (this.stateT <= 0) {
+          this.mode = 'charge';
+          this.stateT = 1.0;
+          this.chargeA = this.angleToPlayer();
+        }
+        break;
+      case 'charge': {
+        const ox = this.x, oy = this.y;
+        this.moveToward(this.chargeA, 140, dt);
+        Particles.spawn(this.cx(), this.y + this.h, { color: U.pick(['#9a9aa8', '#6e6e7c']), life: 0.4, vy: -10, g: 0, size: 2 });
+        if ((this.x === ox && this.y === oy) || this.stateT <= 0) {
+          if (this.x === ox && this.y === oy) { Game.shake(8, 0.4); AudioSys.sfx('explosion'); }
+          this.mode = 'stalk';
+          this.stateT = U.rand(1.4, 2.4);
+        }
+        break;
+      }
+    }
+  }
+
+  draw(ctx) {
+    if (this.form === 'stone') {
+      // moss-dark and still
+      ctx.globalAlpha = 0.92;
+      this.drawSprite(ctx, 0);
+      ctx.globalAlpha = 1;
+      return;
+    }
+    this.drawSprite(ctx, Math.floor(this.animT * 3) % 2);
+  }
+}
+
+// ------------------------------------------------------------
+const BOSS_TYPES = { gloomspore: Gloomspore, magmadon: Magmadon, wraithlord: Wraithlord, shade: Shade, frostmaw: Frostmaw, pharaghast: Pharaghast, karstag: Karstag };
 
 function spawnBoss(id, arenaRect) {
   const Cls = BOSS_TYPES[id];

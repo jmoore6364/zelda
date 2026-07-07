@@ -37,8 +37,9 @@ sword, talk, bow, bomb, boomerang, fire rod, plus pause/inventory/map up top.
 
 ## The World
 
-A 192×184-tile overworld — four times the land it launched with — plus five
-dungeons, caves, interiors, and an archipelago served by ferry.
+A 192×184-tile overworld — four times the land it launched with — plus six
+dungeons, caves, interiors, and an archipelago served by ferry (and, with the
+Pearl of the Deep, swimmable end to end).
 
 - **Elden Village** — your home; Elder Rowan starts your quest and gives you the sword.
   Cottages with smoking chimneys and flower-box windows
@@ -68,8 +69,16 @@ dungeons, caves, interiors, and an archipelago served by ferry.
   beacon for Keeper Elio
 - **East through the Spine** (two mountain passes) — half of Hyrule you've never seen:
   the **Auran Highlands** (Rosa's waystation, the Standing Stones, a hollow crag),
-  the ancient **Elderwood** (one winding road, an old shrine, a hidden fairy glade),
+  the ancient **Elderwood** (one winding road, the woodfolk village of **Gladehollow**
+  with Fern's herb shop, an old shrine, a hidden fairy glade),
   and the **Gilded Meadow** rolling down to the sea
+- **The Seventh Barrow** (beneath the Standing Stones) — the buried stone never agreed
+  to be buried: pit galleries, armos, poes → boss: **KARSTAG, the Seventh Stone**
+  (invulnerable in stone form — wait him out). The vault holds the **Pearl of the
+  Deep**: swim the open ocean, deep water and all
+- **Terrors of the Wilds** — three named roaming minibosses with banner names and
+  guaranteed spoils: the **Direwolf Alpha** (deep Elderwood), the **Dune Tyrant**
+  (eastern sands), and the **Highland Ogre** (the crag road)
 - **The Shattered Sea** — the entire southern half of the world is ocean. Pay
   **Wake the Ferryman** 5 rupees at any dock and sail between **Saltmere Pier**,
   **Windfall Village** on the Isle of Winds (Mayor Palm owes you for that beacon…),
@@ -79,9 +88,9 @@ dungeons, caves, interiors, and an archipelago served by ferry.
   vessel grotto, a love-letter side quest that earns you the Knight's Shield, and a
   bowl of hot soup that means more to one old hermit than any sword…
 
-18 enemy types: Octorok, Moblin, Keese, Stalfos, Chu, Leever, Wizzrobe, Darknut,
+18 enemy types — Octorok, Moblin, Keese, Stalfos, Chu, Leever, Wizzrobe, Darknut,
 Peahat, Zora, Armos, Poe, Wolfos, Freezard, Blade Trap, Gibdo, Vulture, Sandwurm —
-each with its own AI.
+each with its own AI, plus 3 named elites and 7 bosses.
 
 ## Features
 

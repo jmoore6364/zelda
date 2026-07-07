@@ -250,6 +250,7 @@ function buildOverworld() {
   // dunes dwellers
   b.enemy('vulture', 78, 62); b.enemy('vulture', 88, 60);
   b.enemy('sandwurm', 72, 66); b.enemy('sandwurm', 84, 68); b.enemy('sandwurm', 79, 60);
+  b.enemy('dunetyrant', 90, 57); // the Dune Tyrant patrols the eastern sands
   b.enemy('leever', 66, 67); b.enemy('gibdo', 84, 66);
 
   // ============ W: FROSTPEAK HOLLOW ============
@@ -366,13 +367,15 @@ function buildOverworld() {
   b.rect(118, 14, 8, 6, T.GRASS);
   b.house(119, 14, 5, 4, { to: 'waystation', tx: 6, ty: 8, style: 'blue', flowers: true });
   b.object('sign', 125, 17, { text: 'ROSA\'S WAYSTATION — beds, broth, and directions given grudgingly.' });
-  // the Standing Stones — older than the kingdom
+  // the Standing Stones — older than the kingdom, and hollow beneath
   b.rect(148, 5, 7, 6, T.GRASS);
   b.set(149, 6, T.PILLAR); b.set(153, 6, T.PILLAR);
   b.set(148, 8, T.PILLAR); b.set(154, 8, T.PILLAR);
   b.set(149, 10, T.PILLAR); b.set(153, 10, T.PILLAR);
-  b.chest(151, 8, { type: 'rupees', amount: 100 });
-  b.object('sign', 151, 11, { text: 'Six stones stand. A seventh lies buried. The stones do not say where, and you should not ask at night.' });
+  b.set(151, 7, T.STAIRS_DOWN);
+  b.portal(151, 7, 1, 1, 'dungeon6', 20, 30, 'up', { sfx: 'stairs' });
+  b.chest(151, 10, { type: 'rupees', amount: 100 });
+  b.object('sign', 151, 11, { text: 'Six stones stand. A SEVENTH lies buried — and lately, the ground here grinds its teeth at night.' });
   // highland cave — a cracked wall in the eastern crags
   b.blob(172, 15, 4, T.MOUNTAIN, [T.GRASS, T.TALLGRASS, T.ROCK, T.PINE]);
   b.set(172, 17, T.CRACKED_WALL);
@@ -382,6 +385,7 @@ function buildOverworld() {
   b.enemy('vulture', 104, 8); b.enemy('vulture', 160, 14); b.enemy('octorok', 112, 18);
   b.enemy('moblin', 130, 8); b.enemy('moblin', 155, 20); b.enemy('armos', 150, 7);
   b.enemy('peahat', 168, 6); b.enemy('wolfos', 182, 16);
+  b.enemy('ogre', 163, 20); // the Highland Ogre haunts the road to the crag
 
   // ============ E-BEYOND: THE ELDERWOOD (x97-189, y25-52) ============
   b.rect(97, 25, 92, 28, T.GRASS);
@@ -400,6 +404,15 @@ function buildOverworld() {
   b.chest(160, 30, { type: 'potion' });
   b.object('torch', 159, 30); b.object('torch', 162, 30);
   b.object('sign', 161, 32, { text: 'The Elder Shrine. Travelers leave what they can spare and take what they cannot live without.' });
+  // GLADEHOLLOW — the woodfolk's clearing on the Elderwood road
+  b.rect(106, 30, 15, 9, T.GRASS);
+  b.scatter(T.FLOWERS, 0.15, { x: 106, y: 30, w: 15, h: 9 }, [T.GRASS]);
+  b.house(107, 31, 5, 4, { to: 'herb_shop', tx: 7, ty: 9, flowers: true });
+  b.house(114, 31, 5, 4, { to: 'druid_house', tx: 6, ty: 8 });
+  b.object('sign', 112, 36, { text: 'GLADEHOLLOW. The wood permits us. Mind your axe-talk.' });
+  b.object('pot', 106, 36); b.object('pot', 120, 36);
+  b.path([[112, 38], [112, 41]], T.PATH, 2); // down to the road
+
   // a fairy glade hidden under a bush, deep off the road —
   // a faint deer-trail leads to it, if you're looking down
   b.path([[131, 41], [139, 41], [139, 47], [140, 47]], T.GRASS, 1);
@@ -409,6 +422,7 @@ function buildOverworld() {
   b.enemy('moblin', 110, 35); b.enemy('moblin', 145, 28); b.enemy('moblin', 170, 48);
   b.enemy('wolfos', 120, 45); b.enemy('wolfos', 150, 38);
   b.enemy('keese', 135, 32); b.enemy('poe', 165, 50); b.enemy('peahat', 105, 28);
+  b.enemy('direwolf', 176, 36); // the Alpha stalks the deep east wood
 
   // ============ SE-BEYOND: GILDED MEADOW (x97-189, y53-69) ============
   b.rect(97, 53, 92, 17, T.GRASS);
@@ -461,6 +475,12 @@ function buildOverworld() {
   b.object('sign', 135, 139, { text: 'The rock face here is scorched... and cracked.' });
   b.enemy('keese', 130, 132); b.enemy('keese', 140, 138); b.enemy('armos', 138, 140);
   b.enemy('sandwurm', 130, 140); b.enemy('vulture', 141, 130);
+
+  // --- deep-sea secrets, for those who hold the Pearl ---
+  b.blob(170, 155, 2, T.SAND, [T.WATER, T.SHALLOWS, T.DEEPWATER]);
+  b.chest(170, 155, { type: 'rupees', amount: 200 });
+  b.blob(15, 148, 2, T.SAND, [T.WATER, T.SHALLOWS, T.DEEPWATER]);
+  b.npc('fairy', 15, 148);
 
   // --- GULL ROCKS — where the gulls circle ---
   b.blob(85, 155, 7, T.WATER, [T.DEEPWATER]);
@@ -653,6 +673,32 @@ function buildInteriors() {
     b.chest(2, 8, { type: 'rupees', amount: 30 });
     b.object('torch', 2, 5); b.object('torch', 8, 5);
     b.object('pot', 8, 9);
+  });
+
+  // Gladehollow — Fern's herb shop
+  interior('herb_shop', 'Fern\'s Herbs', 15, 11, b => {
+    b.map.music = 'village';
+    b.set(7, 10, T.HOUSE_DOOR);
+    b.portal(7, 10, 1, 1, 'overworld', 109, 35, 'down', { sfx: 'door' });
+    b.hline(3, 11, 4, T.COUNTER);
+    b.set(2, 2, T.SHELF); b.set(3, 2, T.SHELF); b.set(11, 2, T.SHELF); b.set(12, 2, T.SHELF);
+    b.npc('herbalist_fern', 7, 2);
+    b.object('shopitem', 5, 6, { item: 'potion', price: 25, label: 'Red Potion', vendor: 'Fern', vendorPortrait: 'npc_woman' });
+    b.object('shopitem', 7, 6, { item: 'arrows', price: 15, label: 'Arrows x10', vendor: 'Fern', vendorPortrait: 'npc_woman' });
+    b.object('shopitem', 9, 6, { item: 'bombs', price: 25, label: 'Bombs x5', vendor: 'Fern', vendorPortrait: 'npc_woman' });
+    b.object('torch', 2, 8); b.object('torch', 12, 8);
+  });
+
+  // Gladehollow — Ash the druid's home
+  interior('druid_house', 'Ash\'s Hollow', 13, 10, b => {
+    b.map.music = 'village';
+    b.set(6, 9, T.HOUSE_DOOR);
+    b.portal(6, 9, 1, 1, 'overworld', 116, 35, 'down', { sfx: 'door' });
+    b.set(2, 2, T.SHELF); b.set(9, 2, T.SHELF); b.set(3, 5, T.TABLE);
+    b.rect(5, 3, 3, 2, T.CARPET);
+    b.npc('druid_ash', 6, 4);
+    b.object('torch', 2, 6); b.object('torch', 10, 6);
+    b.chest(10, 7, { type: 'rupees', amount: 20 });
   });
 
   // Rosa's waystation — Auran Highlands
@@ -1146,6 +1192,81 @@ function buildDungeon5() {
 }
 
 // ------------------------------------------------------------
+// DUNGEON 6 — THE SEVENTH BARROW  (pearl of the deep, Karstag — optional)
+// ------------------------------------------------------------
+function buildDungeon6() {
+  const b = new MapBuilder('dungeon6', 42, 34, T.WALL_STONE, {
+    name: 'The Seventh Barrow', music: 'tomb', ambient: 'dungeon', seed: 707,
+    respawn: { x: 20, y: 30 }
+  });
+
+  // entrance
+  b.rect(16, 25, 9, 7, T.FLOOR_STONE);
+  b.set(20, 31, T.STAIRS_UP);
+  b.portal(20, 31, 1, 1, 'overworld', 151, 8, 'down', { sfx: 'stairs' });
+  b.object('torch', 17, 26); b.object('torch', 23, 26);
+  b.object('sign', 18, 30, { text: 'The Seventh Barrow. The stone below never agreed to be buried. It is still arguing.' });
+
+  // the gallery of stones — pit-riddled central hall
+  b.rect(13, 13, 16, 9, T.FLOOR_STONE);
+  b.set(14, 14, T.PILLAR); b.set(27, 14, T.PILLAR);
+  b.set(14, 20, T.PILLAR); b.set(27, 20, T.PILLAR);
+  b.set(17, 15, T.GRAVE); b.set(24, 15, T.GRAVE);
+  b.set(16, 18, T.HOLE); b.set(17, 18, T.HOLE);
+  b.set(24, 19, T.HOLE); b.set(25, 19, T.HOLE);
+  b.rect(20, 22, 2, 3, T.FLOOR_STONE); // corridor from entrance
+  b.enemy('armos', 19, 16); b.enemy('armos', 23, 17);
+  b.enemy('blade_trap', 21, 19);
+  b.chest(26, 20, { type: 'key' });
+
+  // west gallery — poes among the cairns
+  b.rect(4, 13, 8, 8, T.FLOOR_STONE);
+  b.rect(12, 17, 2, 2, T.FLOOR_STONE);
+  b.set(5, 14, T.GRAVE); b.set(7, 14, T.GRAVE); b.set(9, 14, T.GRAVE);
+  b.set(6, 17, T.HOLE); b.set(9, 18, T.HOLE);
+  b.enemy('poe', 6, 16); b.enemy('poe', 9, 19); b.enemy('keese', 5, 19);
+  b.chest(5, 20, { type: 'key' });
+  b.chest(10, 20, { type: 'dungeon_map' });
+
+  // east gallery — wizzrobes in the reliquary
+  b.rect(30, 13, 8, 8, T.FLOOR_STONE);
+  b.rect(28, 17, 2, 2, T.FLOOR_STONE);
+  b.set(31, 14, T.GRAVE); b.set(36, 14, T.GRAVE);
+  b.enemy('wizzrobe', 33, 16); b.enemy('wizzrobe', 35, 19);
+  b.chest(36, 14, { type: 'bosskey' });
+  b.chest(32, 20, { type: 'compass' });
+  b.object('pot', 31, 20); b.object('pot', 37, 20);
+
+  // north-west — the PEARL vault (locked)
+  b.rect(5, 3, 8, 8, T.FLOOR_STONE);
+  b.rect(8, 11, 2, 3, T.FLOOR_STONE);
+  b.object('locked_door', 8, 12, { w: 2, h: 1 });
+  b.rect(7, 4, 4, 1, T.CARPET);
+  b.enemy('darknut', 7, 6); b.enemy('blade_trap', 10, 8);
+  b.chest(8, 4, { type: 'pearl' }, { big: true });
+  b.object('torch', 6, 4); b.object('torch', 11, 4);
+
+  // north-east — the tithe room (locked)
+  b.rect(29, 3, 8, 8, T.FLOOR_STONE);
+  b.rect(32, 11, 2, 3, T.FLOOR_STONE);
+  b.object('locked_door', 32, 12, { w: 2, h: 1 });
+  b.enemy('gibdo', 33, 6); b.enemy('poe', 31, 5);
+  b.chest(34, 4, { type: 'rupees', amount: 100 });
+  b.chest(30, 4, { type: 'potion' });
+  b.object('pot', 30, 8); b.object('pot', 36, 8);
+
+  // the Seventh's chamber
+  b.rect(17, 3, 8, 8, T.FLOOR_STONE);
+  b.set(18, 4, T.GRAVE); b.set(23, 4, T.GRAVE);
+  b.rect(20, 11, 2, 2, T.FLOOR_STONE);
+  b.object('boss_door', 20, 12, { w: 2, h: 1 });
+  b.object('boss_trigger', 17, 3, { w: 8, h: 8, boss: 'karstag' });
+  b.object('torch', 18, 5); b.object('torch', 23, 5);
+
+  registerMap(b.build());
+}
+
+// ------------------------------------------------------------
 // SHADOW KEEP — final dungeon
 // ------------------------------------------------------------
 function buildKeep() {
@@ -1204,5 +1325,6 @@ function buildWorld() {
   buildDungeon3();
   buildDungeon4();
   buildDungeon5();
+  buildDungeon6();
   buildKeep();
 }

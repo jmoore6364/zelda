@@ -66,6 +66,18 @@ const Story = {
           }
         }, 900);
         break;
+      case 'karstag':
+        this.set('d6_done');
+        Game.pickups.push(new Pickup(x, y, 'heart_container'));
+        Game.pickups.push(new Pickup(x - 12, y + 6, 'rupee20'));
+        Game.pickups.push(new Pickup(x + 14, y + 6, 'rupee20'));
+        Game.pickups.push(new Pickup(x + 2, y + 14, 'fairy'));
+        setTimeout(() => {
+          if (Game.state === 'play') {
+            Dialogue.start({ pages: ['The Seventh Stone crumbles to gravel and quiet. Far above, six stones stand a little easier in the earth.'] });
+          }
+        }, 900);
+        break;
       case 'frostmaw':
         this.set('d4_done');
         Game.pickups.push(new Pickup(x, y, 'heart_container'));
@@ -470,6 +482,23 @@ const Story = {
       case 'kid_shell':
         if (p.hasFlippers) return { speaker: 'Shell', portrait: 'npc_kid', pages: ['You can SWIM?! In the actual SEA?! Okay okay okay — if you find a shell bigger than my head, I saw it first. That\'s the rule. I made it up but it\'s still the rule.'] };
         return { speaker: 'Shell', portrait: 'npc_kid', pages: ['I\'ve got sixty-one shells! Mama says stop bringing them inside so now they live in the pots. Don\'t tell her. Don\'t SMASH them either!!'] };
+
+      case 'druid_ash':
+        if (F.flag('d6_done')) return { speaker: 'Ash', portrait: 'npc_hermit', pages: ['The wood is lighter since the Barrow went still. Six stones keeping honest watch, and the seventh finally sleeping. You did a green and gentle thing down there, whatever it looked like at the time.'] };
+        return {
+          speaker: 'Ash', portrait: 'npc_hermit',
+          pages: [
+            'I keep the old ways for the Elderwood — someone has to remember which trees are listening.',
+            'You\'ve seen the Standing Stones on the high moor? Six above, and the SEVENTH buried beneath, and it does not lie quiet. The barrow beneath the stones has been grinding at night.',
+            'They say the Seventh guards a pearl the sea gave the mountains as a promise. If you go down for it... go loud. Stone respects thunder.'
+          ]
+        };
+
+      case 'herbalist_fern':
+        return {
+          speaker: 'Fern', portrait: 'npc_woman',
+          pages: ['Welcome to the Hollow. I grow what the wood allows and sell what I can spare — walk up to the counter goods and press E. Everything\'s fresher than that town shop, and I\'ll hear nothing further on the matter.']
+        };
 
       case 'ferryman_wake': {
         const stops = [

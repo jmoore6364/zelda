@@ -113,7 +113,7 @@ const Game = {
     this.data = SaveSys.defaultData();
     const p = this.data.player;
     p.hasSword = true; p.hasMasterSword = true; p.hasBow = true; p.hasBombs = true; p.hasLantern = true; p.hasShield = true;
-    p.hasBoomerang = true; p.hasFireRod = true; p.hasFlippers = true;
+    p.hasBoomerang = true; p.hasFireRod = true; p.hasFlippers = true; p.hasPearl = true;
     p.bombs = 20; p.arrows = 30; p.maxHearts = 10; p.hearts = 10; p.rupees = 100; p.potions = 2;
     const copy = MapBuilder.deserialize(JSON.stringify(mapData));
     this.loadMap(copy, copy.respawn.x, copy.respawn.y);
@@ -284,13 +284,14 @@ const Game = {
     return null;
   },
 
+  // swim: 0/false = none, 1/true = open water, 2 = deep water too (pearl)
   solidAtRect(r, swim = false) {
     const x0 = Math.floor(r.x / 16), y0 = Math.floor(r.y / 16);
     const x1 = Math.floor((r.x + r.w - 0.01) / 16), y1 = Math.floor((r.y + r.h - 0.01) / 16);
     for (let j = y0; j <= y1; j++) {
       for (let i = x0; i <= x1; i++) {
         const tid = this.tileAt(i, j);
-        if (Tiles.solid(tid) && !(swim && tid === T.WATER)) return true;
+        if (Tiles.solid(tid) && !(swim >= 1 && tid === T.WATER) && !(swim >= 2 && tid === T.DEEPWATER)) return true;
       }
     }
     for (const o of this.objects) {
@@ -303,7 +304,8 @@ const Game = {
   },
 
   moveEntity(e, dx, dy) {
-    const swim = e === this.player && this.data && this.data.player.hasFlippers;
+    const pd = this.data && this.data.player;
+    const swim = (e === this.player && pd && pd.hasFlippers) ? (pd.hasPearl ? 2 : 1) : 0;
     if (dx !== 0) {
       const r = { x: e.x + dx, y: e.y, w: e.w, h: e.h };
       if (!this.solidAtRect(r, swim)) e.x += dx;

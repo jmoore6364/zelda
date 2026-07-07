@@ -425,7 +425,8 @@ const UI = {
     if (p.hasBombs) list.push({ spr: 'bomb_item', name: 'Bombs', desc: `C to place. ${p.bombs}/${p.maxBombs} bombs. Opens cracked walls.` });
     if (p.hasBoomerang) list.push({ spr: 'boomerang', name: 'Boomerang', desc: 'R to throw. Stuns foes, rings crystals, fetches trinkets.' });
     if (p.hasFireRod) list.push({ spr: 'fire_rod', name: 'Fire Rod', desc: 'F to cast flame. Burns bushes afar; the dead dread it.' });
-    if (p.hasFlippers) list.push({ spr: 'flippers', name: 'Zora Flippers', desc: 'Swim across open water. Deep water is still off-limits.' });
+    if (p.hasFlippers) list.push({ spr: 'flippers', name: 'Zora Flippers', desc: p.hasPearl ? 'Swim across open water.' : 'Swim across open water. Deep water is still off-limits.' });
+    if (p.hasPearl) list.push({ spr: 'pearl', name: 'Pearl of the Deep', desc: 'The open ocean is yours — deep water no longer bars you.' });
     if (p.hasLantern) list.push({ spr: 'lantern', name: 'Lantern', desc: 'Lights dark places automatically.' });
     if (p.hasShield) list.push({ spr: 'shield_item', name: 'Knight\'s Shield', desc: 'Halves all damage taken.' });
     if (p.potions > 0) list.push({
@@ -705,12 +706,18 @@ const UI = {
     ['Wolfos · Freezard · Blade Trap', ''],
     ['Gibdo · Vulture · Sandwurm', ''],
     ['', ''],
+    ['— TERRORS OF THE WILDS —', ''],
+    ['The Direwolf Alpha', 'Elderwood'],
+    ['The Dune Tyrant', 'Sunspear'],
+    ['The Highland Ogre', 'Auran moor'],
+    ['', ''],
     ['— FALLEN TYRANTS —', ''],
     ['Gloomspore', 'Verdant Temple'],
     ['Magmadon', 'Ember Depths'],
     ['Wraithlord', 'Sunken Crypt'],
     ['Frostmaw', 'Glacier Hollow'],
     ['Pharaghast', 'Sandsear Tomb'],
+    ['Karstag', 'The Seventh Barrow'],
     ['The Shade', 'Shadow Keep'],
     ['', ''],
     ['Made with the MapBuilder engine', ''],

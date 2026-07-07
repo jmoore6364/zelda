@@ -768,12 +768,105 @@ class Sandwurm extends Enemy {
 }
 
 // ------------------------------------------------------------
+// ELITES — named minibosses that roam the wilds. Bigger, meaner,
+// and they always pay out.
+// ------------------------------------------------------------
+function eliteDraw(e, ctx, frame, scale) {
+  const arr = e.flip ? Sprites.flipCache[e.sprite] : Sprites.cache[e.sprite];
+  if (!arr) return;
+  const cv = arr[frame % arr.length];
+  if (e.hurtT > 0.12) ctx.globalAlpha = 0.55;
+  ctx.drawImage(cv, Math.round(e.cx() - cv.width * scale / 2), Math.round(e.y + e.h - cv.height * scale + 2), cv.width * scale, cv.height * scale);
+  ctx.globalAlpha = 1;
+  // name banner when close
+  if (e.distToPlayer() < 100) {
+    ctx.font = 'bold 6px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#000a';
+    ctx.fillText(e.elite, e.cx() + 1, e.y - 5 + 1);
+    ctx.fillStyle = '#f8b8b8';
+    ctx.fillText(e.elite, e.cx(), e.y - 5);
+    ctx.textAlign = 'left';
+  }
+}
+
+function eliteDrops(e) {
+  Game.pickups.push(new Pickup(e.cx(), e.cy(), 'fairy'));
+  Game.pickups.push(new Pickup(e.cx() - 10, e.cy() + 4, 'rupee20'));
+  Game.pickups.push(new Pickup(e.cx() + 10, e.cy() + 4, 'rupee20'));
+}
+
+// DIREWOLF ALPHA — the pack answers to it
+class Direwolf extends Wolfos {
+  constructor(x, y) {
+    super(x, y);
+    this.hp = this.maxHp = 10;
+    this.touchDmg = 1.5;
+    this.speed = 56;
+    this.w = 15; this.h = 14;
+    this.elite = 'DIREWOLF ALPHA';
+  }
+  die() { super.die(); eliteDrops(this); }
+  draw(ctx) {
+    const frame = this.state === 'lunge' ? 1 : Math.floor(this.animT * 6) % 2;
+    eliteDraw(this, ctx, frame, 1.45);
+  }
+}
+
+// DUNE TYRANT — the wurm the other wurms fear
+class Dunetyrant extends Sandwurm {
+  constructor(x, y) {
+    super(x, y);
+    this.hp = this.maxHp = 12;
+    this.touchDmg = 2;
+    this.speed = 55;
+    this.w = 15; this.h = 15;
+    this.elite = 'DUNE TYRANT';
+  }
+  die() { super.die(); eliteDrops(this); }
+  draw(ctx) {
+    if (this.state === 'buried' || this.state === 'rising') return;
+    eliteDraw(this, ctx, Math.floor(this.animT * 5) % 2, 1.5);
+  }
+}
+
+// HIGHLAND OGRE — a moblin that never stopped growing
+class Ogre extends Moblin {
+  constructor(x, y) {
+    super(x, y);
+    this.hp = this.maxHp = 14;
+    this.touchDmg = 2;
+    this.speed = 26;
+    this.w = 16; this.h = 16;
+    this.elite = 'HIGHLAND OGRE';
+    this.rockT = U.rand(1.5, 2.5);
+  }
+  update(dt) {
+    super.update(dt);
+    this.rockT -= dt;
+    if (this.rockT <= 0 && this.distToPlayer() < 150) {
+      this.rockT = U.rand(1.8, 2.8);
+      const a = this.angleToPlayer();
+      Game.projectiles.push(new Projectile(this.cx(), this.cy() - 4, Math.cos(a) * 120, Math.sin(a) * 120, {
+        sprite: 'rock_proj', owner: 'enemy', damage: 1
+      }));
+      AudioSys.sfx('bow');
+    }
+  }
+  die() { super.die(); eliteDrops(this); }
+  draw(ctx) {
+    eliteDraw(this, ctx, Math.floor(this.animT * 4) % 2, 1.5);
+  }
+}
+
+// ------------------------------------------------------------
 const ENEMY_TYPES = {
   octorok: Octorok, moblin: Moblin, keese: Keese, stalfos: Stalfos,
   chu: Chu, leever: Leever, wizzrobe: Wizzrobe, darknut: Darknut,
   peahat: Peahat, zora: Zora, armos: Armos, poe: Poe,
   wolfos: Wolfos, freezard: Freezard, blade_trap: BladeTrap,
-  gibdo: Gibdo, vulture: Vulture, sandwurm: Sandwurm
+  gibdo: Gibdo, vulture: Vulture, sandwurm: Sandwurm,
+  direwolf: Direwolf, dunetyrant: Dunetyrant, ogre: Ogre
 };
 
 function spawnEnemy(type, tx, ty) {

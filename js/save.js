@@ -13,7 +13,7 @@ const SaveSys = {
       bombs: 0, maxBombs: 20, arrows: 0, maxArrows: 30,
       hasSword: false, hasMasterSword: false, hasBow: false,
       hasLantern: false, hasShield: false, hasBombs: false,
-      hasBoomerang: false, hasFireRod: false, hasFlippers: false,
+      hasBoomerang: false, hasFireRod: false, hasFlippers: false, hasPearl: false,
       potions: 0, letter: false, soup: false, lure: false,
       shards: { emerald: false, ruby: false, sapphire: false },
       keys: {}, bosskeys: {}, dmaps: {}, dcompass: {}

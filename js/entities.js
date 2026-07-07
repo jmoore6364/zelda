@@ -109,7 +109,7 @@ class Player extends Entity {
       const tid = Game.tileAt(this.tileX(), this.tileY());
       const tdef = Tiles.def(tid);
       if (tdef && tdef.slow) spd *= 0.6;
-      if (tid === T.WATER) spd *= 0.55; // swimming (flippers)
+      if (tid === T.WATER || tid === T.DEEPWATER) spd *= 0.55; // swimming (flippers / pearl)
       Game.moveEntity(this, dx / len * spd * dt, dy / len * spd * dt);
       this.animT += dt;
       // footstep grass particles
@@ -117,7 +117,7 @@ class Player extends Entity {
         Particles.spawn(this.cx(), this.y + this.h, { vx: U.rand(-8, 8), vy: -12, g: 40, life: 0.35, color: '#5fae4c', size: 1.5 });
       }
       // swim ripples
-      if (Math.random() < 0.12 && tid === T.WATER) {
+      if (Math.random() < 0.12 && (tid === T.WATER || tid === T.DEEPWATER)) {
         Particles.spawn(this.cx() + U.rand(-5, 5), this.y + this.h - 2, { vx: U.rand(-10, 10), vy: -4, g: 0, life: 0.4, color: U.pick(['#a8d0f0', '#6a98e8']), size: 1.5 });
       }
     } else {
@@ -624,9 +624,10 @@ class NPC extends Entity {
       fisher_bjorn: 'npc_fisher', trader_sami: 'npc_nomad', harbor_brine: 'npc_man',
       salt_nan: 'npc_woman', salt_tide: 'npc_man', keeper_elio: 'npc_elder', kid_shell: 'npc_kid',
       ferryman_wake: 'npc_fisher', waykeeper_rosa: 'npc_rancher', mayor_palm: 'npc_man',
-      isle_lila: 'npc_woman', isle_koa: 'npc_kid'
+      isle_lila: 'npc_woman', isle_koa: 'npc_kid',
+      druid_ash: 'npc_hermit', herbalist_fern: 'npc_woman'
     }[id] || 'npc_man';
-    this.wanders = !['shopkeep', 'innkeep', 'elder', 'fairy', 'guard_bex', 'princess', 'hermit_yeta', 'lorelei', 'fisherman_odon', 'trader_sami', 'keeper_elio', 'ferryman_wake'].includes(id);
+    this.wanders = !['shopkeep', 'innkeep', 'elder', 'fairy', 'guard_bex', 'princess', 'hermit_yeta', 'lorelei', 'fisherman_odon', 'trader_sami', 'keeper_elio', 'ferryman_wake', 'herbalist_fern'].includes(id);
   }
 
   update(dt) {

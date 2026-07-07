@@ -29,7 +29,8 @@ const Items = {
     flippers:        { name: 'Zora Flippers', sprite: 'flippers', msg: 'You got the ZORA FLIPPERS! You can now swim across open water. Deep water is still too treacherous.' },
     lure:            { name: 'Lucky Lure', sprite: 'lure', msg: 'The Lucky Lure! Hand-painted, twice-blessed, and lost exactly once. Odon will want this back.' },
     big_quiver:      { name: 'Big Quiver', sprite: 'quiver', msg: 'A BIG QUIVER stitched from ranch leather! You can now carry 50 arrows.' },
-    bomb_bag:        { name: 'Big Bomb Bag', sprite: 'bombbag', msg: 'A BIG BOMB BAG of oiled desert hide! You can now carry 30 bombs.' }
+    bomb_bag:        { name: 'Big Bomb Bag', sprite: 'bombbag', msg: 'A BIG BOMB BAG of oiled desert hide! You can now carry 30 bombs.' },
+    pearl:           { name: 'Pearl of the Deep', sprite: 'pearl', msg: 'The PEARL OF THE DEEP! The open ocean holds its breath for you — you can now swim across deep water.' }
   },
 
   // grant an item to the player. contents: {type, amount}
@@ -118,6 +119,7 @@ const Items = {
         p.bombs = p.maxBombs;
         AudioSys.sfx('item');
         break;
+      case 'pearl': p.hasPearl = true; AudioSys.sfx('item'); break;
     }
 
     if (msg && !opts.silent) {

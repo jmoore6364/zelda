@@ -2484,6 +2484,96 @@ Sprites.def('quiver', { B: '#a8814e', b: '#7a5830', S: '#c8c8d8', F: '#e84848', 
   ]
 ]);
 
+// Boss: KARSTAG — the Seventh Stone (barrow golem)
+Sprites.def('boss_karstag', { S: '#9a9aa8', s: '#6e6e7c', D: '#4a4a58', E: '#68d8f0', M: '#2c2c38', G: '#7a8a6a' }, [
+  [
+    '..........SSSSSSSSSS............',
+    '........SSSSSSSSSSSSSS..........',
+    '.......SSSGSSSSSSSSGSSS.........',
+    '......SSSSSSSSSSSSSSSSSS........',
+    '......SSsEESSSSSSSSEEsSS........',
+    '......SSsEESSSSSSSSEEsSS........',
+    '......SSSSSSSSssSSSSSSSS........',
+    '......sSSSSSsMMMMsSSSSSs........',
+    '.......sSSSSSMMMMSSSSSs.........',
+    '....SSSSssSSSSSSSSSSssSSSS......',
+    '...SSSSSSSssssssssssSSSSSSS.....',
+    '..SSSsSSSSSSSSSSSSSSSSSsSSS.....',
+    '..SSsSSGSSSSSSSSSSSSGSSsSSS.....',
+    '..SSsSSSSSSSsssSSSSSSSSsSSS.....',
+    '..sSsSSSSSssDDDssSSSSSSsSs......',
+    '..sSsSSSSsDDDDDDDsSSSSSsSs......',
+    '..sSsSSSSsDDDDDDDsSSSSSsSs......',
+    '...SsSSSSSsDDDDDsSSSSSSsS.......',
+    '...ssSSSSSSsssssSSSSSSSss.......',
+    '....sSSSSSSSSSSSSSSSSSSs........',
+    '.....sSSSSSSSSSSSSSSSSs.........',
+    '.....SSSSSssSSSSssSSSSS.........',
+    '....SSSSSs..SSSS..sSSSSS........',
+    '....SSSSs...SSSS...sSSSS........',
+    '...SSSSS...sSSSSs...SSSSS.......',
+    '...sssss...ssssss...sssss.......',
+    '................................',
+    '................................',
+    '................................',
+    '................................',
+    '................................',
+    '................................'
+  ],
+  [
+    '..........SSSSSSSSSS............',
+    '........SSSSSSSSSSSSSS..........',
+    '.......SSSGSSSSSSSSGSSS.........',
+    '......SSSSSSSSSSSSSSSSSS........',
+    '......SSsEESSSSSSSSEEsSS........',
+    '......SSsEESSSSSSSSEEsSS........',
+    '......SSSSSSSSssSSSSSSSS........',
+    '......sSSSSSsMMMMsSSSSSs........',
+    '.......sSSSSSMMMMSSSSSs.........',
+    '...SSSSssSSSSSSSSSSssSSSS.......',
+    '..SSSSSSSsssssssssssSSSSSSS.....',
+    '..SSSsSSSSSSSSSSSSSSSSSsSSSS....',
+    '..SSsSSGSSSSSSSSSSSSGSSsSSSS....',
+    '..SSsSSSSSSSsssSSSSSSSSsSSSS....',
+    '..sSsSSSSSssDDDssSSSSSSsSss.....',
+    '..sSsSSSSsDDDDDDDsSSSSSsSs......',
+    '..sSsSSSSsDDDDDDDsSSSSSsSs......',
+    '...SsSSSSSsDDDDDsSSSSSSsS.......',
+    '...ssSSSSSSsssssSSSSSSSss.......',
+    '....sSSSSSSSSSSSSSSSSSSs........',
+    '.....sSSSSSSSSSSSSSSSSs.........',
+    '.....SSSSSssSSSSssSSSSS.........',
+    '....SSSSs...SSSS..sSSSSS........',
+    '...SSSSs....SSSS...sSSSS........',
+    '...SSSS....sSSSSs....SSSS.......',
+    '...ssss....ssssss....ssss.......',
+    '................................',
+    '................................',
+    '................................',
+    '................................',
+    '................................',
+    '................................'
+  ]
+]);
+
+// Pearl of the Deep
+Sprites.def('pearl', { P: '#e8f0f8', p: '#b8ccd8', B: '#4878c8', W: '#ffffff', S: '#88b8d8' }, [
+  [
+    '................',
+    '.....SSSSS......',
+    '....SPPPPPS.....',
+    '...SPPWWPPPS....',
+    '...SPWWPPPPS....',
+    '...SPPPPPPpS....',
+    '...SPPPPPppS....',
+    '....SPpppppS....',
+    '.....SSSSS......',
+    '....BBBBBBB.....',
+    '...BBBBBBBBB....',
+    '................'
+  ]
+]);
+
 // Big Bomb Bag
 Sprites.def('bombbag', { B: '#6a5038', b: '#4c3824', K: '#26262e', F: '#e8a030', W: '#f0e0c0' }, [
   [
@@ -2677,3 +2767,8 @@ Sprites.def('npc_cucco', { W: '#f8f8f0', w: '#d8d0c0', R: '#e84848', B: '#f0a030
     '................'
   ]
 ]);
+
+// Elite aliases — the editor and tools look sprites up by enemy type name
+Sprites.defs.direwolf = Sprites.defs.wolfos;
+Sprites.defs.dunetyrant = Sprites.defs.sandwurm;
+Sprites.defs.ogre = Sprites.defs.moblin;
