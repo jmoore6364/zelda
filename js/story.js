@@ -110,6 +110,93 @@ const Story = {
     }
   },
 
+  // ---------------- quest journal ----------------
+  // returns [{title, status: 'active'|'done', hint}] — only started quests
+  quests() {
+    const F = this, p = Game.data.player;
+    const tradeHints = {
+      none: 'Koa of Windfall wants a really, REALLY big shell. A girl in Saltmere has sixty-one...',
+      shell: 'Deliver Sir Whorlington (do not rename him) to Koa on the Isle of Winds.',
+      toy_boat: 'A whittled boat for someone who misses the water. An ice fisher dreams in gulls...',
+      fish: 'A smoked fish for someone who remembers real fish. A granny in Elden, perhaps.',
+      wool: 'Soft wool for hands that still work a loom. A weaver across the water...',
+      sailcloth: 'Fine sailcloth for one who dreams in canvas. Try the Gull\'s Rest in Saltmere.',
+      spyglass: 'The spyglass belongs with the one who watches the sea for all of us. Long stairs.'
+    };
+    const defs = [
+      {
+        title: 'The Sunstone Shards',
+        started: () => true, done: () => F.flag('game_complete'),
+        hint: () => {
+          if (!F.flag('got_sword')) return 'Elder Rowan is waiting in his house in Elden Village — the one with the pots by the door.';
+          return Items.shardCount() >= 3
+            ? 'All three shards blaze. The castle gate in the north-west will yield.'
+            : `Recover the three shards of the shattered Sunstone. (${Items.shardCount()}/3)`;
+        },
+        doneText: 'The sun is back. They will sing of you.'
+      },
+      {
+        title: 'A Letter for Finn',
+        started: () => F.flag('marin_letter'), done: () => F.flag('letter_delivered'),
+        hint: () => 'Deliver Marin\'s letter to Finn at the Drowsy Cucco Inn in Bramblewick.',
+        doneText: 'Finn walked home in the dark, the fool. You got a shield out of it.'
+      },
+      {
+        title: 'Soup for the Hermit',
+        started: () => F.flag('hermit_wants_soup'), done: () => F.flag('hermit_fed'),
+        hint: () => p.soup ? 'Deliver the soup to Yeta in Frostpeak Hollow while it\'s warm!' : 'Fetch hot barley soup from the Drowsy Cucco for Hermit Yeta.',
+        doneText: 'Too much pepper. Perfect.'
+      },
+      {
+        title: 'The Lucky Lure',
+        started: () => F.flag('lure_quest'), done: () => F.flag('flippers_given'),
+        hint: () => p.lure ? 'Return the Lucky Lure to Odon at Lake Hylia.' : 'Odon\'s lure snagged in the river shallows east of the bridge. Red and white, smiling.',
+        doneText: 'Zora flippers, real Zora make. The lake is yours.'
+      },
+      {
+        title: 'Pella Come Home',
+        started: () => F.flag('ranch_quest'), done: () => F.flag('cucco_home'),
+        hint: () => F.flag('cucco_carried') ? 'Pella is in your pack. Carry her home to Meadowbrook Ranch.' : 'Elda\'s prize cucco fled west into the Frostpeak snow. Listen for clucking.',
+        doneText: 'Pella rules her roost again. The Big Quiver is yours.'
+      },
+      {
+        title: 'Saltmere Light',
+        started: () => F.flag('beacon_quest'), done: () => F.flag('beacon_lit'),
+        hint: () => p.hasFireRod ? 'You carry true flame. Bring the Fire Rod to Keeper Elio.' : 'The lamp wants TRUE flame — the kind desert kings were buried with.',
+        doneText: 'Gold light rolls across the water. The boats steer home by it.'
+      },
+      {
+        title: 'The Great Trade',
+        started: () => F.flag('trade_start'), done: () => F.flag('trade_done'),
+        hint: () => tradeHints[p.tradeItem || (F.flag('shell_given') ? 'shell' : 'none')] || tradeHints.none,
+        doneText: 'Seven hands around the world, and it started with a shell.'
+      },
+      {
+        title: 'Rumor: the Glacier\'s Jaws',
+        started: () => true, done: () => F.flag('d4_done'),
+        hint: () => 'Something old gnaws at the glacier west of Elden, and the snow will not melt.',
+        doneText: 'Frostmaw is broken. Frostpeak will see spring.'
+      },
+      {
+        title: 'Rumor: the Hollow King',
+        started: () => true, done: () => F.flag('d5_done'),
+        hint: () => 'A king who refused to stay buried, beneath the dunes in the south-east.',
+        doneText: 'Pharaghast is still sand. The dunes have gone quiet.'
+      },
+      {
+        title: 'Rumor: the Seventh Stone',
+        started: () => true, done: () => F.flag('d6_done'),
+        hint: () => 'The ground beneath the Standing Stones grinds its teeth at night.',
+        doneText: 'Karstag sleeps at last. Six stones stand easier.'
+      }
+    ];
+    return defs.filter(q => q.started() || q.done()).map(q => ({
+      title: q.title,
+      status: q.done() ? 'done' : 'active',
+      hint: q.done() ? q.doneText : q.hint()
+    }));
+  },
+
   // ---------------- NPC dialogue ----------------
   // returns {speaker, pages, portrait?, choices?, onEnd?}
   npcDialogue(id) {
@@ -259,6 +346,17 @@ const Story = {
         return { speaker: 'Ana', portrait: 'npc_woman', pages: ['Keep clear of the marsh, dear. The dead down there stopped resting when the Shade came. My grandmother is among them, and she was difficult enough alive.'] };
 
       case 'granny_lu':
+        if (p.tradeItem === 'fish') {
+          return {
+            speaker: 'Granny Lu', portrait: 'npc_woman',
+            pages: [
+              'Is that... smoked whitefish? PROPERLY smoked? Child, sit. Sit! Nobody smokes fish right anymore, they\'re all in a hurry—',
+              '...Mm. MM. Yes. That man knows his birch smoke. Here — wool from my own spinning, the soft batch. Find it hands that still work a loom. There\'s a girl across the water, if the gulls are to be believed.'
+            ],
+            onEnd: () => Items.grant({ type: 'wool' })
+          };
+        }
+        if (F.flag('trade_done')) return { speaker: 'Granny Lu', portrait: 'npc_woman', pages: ['I\'ve written that ice fisherman a letter about his brining. Compliments, mostly. MOSTLY.'] };
         return { speaker: 'Granny Lu', portrait: 'npc_woman', pages: ['In my day the monsters had the decency to stay in dungeons! Now they loiter on the roads like they pay taxes.'] };
 
       case 'villager_meg':
@@ -369,9 +467,46 @@ const Story = {
           ]
         };
 
-      case 'digger_dan':
-        if (F.flag('d5_done')) return { speaker: 'Digger Dan', portrait: 'npc_man', pages: ['You beat the Hollow King?! I\'ve been digging for his treasury for six years! ...Was there gold down there? Don\'t tell me. TELL me. No — don\'t.'] };
-        return { speaker: 'Digger Dan', portrait: 'npc_man', pages: ['Careful where you step — sandwurms hunt by feel. When the ground starts churning, MOVE. I lost a boot learning that. The boot had my lunch in it. Long story.'] };
+      case 'digger_dan': {
+        const dig = () => {
+          const pd = Game.data.player;
+          if (pd.rupees < 10) {
+            AudioSys.sfx('error');
+            Dialogue.start({ speaker: 'Digger Dan', portrait: 'npc_man', pages: ['Ten rupees, friend. The shovel doesn\'t haggle.'] });
+            return;
+          }
+          pd.rupees -= 10;
+          AudioSys.sfx('buy');
+          const r = Math.random();
+          if (r < 0.05) {
+            Dialogue.start({ speaker: 'Digger Dan', portrait: 'npc_man', pages: ['*CHUNK* ...That\'s a strongbox. THAT\'S A STRONGBOX! Split\'s a split — fifty for you!'], onEnd: () => Items.grant({ type: 'rupees', amount: 50 }) });
+          } else if (r < 0.35) {
+            const amt = U.irand(8, 25);
+            Dialogue.start({ speaker: 'Digger Dan', portrait: 'npc_man', pages: [`*shk shk shk* — coins! Loose ones! ${amt} rupees, straight from some careless ancestor\'s pocket.`], onEnd: () => Items.grant({ type: 'rupees', amount: amt }) });
+          } else if (r < 0.55) {
+            Dialogue.start({ speaker: 'Digger Dan', portrait: 'npc_man', pages: ['*thunk* Old powder cache! Bombs keep forever if you keep them dry. These were... mostly dry.'], onEnd: () => Items.grant({ type: 'bombs', amount: 3 }) });
+          } else if (r < 0.72) {
+            Dialogue.start({ speaker: 'Digger Dan', portrait: 'npc_man', pages: ['*scrape* Arrows! Bundle of them! Fletching\'s sandy but they\'ll fly.'], onEnd: () => Items.grant({ type: 'arrows', amount: 8 }) });
+          } else {
+            Dialogue.start({ speaker: 'Digger Dan', portrait: 'npc_man', pages: [U.pick([
+              '*dig dig dig* ...It\'s a boot. It\'s MY boot! The lunch is gone. Six years, and the lunch is gone.',
+              '*clonk* A rock shaped exactly like a rupee. I\'m keeping it. You get nothing, but LOOK at it.',
+              '*fss* Sand. Premium sand, though. Really top-shelf sand. No? Just me?'
+            ])] });
+          }
+        };
+        const pages = F.flag('d5_done')
+          ? ['You beat the Hollow King?! I\'ve been digging for his treasury for six years! ...Anyway. The GOOD digging\'s still out here. Ten rupees stakes you a hole — whatever the shovel finds, we split.']
+          : ['Careful where you step — sandwurms hunt by feel. I lost a boot learning that. Say... ten rupees stakes you a hole. Whatever the shovel finds, we split. The desert OWES me.'];
+        return {
+          speaker: 'Digger Dan', portrait: 'npc_man',
+          pages,
+          choices: [
+            { label: 'Dig! (10r)', cb: dig },
+            { label: 'Not today', cb: () => {} }
+          ]
+        };
+      }
 
       case 'rancher_elda':
         if (F.flag('cucco_home')) return { speaker: 'Elda', portrait: 'npc_rancher', pages: ['Pella\'s back on her roost like nothing happened, the little tyrant. That quiver was my husband\'s — he\'d be glad it\'s getting used.'] };
@@ -415,6 +550,17 @@ const Story = {
         return { speaker: 'Pella', portrait: 'npc_cucco', pages: ['BWOK. The cucco stares through you with the confidence of a creature that has never once been wrong.'] };
 
       case 'fisher_bjorn':
+        if (p.tradeItem === 'toy_boat') {
+          return {
+            speaker: 'Bjorn', portrait: 'npc_fisher',
+            pages: [
+              '...A little boat. With a real sail. I grew up on the coast, you know. Forty years since I\'ve smelled salt and I still dream in gulls.',
+              'Take a smoked fish for it — my best. Give it to somebody who remembers what fish are SUPPOSED to taste like. The old ones always do.'
+            ],
+            onEnd: () => Items.grant({ type: 'fish' })
+          };
+        }
+        if (F.flag('trade_done')) return { speaker: 'Bjorn', portrait: 'npc_fisher', pages: ['The little boat sits on my sill, pointed at the sea. Some mornings I point it at the pond instead, so it doesn\'t get ideas.'] };
         if (F.flag('d4_done')) return { speaker: 'Bjorn', portrait: 'npc_fisher', pages: ['Pond\'s thawing at the edges since the glacier went quiet. The fish are confused. So am I. Good work, probably!'] };
         return {
           speaker: 'Bjorn', portrait: 'npc_fisher',
@@ -445,6 +591,17 @@ const Story = {
         return { speaker: 'Nan', portrait: 'npc_woman', pages: ['Mind the tide, dear. It comes in faster than it used to. Everything\'s in a hurry since the dusk — everything except the fish.'] };
 
       case 'salt_tide':
+        if (p.tradeItem === 'sailcloth') {
+          return {
+            speaker: 'Old Tide', portrait: 'npc_man',
+            pages: [
+              '...Red-striped canvas. My old ship flew red stripes. Don\'t you look at me like that, it\'s the salt air in my eyes.',
+              'A fair wind deserves fair trade. My captain\'s spyglass — forty years of squinting through her. Give her to the fellow who watches the sea for ALL of us. You know the one. Tall house. Long stairs.'
+            ],
+            onEnd: () => Items.grant({ type: 'spyglass' })
+          };
+        }
+        if (F.flag('trade_done')) return { speaker: 'Old Tide', portrait: 'npc_man', pages: ['Lila\'s cloth hangs over my bunk like a flag. Story number five, at last. You\'re in it. I make you taller.'] };
         return {
           speaker: 'Old Tide', portrait: 'npc_man',
           pages: [
@@ -454,6 +611,20 @@ const Story = {
         };
 
       case 'keeper_elio':
+        if (p.tradeItem === 'spyglass') {
+          return {
+            speaker: 'Keeper Elio', portrait: 'npc_elder',
+            pages: [
+              'Tide\'s spyglass? He\'d sooner part with his teeth... He really sent this up? For me?',
+              'Then take the finest thing this tower holds. Found it in the lamp room the day I took the post, and the old keeper just smiled. A keeper keeps — but a hero should carry it.',
+              'While your heart is whole, your blade will speak in light. I\'ve watched enough heroes through that glass to know yours is whole often.'
+            ],
+            onEnd: () => {
+              F.set('trade_done');
+              Items.grant({ type: 'hero_charm' });
+            }
+          };
+        }
         if (F.flag('beacon_lit')) return { speaker: 'Keeper Elio', portrait: 'npc_elder', pages: ['Hear it? That soft roar up top — that\'s her burning. Three years I climbed those stairs to polish a cold lamp, because a keeper keeps. Tonight I\'ll climb them just to watch her shine.'] };
         if (p.hasFireRod) {
           return {
@@ -476,10 +647,22 @@ const Story = {
           pages: [
             'Saltmere Light\'s been dark three years. The dusk drinks any spark I strike before the wick catches. Flint\'s no good. Lantern\'s no good.',
             'It wants a TRUE flame — the old kind. They say the desert kings were buried with fire that never dies. Fat lot of good it does anyone down there.'
-          ]
+          ],
+          onEnd: () => F.set('beacon_quest')
         };
 
       case 'kid_shell':
+        if (F.flag('trade_start') && !F.flag('shell_given')) {
+          return {
+            speaker: 'Shell', portrait: 'npc_kid',
+            pages: [
+              'A boy on the ISLAND wants one of MY shells? An island boy? With ZERO shells? That\'s the saddest thing I\'ve ever heard.',
+              'Here — the spiral one. My second-third-best. Tell him it\'s called Sir Whorlington and he is NOT allowed to rename it.'
+            ],
+            onEnd: () => { F.set('shell_given'); Items.grant({ type: 'shell' }); }
+          };
+        }
+        if (F.flag('trade_done')) return { speaker: 'Shell', portrait: 'npc_kid', pages: ['Sixty shells is a rounder number anyway. Is Sir Whorlington happy? Does he have a good windowsill? DETAILS, please.'] };
         if (p.hasFlippers) return { speaker: 'Shell', portrait: 'npc_kid', pages: ['You can SWIM?! In the actual SEA?! Okay okay okay — if you find a shell bigger than my head, I saw it first. That\'s the rule. I made it up but it\'s still the rule.'] };
         return { speaker: 'Shell', portrait: 'npc_kid', pages: ['I\'ve got sixty-one shells! Mama says stop bringing them inside so now they live in the pots. Don\'t tell her. Don\'t SMASH them either!!'] };
 
@@ -560,12 +743,44 @@ const Story = {
         return { speaker: 'Mayor Palm', portrait: 'npc_man', pages: ['Welcome to Windfall! Mayor Palm — elected by everyone, opposed by no one, which my wife says should worry me. The mainland\'s lighthouse went dark years back. Our boats miss it sorely.'] };
 
       case 'isle_lila':
+        if (p.tradeItem === 'wool') {
+          return {
+            speaker: 'Lila', portrait: 'npc_woman',
+            pages: [
+              'Oh — OH. Feel this wool. Whoever spun this has fifty years in her fingers. My loom\'s been hungry for exactly this.',
+              'Give me a moment... there. Fine sailcloth, red stripe and all, first I\'ve woven in years. Take it to someone who dreams in canvas. Every port has one — ours sits in the Gull\'s Rest telling the same four stories.'
+            ],
+            onEnd: () => Items.grant({ type: 'sailcloth' })
+          };
+        }
+        if (F.flag('trade_done')) return { speaker: 'Lila', portrait: 'npc_woman', pages: ['The loom hasn\'t stopped since that wool arrived. Windfall will have sails again before the sun\'s properly back. Imagine that.'] };
         if (Items.shardCount() >= 3) return { speaker: 'Lila', portrait: 'npc_woman', pages: ['Three sunstone shards in one pack! When you\'ve finished saving the world, come back — I want to weave that light into a sail. First one\'s yours.'] };
         return { speaker: 'Lila', portrait: 'npc_woman', pages: ['I weave sailcloth. Or I did, when there were ships worth the thread. Wake\'s little ferry doesn\'t need sails — she needs luck, mostly. We all chip in.'] };
 
       case 'isle_koa':
-        if (F.flag('d5_done')) return { speaker: 'Koa', portrait: 'npc_kid', pages: ['You went INSIDE the dead king\'s tomb? On PURPOSE? You\'re officially the coolest person to ever visit this island. The bar was low but STILL.'] };
-        return { speaker: 'Koa', portrait: 'npc_kid', pages: ['I\'ve been to the mainland TWICE. There\'s a mountain that BREATHES SMOKE east of here — Wake sails past it! He says nobody\'s ever cracked the rock open. Somebody should crack the rock open.'] };
+        if (p.tradeItem === 'shell' && F.flag('trade_start')) {
+          return {
+            speaker: 'Koa', portrait: 'npc_kid',
+            pages: [
+              'THAT. IS. THE BIGGEST SHELL I HAVE EVER — okay okay, deal\'s a deal.',
+              'Here: I whittled this boat myself. Real sailcloth sail! But looking at it makes me sad now — it wants someone who misses the water. You\'ll know them when you see them.'
+            ],
+            onEnd: () => Items.grant({ type: 'toy_boat' })
+          };
+        }
+        if (!F.flag('trade_start')) {
+          return {
+            speaker: 'Koa', portrait: 'npc_kid',
+            pages: [
+              'I\'ve been to the mainland TWICE. There\'s a girl in Saltmere with SIXTY-ONE shells and I have ZERO because the sea hates me personally.',
+              'Bring me a really, REALLY big shell and I\'ll trade you the best thing I own. That\'s a Koa Promise. Those are binding.'
+            ],
+            onEnd: () => F.set('trade_start')
+          };
+        }
+        if (F.flag('trade_done')) return { speaker: 'Koa', portrait: 'npc_kid', pages: ['My shell sits on the windowsill where everyone can see it. Lila says the whole trade went seven hands around the world. SEVEN. And it started with ME.'] };
+        if (F.flag('d5_done')) return { speaker: 'Koa', portrait: 'npc_kid', pages: ['You went INSIDE the dead king\'s tomb? On PURPOSE? You\'re officially the coolest person to ever visit this island. The bar was low but STILL. (Still want that shell, though.)'] };
+        return { speaker: 'Koa', portrait: 'npc_kid', pages: ['Shell status? ...That\'s not a shell. THE SHELL, remember! Saltmere girl! Sixty-one of them! She can spare ONE!'] };
 
       case 'fairy':
         return {

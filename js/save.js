@@ -15,6 +15,7 @@ const SaveSys = {
       hasLantern: false, hasShield: false, hasBombs: false,
       hasBoomerang: false, hasFireRod: false, hasFlippers: false, hasPearl: false,
       potions: 0, letter: false, soup: false, lure: false,
+      tradeItem: null, hasCharm: false,
       shards: { emerald: false, ruby: false, sapphire: false },
       keys: {}, bosskeys: {}, dmaps: {}, dcompass: {}
     };

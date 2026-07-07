@@ -170,6 +170,14 @@ class Player extends Entity {
     AudioSys.sfx('sword');
     // cut tiles immediately
     this.cutTiles();
+    // the Hero's Charm — at full hearts the blade looses light
+    if (this.data.hasCharm && this.data.hearts >= this.data.maxHearts) {
+      const v = DIRS[this.facing];
+      Game.projectiles.push(new Projectile(this.cx() + v.x * 10, this.cy() + v.y * 10, v.x * 230, v.y * 230, {
+        sprite: 'sword_beam', owner: 'player', damage: this.swordDamage(), rotate: true, life: 1.2
+      }));
+      AudioSys.sfx('charge');
+    }
   }
 
   startSpin() {

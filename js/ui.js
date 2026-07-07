@@ -363,23 +363,25 @@ const UI = {
   },
 
   // ---------------- PAUSE ----------------
-  PAUSE_OPTS: ['RESUME', 'SAVE GAME', 'SETTINGS', 'QUIT TO TITLE'],
+  PAUSE_OPTS: ['RESUME', 'QUESTS', 'SAVE GAME', 'SETTINGS', 'QUIT TO TITLE'],
 
   updatePause(dt) {
     if (Input.pause() || Input.cancel()) { Game.state = 'play'; AudioSys.sfx('menu'); return; }
-    if (Input.menuUp()) { this.pauseIdx = (this.pauseIdx + 3) % 4; AudioSys.sfx('menu'); }
-    if (Input.menuDown()) { this.pauseIdx = (this.pauseIdx + 1) % 4; AudioSys.sfx('menu'); }
+    const n = this.PAUSE_OPTS.length;
+    if (Input.menuUp()) { this.pauseIdx = (this.pauseIdx + n - 1) % n; AudioSys.sfx('menu'); }
+    if (Input.menuDown()) { this.pauseIdx = (this.pauseIdx + 1) % n; AudioSys.sfx('menu'); }
     if (Input.confirm()) {
       AudioSys.sfx('select');
       switch (this.pauseIdx) {
         case 0: Game.state = 'play'; break;
-        case 1:
+        case 1: Game.state = 'journal'; break;
+        case 2:
           this.saveMode = 'save';
           this.saveIdx = (Game.data.slot || 1) - 1;
           Game.state = 'saveselect';
           break;
-        case 2: this.setIdx = 0; this.settingsReturn = 'pause'; Game.state = 'settings'; break;
-        case 3: Game.toTitle(); break;
+        case 3: this.setIdx = 0; this.settingsReturn = 'pause'; Game.state = 'settings'; break;
+        case 4: Game.toTitle(); break;
       }
     }
   },
@@ -399,7 +401,48 @@ const UI = {
     });
     ctx.font = '7px monospace';
     ctx.fillStyle = '#605878';
-    ctx.fillText('tab: inventory   m: map', 192, 190);
+    ctx.fillText('tab: inventory   m: map   j: quests', 192, 196);
+    ctx.textAlign = 'left';
+  },
+
+  // ---------------- QUEST JOURNAL ----------------
+  updateJournal(dt) {
+    if (Input.journal() || Input.cancel() || Input.confirm() || Input.pause()) {
+      Game.state = 'play';
+      AudioSys.sfx('menu');
+    }
+  },
+
+  drawJournal(ctx) {
+    ctx.fillStyle = 'rgba(8,8,22,0.92)';
+    ctx.fillRect(0, 0, 384, 240);
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 12px monospace';
+    ctx.fillStyle = '#e8c860';
+    ctx.fillText('QUESTS', 192, 22);
+    ctx.textAlign = 'left';
+
+    const quests = Story.quests();
+    let y = 38;
+    for (const q of quests) {
+      if (y > 218) break;
+      const done = q.status === 'done';
+      ctx.font = 'bold 8px monospace';
+      ctx.fillStyle = done ? '#78b878' : '#f0e0a0';
+      ctx.fillText((done ? '✓ ' : '• ') + q.title, 28, y);
+      ctx.font = '7px monospace';
+      ctx.fillStyle = done ? '#5a7a5a' : '#a8a8c0';
+      const lines = U.wrapText(ctx, q.hint, 320);
+      ctx.fillText(lines[0] || '', 40, y + 9);
+      y += lines[0] && lines[1] ? 0 : 0;
+      if (lines[1]) { ctx.fillText(lines[1], 40, y + 17); y += 8; }
+      y += 19;
+    }
+
+    ctx.textAlign = 'center';
+    ctx.font = '7px monospace';
+    ctx.fillStyle = '#605878';
+    ctx.fillText('j/esc: close', 192, 232);
     ctx.textAlign = 'left';
   },
 
@@ -442,6 +485,11 @@ const UI = {
     if (p.letter) list.push({ spr: 'map_item', name: 'Sealed Letter', desc: 'For Finn at the Drowsy Cucco Inn in Bramblewick.' });
     if (p.soup) list.push({ spr: 'soup', name: 'Hot Soup', desc: 'For Hermit Yeta in Frostpeak Hollow. Still warm!' });
     if (p.lure) list.push({ spr: 'lure', name: 'Lucky Lure', desc: 'Odon\'s pride and joy. It is, in fact, smiling.' });
+    if (p.hasCharm) list.push({ spr: 'hero_charm', name: 'Hero\'s Charm', desc: 'At full hearts, your sword looses a blade of light.' });
+    if (p.tradeItem) {
+      const info = Items.INFO[p.tradeItem];
+      if (info) list.push({ spr: info.sprite, name: info.name, desc: 'The Great Trade — someone out there needs this. (Check your quests: J)' });
+    }
     return list;
   },
 

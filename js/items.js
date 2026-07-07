@@ -30,7 +30,15 @@ const Items = {
     lure:            { name: 'Lucky Lure', sprite: 'lure', msg: 'The Lucky Lure! Hand-painted, twice-blessed, and lost exactly once. Odon will want this back.' },
     big_quiver:      { name: 'Big Quiver', sprite: 'quiver', msg: 'A BIG QUIVER stitched from ranch leather! You can now carry 50 arrows.' },
     bomb_bag:        { name: 'Big Bomb Bag', sprite: 'bombbag', msg: 'A BIG BOMB BAG of oiled desert hide! You can now carry 30 bombs.' },
-    pearl:           { name: 'Pearl of the Deep', sprite: 'pearl', msg: 'The PEARL OF THE DEEP! The open ocean holds its breath for you — you can now swim across deep water.' }
+    pearl:           { name: 'Pearl of the Deep', sprite: 'pearl', msg: 'The PEARL OF THE DEEP! The open ocean holds its breath for you — you can now swim across deep water.' },
+    // — the Great Trade —
+    shell:           { name: 'Spiral Shell', sprite: 'shell', msg: 'A SPIRAL SHELL bigger than your fist! Somewhere, a boy on an island needs to see this.' },
+    toy_boat:        { name: 'Whittled Boat', sprite: 'toy_boat', msg: 'A WHITTLED BOAT with a real cloth sail. Koa says it wants "someone who misses the water."' },
+    fish:            { name: 'Smoked Fish', sprite: 'fish', msg: 'A SMOKED FISH, Bjorn\'s finest. "For someone who remembers what fish are supposed to taste like."' },
+    wool:            { name: 'Soft Wool', sprite: 'wool', msg: 'A skein of SOFT WOOL, spun by Granny Lu. "For hands that still work a loom."' },
+    sailcloth:       { name: 'Fine Sailcloth', sprite: 'sailcloth', msg: 'FINE SAILCLOTH with a red stripe, woven by Lila. "For an old man who dreams in canvas."' },
+    spyglass:        { name: 'Captain\'s Spyglass', sprite: 'spyglass', msg: 'The CAPTAIN\'S SPYGLASS, polished by forty years of squinting. "For the fellow who watches the sea for all of us."' },
+    hero_charm:      { name: 'Hero\'s Charm', sprite: 'hero_charm', msg: 'The HERO\'S CHARM! While your hearts are full, your sword looses a blade of light with every swing!' }
   },
 
   // grant an item to the player. contents: {type, amount}
@@ -120,6 +128,15 @@ const Items = {
         AudioSys.sfx('item');
         break;
       case 'pearl': p.hasPearl = true; AudioSys.sfx('item'); break;
+      case 'shell': case 'toy_boat': case 'fish': case 'wool': case 'sailcloth': case 'spyglass':
+        p.tradeItem = t;
+        AudioSys.sfx('chest');
+        break;
+      case 'hero_charm':
+        p.tradeItem = null;
+        p.hasCharm = true;
+        AudioSys.sfx('item');
+        break;
     }
 
     if (msg && !opts.silent) {

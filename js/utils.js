@@ -111,6 +111,7 @@ const Input = {
   pause()    { return this.pressed['Escape']; },
   inventory(){ return this.pressed['KeyI'] || this.pressed['Tab']; },
   mapKey()   { return this.pressed['KeyM']; },
+  journal()  { return this.pressed['KeyJ']; },
   menuUp()   { return this.pressed['ArrowUp'] || this.pressed['KeyW']; },
   menuDown() { return this.pressed['ArrowDown'] || this.pressed['KeyS']; },
   menuLeft() { return this.pressed['ArrowLeft'] || this.pressed['KeyA']; },

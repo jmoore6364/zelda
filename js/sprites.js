@@ -2768,6 +2768,152 @@ Sprites.def('npc_cucco', { W: '#f8f8f0', w: '#d8d0c0', R: '#e84848', B: '#f0a030
   ]
 ]);
 
+// ============================================================
+// THE GREAT TRADE — seven treasures passed hand to hand
+// ============================================================
+Sprites.def('shell', { P: '#f0d8e0', p: '#d0a8b8', W: '#f8f0f4', S: '#b08898' }, [
+  [
+    '................',
+    '.....PPPP.......',
+    '....PPWWPP......',
+    '...PPWWWWPP.....',
+    '...PWWPPWWPS....',
+    '...PWPPPPWPS....',
+    '...PPWPPWPSS....',
+    '....PPWWPSS.....',
+    '.....PPPSS......',
+    '......pSS.......',
+    '.......S........',
+    '................'
+  ]
+]);
+
+Sprites.def('toy_boat', { B: '#a8814e', b: '#7a5830', W: '#f0f0f0', M: '#c8b078' }, [
+  [
+    '.......M........',
+    '.......M........',
+    '.....WWM........',
+    '....WWWM........',
+    '...WWWWM........',
+    '.......M........',
+    '..BBBBBBBBBB....',
+    '..bBBBBBBBBb....',
+    '...bBBBBBBb.....',
+    '....bbbbbb......',
+    '................',
+    '................'
+  ]
+]);
+
+Sprites.def('fish', { F: '#88a8c8', f: '#5878a0', W: '#e8f0f8', E: '#1c1c2e' }, [
+  [
+    '................',
+    '................',
+    '..........FF....',
+    '..FFFFFFF.FF....',
+    '.FEFFFFFFFFF....',
+    '.FFFFFFFFFFF....',
+    '..FFFFFFF.FF....',
+    '...fffff..ff....',
+    '................',
+    '................',
+    '................',
+    '................'
+  ]
+]);
+
+Sprites.def('wool', { W: '#f0ece0', w: '#d0c8b8', S: '#b8b0a0' }, [
+  [
+    '................',
+    '....WWWWWW......',
+    '...WWwWWWWW.....',
+    '..WWWWWwWWWW....',
+    '..WwWWWWWWwW....',
+    '..WWWwWWWWWW....',
+    '..WWWWWWwWWW....',
+    '...WWwWWWWW.....',
+    '....WWWWWW......',
+    '......SS........',
+    '.......SS.......',
+    '................'
+  ]
+]);
+
+Sprites.def('sailcloth', { C: '#e8e0d0', c: '#c8bca8', R: '#c85858' }, [
+  [
+    '................',
+    '..CCCCCCCCCC....',
+    '..CcCCCCCCcC....',
+    '..CCRRRRRRCC....',
+    '..CcCCCCCCcC....',
+    '..CCCCCCCCCC....',
+    '..CcCCCCCCcC....',
+    '..CCCCCCCCCC....',
+    '...cCCCCCCc.....',
+    '....cccccc......',
+    '................',
+    '................'
+  ]
+]);
+
+Sprites.def('spyglass', { G: '#c8a030', g: '#96751c', K: '#48485a', L: '#a8d8f0' }, [
+  [
+    '................',
+    '..........KK....',
+    '.........KLK....',
+    '........KKK.....',
+    '.......GGG......',
+    '......GGG.......',
+    '.....GGG........',
+    '....ggG.........',
+    '...gGG..........',
+    '..ggg...........',
+    '................',
+    '................'
+  ]
+]);
+
+Sprites.def('hero_charm', { G: '#f0d030', g: '#c8a018', W: '#f8f8ff', B: '#4878c8' }, [
+  [
+    '................',
+    '.......G........',
+    '......GGG.......',
+    '.....GGBGG......',
+    '....GGBBBGG.....',
+    '...GGBBWBBGG....',
+    '...GGBBBBBGG....',
+    '....GGBBBGG.....',
+    '.....GGBGG......',
+    '......GgG.......',
+    '.......g........',
+    '................'
+  ]
+]);
+
+// sword beam — loosed at full hearts by the Hero's Charm
+Sprites.def('sword_beam', { W: '#f8f8ff', B: '#a8c8f8', b: '#6890e0' }, [
+  [
+    '...W....',
+    '..WWW...',
+    '..WBW...',
+    '..BWB...',
+    '..bBb...',
+    '...b....',
+    '........',
+    '........'
+  ],
+  [
+    '...W....',
+    '..WBW...',
+    '..BWB...',
+    '..WBW...',
+    '..bbb...',
+    '...b....',
+    '........',
+    '........'
+  ]
+]);
+
 // Elite aliases — the editor and tools look sprites up by enemy type name
 Sprites.defs.direwolf = Sprites.defs.wolfos;
 Sprites.defs.dunetyrant = Sprites.defs.sandwurm;

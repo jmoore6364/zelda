@@ -33,7 +33,8 @@ sword, talk, bow, bomb, boomerang, fire rod, plus pause/inventory/map up top.
 | E / Enter | Talk / read / open / buy |
 | Tab / I | Inventory (use potions here) |
 | M | Map screen |
-| Esc | Pause (save game from here) |
+| J | Quest journal |
+| Esc | Pause (quests + save game from here) |
 
 ## The World
 
@@ -79,6 +80,14 @@ Pearl of the Deep, swimmable end to end).
 - **Terrors of the Wilds** — three named roaming minibosses with banner names and
   guaranteed spoils: the **Direwolf Alpha** (deep Elderwood), the **Dune Tyrant**
   (eastern sands), and the **Highland Ogre** (the crag road)
+- **The Great Trade** — a seven-hop trading sequence spanning the whole world,
+  from a boy's shell wish on the Isle of Winds to the lighthouse keeper's final
+  gift: the **Hero's Charm** (at full hearts your sword fires a blade of light)
+- **Digger Dan's gamble** — stake him 10 rupees in the dunes and split whatever
+  the shovel finds. The desert owes him. The desert disagrees.
+- A **quest journal** (J, or from the pause menu) tracks every thread, and the
+  overworld music changes with the region — sea shanties on the strand, wind on
+  the high moor, something old and patient under the Elderwood
 - **The Shattered Sea** — the entire southern half of the world is ocean. Pay
   **Wake the Ferryman** 5 rupees at any dock and sail between **Saltmere Pier**,
   **Windfall Village** on the Isle of Winds (Mayor Palm owes you for that beacon…),
@@ -95,7 +104,7 @@ each with its own AI, plus 3 named elites and 7 bosses.
 ## Features
 
 - 3 save slots (localStorage), settings (music/sfx volume, screen shake, minimap)
-- Procedural chiptune soundtrack (title, overworld, town, village, cave, dungeon, glacier, tomb, boss, final boss, ending, game over)
+- Procedural chiptune soundtrack, 15 tracks (title, overworld, town, village, cave, dungeon, glacier, tomb, sea, highlands, elderwood, boss, final boss, ending, game over) — the overworld theme follows the region you're standing in
 - Dynamic lighting (lantern + torches in dark dungeons), day/dusk world tinting, falling snow in Frostpeak, swimming with ripple trails, particles, screen shake
 - Full story arc: intro, boss cutscene banners, ending + credits
 

@@ -113,7 +113,7 @@ const Game = {
     this.data = SaveSys.defaultData();
     const p = this.data.player;
     p.hasSword = true; p.hasMasterSword = true; p.hasBow = true; p.hasBombs = true; p.hasLantern = true; p.hasShield = true;
-    p.hasBoomerang = true; p.hasFireRod = true; p.hasFlippers = true; p.hasPearl = true;
+    p.hasBoomerang = true; p.hasFireRod = true; p.hasFlippers = true; p.hasPearl = true; p.hasCharm = true;
     p.bombs = 20; p.arrows = 30; p.maxHearts = 10; p.hearts = 10; p.rupees = 100; p.potions = 2;
     const copy = MapBuilder.deserialize(JSON.stringify(mapData));
     this.loadMap(copy, copy.respawn.x, copy.respawn.y);
@@ -228,7 +228,18 @@ const Game = {
     this.player.kbx = 0; this.player.kby = 0;
 
     this.updateCamera(true);
-    if (this.audioReady) AudioSys.play(m.music);
+    if (this.audioReady) AudioSys.play(m.id === 'overworld' ? this.overworldTrack() : m.music);
+  },
+
+  // which song fits where the player is standing on the overworld
+  overworldTrack() {
+    if (!this.player) return 'overworld';
+    const px = this.player.tileX(), py = this.player.tileY();
+    if (py >= 70) return 'sea';                            // coast, ocean, isles
+    if (px < 15 && py >= 5 && py < 47) return 'glacier';   // Frostpeak Hollow
+    if (px >= 94 && py < 25) return 'highlands';           // Auran Highlands
+    if (px >= 94 && py < 53) return 'elderwood';           // the Elderwood
+    return 'overworld';
   },
 
   crackFloorTile() {
@@ -495,6 +506,7 @@ const Game = {
       case 'settings': UI.updateSettings(dt); break;
       case 'pause': UI.updatePause(dt); break;
       case 'inventory': UI.updateInventory(dt); break;
+      case 'journal': UI.updateJournal(dt); break;
       case 'map': UI.updateMapScreen(dt); break;
       case 'gameover': UI.updateGameOver(dt); break;
       case 'ending': UI.updateEnding(dt); break;
@@ -556,6 +568,7 @@ const Game = {
     if (!this.playtest && Input.pause()) { UI.pauseIdx = 0; this.state = 'pause'; AudioSys.sfx('menu'); return; }
     if (Input.inventory()) { this.state = 'inventory'; AudioSys.sfx('menu'); return; }
     if (Input.mapKey()) { this.state = 'map'; AudioSys.sfx('menu'); return; }
+    if (Input.journal()) { this.state = 'journal'; AudioSys.sfx('menu'); return; }
 
     this.player.update(dt);
 
@@ -632,6 +645,13 @@ const Game = {
         vx: U.rand(-10, 4), vy: U.rand(16, 30), g: 0, life: U.rand(2, 3.5),
         color: U.pick(['#eef4fa', '#d8e4f0']), size: U.rand(1, 2)
       });
+    }
+
+    // regional music — the song follows you across the overworld
+    this._musT = (this._musT || 0) - dt;
+    if (this._musT <= 0) {
+      this._musT = 0.5;
+      if (this.map.id === 'overworld' && this.audioReady) AudioSys.play(this.overworldTrack());
     }
 
     // chimney smoke — every hearth on screen breathes
@@ -726,6 +746,7 @@ const Game = {
     switch (this.state) {
       case 'pause': UI.drawPause(ctx); break;
       case 'inventory': UI.drawInventory(ctx); break;
+      case 'journal': UI.drawJournal(ctx); break;
       case 'map': UI.drawMapScreen(ctx); break;
       case 'bossintro':
         if (this.boss) UI.drawBossBanner(ctx, this.boss, this.bossIntroT);
