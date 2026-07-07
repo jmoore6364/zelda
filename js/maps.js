@@ -8,11 +8,13 @@ const WORLD = {}; // id -> map data
 function registerMap(m) { WORLD[m.id] = m; }
 
 // ------------------------------------------------------------
-// OVERWORLD — 96 x 92 (the southern coast was uncovered when the
-// old border ridge was breached — see SALTMERE STRAND below)
+// OVERWORLD — 192 x 184. The familiar lands are the north-west
+// quarter; east through the spine passes lie the Auran Highlands,
+// the Elderwood and the Gilded Meadow, and the whole south is the
+// Shattered Sea — ferry country.
 // ------------------------------------------------------------
 function buildOverworld() {
-  const b = new MapBuilder('overworld', 96, 92, T.GRASS, {
+  const b = new MapBuilder('overworld', 192, 184, T.GRASS, {
     name: 'Hyrule Field', music: 'overworld', ambient: 'day', seed: 42,
     respawn: { x: 16, y: 57 }
   });
@@ -288,26 +290,28 @@ function buildOverworld() {
   // Pella, Meadowbrook's escaped prize cucco, sulking in the snow
   b.npc('cucco_pella', 6, 36);
 
-  // ============ S: SALTMERE STRAND ============
-  // the old border ridge, breached in three places
-  b.rect(2, 70, 92, 2, T.MOUNTAIN);
+  // ============ S: SALTMERE STRAND (now running the full width of the world) ============
+  // the old border ridge, breached in five places
+  b.rect(2, 70, 188, 2, T.MOUNTAIN);
   b.rect(15, 70, 3, 2, T.PATH);   // west pass, below Elden
   b.rect(53, 70, 3, 2, T.MARSH);  // center pass, out of the marsh
-  b.rect(74, 70, 2, 2, T.PATH);   // east pass, down from the dunes
+  b.rect(74, 70, 2, 2, T.PATH);   // pass below the dunes
+  b.rect(120, 70, 3, 2, T.PATH);  // Gilded Meadow pass
+  b.rect(160, 70, 3, 2, T.PATH);  // far-east pass
   // the strand: meadow, beach, shallows, open sea
-  b.rect(2, 72, 92, 6, T.GRASS);
-  b.scatter(T.FLOWERS, 0.05, { x: 2, y: 72, w: 92, h: 6 }, [T.GRASS]);
-  b.scatter(T.TALLGRASS, 0.06, { x: 2, y: 72, w: 92, h: 6 }, [T.GRASS]);
-  b.scatter(T.BUSH, 0.02, { x: 2, y: 72, w: 92, h: 6 }, [T.GRASS]);
-  b.rect(2, 78, 92, 4, T.SAND);
-  b.rect(2, 82, 92, 2, T.SHALLOWS);
-  b.rect(2, 84, 92, 3, T.WATER);
-  b.rect(2, 87, 92, 3, T.DEEPWATER);
+  b.rect(2, 72, 188, 6, T.GRASS);
+  b.scatter(T.FLOWERS, 0.05, { x: 2, y: 72, w: 188, h: 6 }, [T.GRASS]);
+  b.scatter(T.TALLGRASS, 0.06, { x: 2, y: 72, w: 188, h: 6 }, [T.GRASS]);
+  b.scatter(T.BUSH, 0.02, { x: 2, y: 72, w: 188, h: 6 }, [T.GRASS]);
+  b.rect(2, 78, 188, 4, T.SAND);
+  b.rect(2, 82, 188, 2, T.SHALLOWS);
+  b.rect(2, 84, 188, 3, T.WATER);
+  b.rect(2, 87, 188, 3, T.DEEPWATER);
   // a ragged, natural waterline
-  b.scatter(T.SAND, 0.4, { x: 2, y: 82, w: 92, h: 1 }, [T.SHALLOWS]);
-  b.scatter(T.SHALLOWS, 0.4, { x: 2, y: 84, w: 92, h: 1 }, [T.WATER]);
-  b.scatter(T.PALM, 0.04, { x: 2, y: 78, w: 92, h: 3 }, [T.SAND]);
-  b.scatter(T.ROCK, 0.02, { x: 2, y: 78, w: 92, h: 3 }, [T.SAND]);
+  b.scatter(T.SAND, 0.4, { x: 2, y: 82, w: 188, h: 1 }, [T.SHALLOWS]);
+  b.scatter(T.SHALLOWS, 0.4, { x: 2, y: 84, w: 188, h: 1 }, [T.WATER]);
+  b.scatter(T.PALM, 0.04, { x: 2, y: 78, w: 188, h: 3 }, [T.SAND]);
+  b.scatter(T.ROCK, 0.02, { x: 2, y: 78, w: 188, h: 3 }, [T.SAND]);
   // roads down through the passes
   b.path([[16, 62], [16, 74], [28, 74]], T.PATH, 2);
   b.path([[54, 68], [54, 74]], T.DIRT, 2);
@@ -333,11 +337,141 @@ function buildOverworld() {
   b.rect(81, 83, 7, 5, T.WATER);
   b.blob(84, 85, 2, T.SAND, [T.WATER, T.SHALLOWS, T.DEEPWATER]);
   b.chest(84, 85, { type: 'rupees', amount: 100 });
+  // Wake's ferry — the only boat on the Shattered Sea
+  b.npc('ferryman_wake', 39, 80);
+  b.object('sign', 40, 79, { text: 'FERRY: Isle of Winds — Ember Isle — Gull Rocks. Speak to Wake. Mind the wake.' });
   // shore dwellers
   b.enemy('octorok', 20, 75); b.enemy('octorok', 48, 74); b.enemy('chu', 44, 78);
   b.enemy('leever', 56, 79); b.enemy('leever', 68, 79); b.enemy('leever', 12, 79);
   b.enemy('zora', 42, 84); b.enemy('zora', 28, 85); b.enemy('zora', 70, 84); b.enemy('zora', 84, 83);
   b.enemy('peahat', 80, 75); b.enemy('vulture', 88, 77);
+
+  // ============ E: THE SPINE ============
+  // the mountain wall that hid half of Hyrule, breached in two places
+  b.rect(94, 2, 3, 68, T.MOUNTAIN);
+  b.path([[80, 12], [99, 12]], T.DIRT, 2);   // highland pass, through Mt. Cindertop
+  b.path([[88, 40], [99, 40]], T.PATH, 2);   // Elderwood pass, out of the Verdant Woods
+
+  // ============ NE-BEYOND: AURAN HIGHLANDS (x97-189, y2-24) ============
+  b.rect(97, 2, 92, 23, T.GRASS);
+  b.scatter(T.MOUNTAIN, 0.1, { x: 97, y: 2, w: 92, h: 23 }, [T.GRASS]);
+  b.scatter(T.ROCK, 0.08, { x: 97, y: 2, w: 92, h: 23 }, [T.GRASS]);
+  b.scatter(T.TALLGRASS, 0.12, { x: 97, y: 2, w: 92, h: 23 }, [T.GRASS]);
+  b.scatter(T.PINE, 0.05, { x: 97, y: 2, w: 92, h: 23 }, [T.GRASS]);
+  b.blob(110, 6, 4, T.MOUNTAIN); b.blob(175, 5, 5, T.MOUNTAIN); b.blob(140, 20, 4, T.MOUNTAIN);
+  // the high road
+  b.path([[99, 12], [120, 12], [120, 17], [150, 17], [150, 10], [186, 10]], T.DIRT, 2);
+  b.object('sign', 100, 14, { text: 'The Auran Highlands. Thin air, long views, short tempers among the wildlife.' });
+  // Rosa's waystation — last warm bed before the wild east
+  b.rect(118, 14, 8, 6, T.GRASS);
+  b.house(119, 14, 5, 4, { to: 'waystation', tx: 6, ty: 8, style: 'blue', flowers: true });
+  b.object('sign', 125, 17, { text: 'ROSA\'S WAYSTATION — beds, broth, and directions given grudgingly.' });
+  // the Standing Stones — older than the kingdom
+  b.rect(148, 5, 7, 6, T.GRASS);
+  b.set(149, 6, T.PILLAR); b.set(153, 6, T.PILLAR);
+  b.set(148, 8, T.PILLAR); b.set(154, 8, T.PILLAR);
+  b.set(149, 10, T.PILLAR); b.set(153, 10, T.PILLAR);
+  b.chest(151, 8, { type: 'rupees', amount: 100 });
+  b.object('sign', 151, 11, { text: 'Six stones stand. A seventh lies buried. The stones do not say where, and you should not ask at night.' });
+  // highland cave — a cracked wall in the eastern crags
+  b.blob(172, 15, 4, T.MOUNTAIN, [T.GRASS, T.TALLGRASS, T.ROCK, T.PINE]);
+  b.set(172, 17, T.CRACKED_WALL);
+  b.set(172, 18, T.GRASS);
+  b.portal(172, 17, 1, 1, 'cave_highland', 6, 8, 'up', { sfx: 'stairs', hidden: true });
+  b.object('sign', 174, 18, { text: 'The crag here rings hollow when the wind hits it. Or when anything else does.' });
+  b.enemy('vulture', 104, 8); b.enemy('vulture', 160, 14); b.enemy('octorok', 112, 18);
+  b.enemy('moblin', 130, 8); b.enemy('moblin', 155, 20); b.enemy('armos', 150, 7);
+  b.enemy('peahat', 168, 6); b.enemy('wolfos', 182, 16);
+
+  // ============ E-BEYOND: THE ELDERWOOD (x97-189, y25-52) ============
+  b.rect(97, 25, 92, 28, T.GRASS);
+  b.scatter(T.TREE, 0.52, { x: 97, y: 25, w: 92, h: 28 }, [T.GRASS]);
+  b.scatter(T.PINE, 0.14, { x: 97, y: 25, w: 92, h: 28 }, [T.GRASS]);
+  b.scatter(T.DEADTREE, 0.03, { x: 97, y: 25, w: 92, h: 28 }, [T.GRASS]);
+  b.scatter(T.TALLGRASS, 0.06, { x: 97, y: 25, w: 92, h: 28 }, [T.GRASS]);
+  // one winding road through the deep wood
+  b.path([[99, 40], [130, 40], [130, 30], [160, 30], [160, 45], [186, 45]], T.PATH, 2);
+  b.object('sign', 100, 41, { text: 'The Elderwood. The trees here were old when the castle was young. Stay on the road. The road stays on you.' });
+  // the Elder Shrine — a mossy clearing
+  b.rect(157, 27, 8, 7, T.GRASS);
+  b.scatter(T.FLOWERS, 0.25, { x: 157, y: 27, w: 8, h: 7 }, [T.GRASS]);
+  b.rect(159, 28, 4, 2, T.WALL_BRICK);
+  b.set(160, 29, T.FLOOR_STONE); b.set(161, 29, T.FLOOR_STONE);
+  b.chest(160, 30, { type: 'potion' });
+  b.object('torch', 159, 30); b.object('torch', 162, 30);
+  b.object('sign', 161, 32, { text: 'The Elder Shrine. Travelers leave what they can spare and take what they cannot live without.' });
+  // a fairy glade hidden under a bush, deep off the road —
+  // a faint deer-trail leads to it, if you're looking down
+  b.path([[131, 41], [139, 41], [139, 47], [140, 47]], T.GRASS, 1);
+  b.set(140, 48, T.BUSH);
+  b.set(141, 48, T.GRASS);
+  b.portal(140, 48, 1, 1, 'cave_glade', 6, 8, 'up', { sfx: 'stairs', hidden: true, underBush: true });
+  b.enemy('moblin', 110, 35); b.enemy('moblin', 145, 28); b.enemy('moblin', 170, 48);
+  b.enemy('wolfos', 120, 45); b.enemy('wolfos', 150, 38);
+  b.enemy('keese', 135, 32); b.enemy('poe', 165, 50); b.enemy('peahat', 105, 28);
+
+  // ============ SE-BEYOND: GILDED MEADOW (x97-189, y53-69) ============
+  b.rect(97, 53, 92, 17, T.GRASS);
+  b.scatter(T.TALLGRASS, 0.3, { x: 97, y: 53, w: 92, h: 17 }, [T.GRASS]);
+  b.scatter(T.FLOWERS, 0.15, { x: 97, y: 53, w: 92, h: 17 }, [T.GRASS]);
+  b.scatter(T.BUSH, 0.03, { x: 97, y: 53, w: 92, h: 17 }, [T.GRASS]);
+  b.path([[121, 53], [121, 74]], T.PATH, 2);  // down to the coast
+  b.path([[161, 45], [161, 74]], T.PATH, 2);  // far-east road, wood to sea
+  b.object('sign', 123, 55, { text: 'The Gilded Meadow. In the old light it shone like a second sun. Give it time.' });
+  // a ring of bushes hiding gold
+  b.set(149, 60, T.BUSH); b.set(151, 60, T.BUSH); b.set(148, 61, T.BUSH); b.set(152, 61, T.BUSH);
+  b.set(148, 62, T.BUSH); b.set(152, 62, T.BUSH); b.set(149, 63, T.BUSH); b.set(151, 63, T.BUSH);
+  b.set(150, 60, T.BUSH); b.set(150, 63, T.BUSH);
+  b.chest(150, 61, { type: 'rupees', amount: 50 });
+  b.enemy('leever', 110, 60); b.enemy('leever', 140, 56); b.enemy('peahat', 130, 64);
+  b.enemy('octorok', 100, 56); b.enemy('octorok', 170, 60); b.enemy('chu', 155, 66);
+
+  // ============ THE SHATTERED SEA (y90-181) ============
+  b.rect(2, 90, 188, 92, T.DEEPWATER);
+  b.rect(2, 90, 188, 2, T.WATER); // near-shore swimming strip
+
+  // --- ISLE OF WINDS — the village across the water ---
+  b.blob(45, 120, 14, T.WATER, [T.DEEPWATER]);
+  b.blob(45, 120, 11, T.SAND);
+  b.blob(45, 119, 8, T.GRASS, [T.SAND]);
+  b.scatter(T.FLOWERS, 0.1, { x: 36, y: 112, w: 18, h: 15 }, [T.GRASS]);
+  b.scatter(T.PALM, 0.06, { x: 34, y: 110, w: 22, h: 20 }, [T.SAND]);
+  b.rect(44, 108, 2, 6, T.DOCK);
+  b.npc('ferryman_wake', 46, 112);
+  b.house(39, 115, 5, 4, { to: 'isle_house1', tx: 6, ty: 8, style: 'blue', flowers: true });
+  b.house(47, 115, 5, 4, { to: 'isle_house2', tx: 6, ty: 8, style: 'wood', flowers: true });
+  b.house(42, 121, 6, 4, { to: 'isle_mayor', tx: 6, ty: 8, style: 'blue', balcony: true });
+  b.object('sign', 41, 119, { text: 'Windfall Village, Isle of Winds. Population: enough. Weather: yes.' });
+  b.npc('isle_koa', 46, 120);
+  b.object('pot', 38, 119); b.object('pot', 52, 119);
+  b.chest(52, 124, { type: 'rupees', amount: 30 });
+  b.enemy('octorok', 38, 126); b.enemy('chu', 51, 113);
+
+  // --- EMBER ISLE — the smoking rock ---
+  b.blob(135, 135, 13, T.WATER, [T.DEEPWATER]);
+  b.blob(135, 135, 10, T.SAND);
+  b.blob(135, 134, 5, T.MOUNTAIN, [T.SAND]);
+  b.rect(135, 132, 2, 2, T.LAVA);
+  b.rect(134, 124, 2, 5, T.DOCK);
+  b.npc('ferryman_wake', 136, 127);
+  b.set(133, 138, T.CRACKED_WALL);
+  b.set(133, 139, T.SAND);
+  b.portal(133, 138, 1, 1, 'cave_ember', 6, 8, 'up', { sfx: 'stairs', hidden: true });
+  b.object('sign', 136, 129, { text: 'Ember Isle. The mountain grumbles but rarely commits. Rich pickings for the brave.' });
+  b.object('sign', 135, 139, { text: 'The rock face here is scorched... and cracked.' });
+  b.enemy('keese', 130, 132); b.enemy('keese', 140, 138); b.enemy('armos', 138, 140);
+  b.enemy('sandwurm', 130, 140); b.enemy('vulture', 141, 130);
+
+  // --- GULL ROCKS — where the gulls circle ---
+  b.blob(85, 155, 7, T.WATER, [T.DEEPWATER]);
+  b.blob(85, 155, 4, T.SAND);
+  b.scatter(T.ROCK, 0.15, { x: 81, y: 151, w: 9, h: 9 }, [T.SAND]);
+  b.rect(84, 149, 2, 4, T.DOCK);
+  b.npc('ferryman_wake', 86, 151);
+  b.chest(83, 155, { type: 'rupees', amount: 100 });
+  b.chest(87, 156, { type: 'potion' });
+  b.object('sign', 85, 153, { text: 'Gull Rocks. The gulls found it first. The gulls share reluctantly.' });
+  b.enemy('zora', 78, 155); b.enemy('zora', 92, 154); b.enemy('vulture', 85, 158);
 
   // ============ field enemies ============
   b.enemy('octorok', 34, 40); b.enemy('octorok', 26, 42); b.enemy('octorok', 52, 30);
@@ -521,6 +655,48 @@ function buildInteriors() {
     b.object('pot', 8, 9);
   });
 
+  // Rosa's waystation — Auran Highlands
+  interior('waystation', 'Rosa\'s Waystation', 15, 11, b => {
+    b.map.music = 'town';
+    b.set(7, 10, T.HOUSE_DOOR);
+    b.portal(7, 10, 1, 1, 'overworld', 121, 18, 'down', { sfx: 'door' });
+    b.set(2, 2, T.SHELF); b.set(3, 2, T.SHELF); b.set(11, 2, T.SHELF);
+    b.set(4, 5, T.TABLE); b.set(10, 5, T.TABLE);
+    b.rect(6, 3, 3, 2, T.CARPET);
+    b.npc('waykeeper_rosa', 7, 3);
+    b.object('torch', 2, 7); b.object('torch', 12, 7);
+    b.chest(12, 8, { type: 'arrows', amount: 10 });
+  });
+
+  // Isle of Winds — Windfall Village
+  interior('isle_house1', 'Lila\'s Loomhouse', 13, 10, b => {
+    b.set(6, 9, T.HOUSE_DOOR);
+    b.portal(6, 9, 1, 1, 'overworld', 41, 119, 'down', { sfx: 'door' });
+    b.set(2, 2, T.SHELF); b.set(9, 3, T.TABLE); b.set(3, 5, T.TABLE);
+    b.rect(5, 3, 3, 2, T.CARPET);
+    b.npc('isle_lila', 6, 4);
+    b.object('pot', 10, 7);
+  });
+
+  interior('isle_house2', 'Shorehouse', 13, 10, b => {
+    b.set(6, 9, T.HOUSE_DOOR);
+    b.portal(6, 9, 1, 1, 'overworld', 49, 119, 'down', { sfx: 'door' });
+    b.set(3, 2, T.SHELF); b.set(9, 2, T.SHELF); b.set(6, 4, T.TABLE);
+    b.chest(10, 2, { type: 'rupees', amount: 20 });
+    b.object('pot', 2, 7); b.object('pot', 10, 7);
+  });
+
+  interior('isle_mayor', 'Mayor Palm\'s Hall', 15, 11, b => {
+    b.map.music = 'town';
+    b.set(7, 10, T.HOUSE_DOOR);
+    b.portal(7, 10, 1, 1, 'overworld', 45, 125, 'down', { sfx: 'door' });
+    b.rect(5, 3, 5, 3, T.CARPET);
+    b.set(2, 2, T.SHELF); b.set(12, 2, T.SHELF);
+    b.npc('mayor_palm', 7, 4);
+    b.object('torch', 2, 6); b.object('torch', 12, 6);
+    b.object('pot', 2, 8);
+  });
+
   // Hermit Yeta's cabin — Frostpeak Hollow
   interior('hermit_cabin', 'Yeta\'s Cabin', 13, 10, b => {
     b.set(6, 9, T.HOUSE_DOOR);
@@ -583,6 +759,39 @@ function buildCaves() {
     b.set(6, 4, T.FLOOR_STONE);
     b.npc('fairy', 6, 4);
     b.object('torch', 2, 3); b.object('torch', 10, 3);
+  });
+
+  // Auran Highlands — behind the cracked crag
+  cave('cave_highland', 'Crag Hollow', 13, 11, b => {
+    b.set(6, 9, T.STAIRS_UP);
+    b.portal(6, 9, 1, 1, 'overworld', 172, 18, 'down', { sfx: 'stairs' });
+    b.scatter(T.CAVE_WALL, 0.08, { x: 2, y: 2, w: 9, h: 6 }, [T.CAVE_FLOOR]);
+    b.chest(6, 3, { type: 'heart_container' }, { big: true });
+    b.object('torch', 4, 4); b.object('torch', 8, 4);
+    b.enemy('keese', 3, 5); b.enemy('keese', 9, 6); b.enemy('chu', 6, 6);
+  });
+
+  // Elderwood — the hidden fairy glade
+  cave('cave_glade', 'Elder Glade', 13, 12, b => {
+    b.map.music = 'village';
+    b.set(6, 10, T.STAIRS_UP);
+    b.portal(6, 10, 1, 1, 'overworld', 140, 49, 'down', { sfx: 'stairs' });
+    b.blob(6, 4, 3, T.SHALLOWS, [T.CAVE_FLOOR]);
+    b.set(6, 4, T.FLOOR_STONE);
+    b.npc('fairy', 6, 4);
+    b.object('torch', 2, 3); b.object('torch', 10, 3);
+  });
+
+  // Ember Isle — the smoking mountain's hoard
+  cave('cave_ember', 'Cinder Vault', 15, 12, b => {
+    b.set(7, 10, T.STAIRS_UP);
+    b.portal(7, 10, 1, 1, 'overworld', 133, 139, 'down', { sfx: 'stairs' });
+    b.rect(3, 3, 4, 1, T.LAVA); b.rect(9, 6, 4, 1, T.LAVA);
+    b.chest(5, 5, { type: 'rupees', amount: 100 });
+    b.chest(9, 3, { type: 'bombs', amount: 10 });
+    b.chest(11, 8, { type: 'rupees', amount: 50 });
+    b.object('torch', 2, 8); b.object('torch', 12, 3);
+    b.enemy('keese', 4, 7); b.enemy('keese', 10, 4); b.enemy('chu', 7, 7);
   });
 }
 

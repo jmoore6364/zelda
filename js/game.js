@@ -663,6 +663,23 @@ const Game = {
     };
   },
 
+  // Wake's ferry — sail (fade) to another dock on the same map
+  ferryTo(tx, ty) {
+    AudioSys.sfx('splash');
+    this.state = 'transition';
+    this.transition = {
+      t: 0, dur: 1.0, midDone: false,
+      mid: () => {
+        this.player.x = tx * 16 + 2;
+        this.player.y = ty * 16 + 3;
+        this.player.lastSafe = { x: this.player.x, y: this.player.y };
+        this.player.kbx = 0; this.player.kby = 0;
+        this.updateCamera(true);
+        AudioSys.sfx('splash');
+      }
+    };
+  },
+
   shake(amt, dur) {
     if (!SaveSys.settings.screenShake) return;
     this.shakeAmt = amt;

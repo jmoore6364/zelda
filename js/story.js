@@ -471,6 +471,73 @@ const Story = {
         if (p.hasFlippers) return { speaker: 'Shell', portrait: 'npc_kid', pages: ['You can SWIM?! In the actual SEA?! Okay okay okay — if you find a shell bigger than my head, I saw it first. That\'s the rule. I made it up but it\'s still the rule.'] };
         return { speaker: 'Shell', portrait: 'npc_kid', pages: ['I\'ve got sixty-one shells! Mama says stop bringing them inside so now they live in the pots. Don\'t tell her. Don\'t SMASH them either!!'] };
 
+      case 'ferryman_wake': {
+        const stops = [
+          { label: 'Saltmere Pier', x: 37, y: 81 },
+          { label: 'Isle of Winds', x: 44, y: 112 },
+          { label: 'Ember Isle', x: 134, y: 127 },
+          { label: 'Gull Rocks', x: 84, y: 151 }
+        ];
+        const pl = Game.player;
+        const here = pl ? stops.reduce((a, s) =>
+          U.dist(pl.cx(), pl.cy(), s.x * 16, s.y * 16) < U.dist(pl.cx(), pl.cy(), a.x * 16, a.y * 16) ? s : a) : stops[0];
+        const choices = stops.filter(s => s !== here).map(s => ({
+          label: `${s.label} (5r)`,
+          cb: () => {
+            const pd = Game.data.player;
+            if (pd.rupees >= 5) {
+              pd.rupees -= 5;
+              AudioSys.sfx('buy');
+              Game.ferryTo(s.x, s.y);
+            } else {
+              AudioSys.sfx('error');
+              Dialogue.start({ speaker: 'Wake', portrait: 'npc_fisher', pages: ['Five rupees, friend. The sea takes her toll and so do I — she\'s just less polite about it.'] });
+            }
+          }
+        }));
+        choices.push({ label: 'Stay ashore', cb: () => {} });
+        return {
+          speaker: 'Wake the Ferryman', portrait: 'npc_fisher',
+          pages: [`Only boat on the Shattered Sea, and you're looking at her captain. Where to from ${here.label}?`],
+          choices
+        };
+      }
+
+      case 'waykeeper_rosa':
+        if (F.flag('d5_done') && F.flag('d4_done')) return { speaker: 'Rosa', portrait: 'npc_rancher', pages: ['Glacier quiet, dunes quiet — the highland wind\'s the loudest thing left out here, and I intend to keep it that way. Broth\'s on. Sit before it isn\'t.'] };
+        return {
+          speaker: 'Rosa', portrait: 'npc_rancher',
+          pages: [
+            'Rosa. This is my waystation, and those are my rules on the wall — there\'s one rule and it\'s "wipe your boots."',
+            'Directions? East road runs to the crags — something hollow in the far rock, if you\'ve powder to spend. South through the Elderwood the road forgets itself, so don\'t you forget it too. And the Standing Stones... leave them be after dark. They count you.'
+          ]
+        };
+
+      case 'mayor_palm':
+        if (F.flag('beacon_lit') && !F.flag('mayor_thanks')) {
+          return {
+            speaker: 'Mayor Palm', portrait: 'npc_man',
+            pages: [
+              'You\'re the one who relit Saltmere Light! Friend, our whole fishing fleet steers home by that flame. Three boats we\'d have lost to the fog this season alone.',
+              'Windfall pays its debts. My grandmother\'s strength charm — the whole village insists. No arguing with a village.'
+            ],
+            onEnd: () => {
+              F.set('mayor_thanks');
+              Items.grant({ type: 'heart_container' });
+            }
+          };
+        }
+        if (F.flag('mayor_thanks')) return { speaker: 'Mayor Palm', portrait: 'npc_man', pages: ['The Light still burns and the boats still come home. You\'ll never buy your own drink on this island, hero.'] };
+        return { speaker: 'Mayor Palm', portrait: 'npc_man', pages: ['Welcome to Windfall! Mayor Palm — elected by everyone, opposed by no one, which my wife says should worry me. The mainland\'s lighthouse went dark years back. Our boats miss it sorely.'] };
+
+      case 'isle_lila':
+        if (Items.shardCount() >= 3) return { speaker: 'Lila', portrait: 'npc_woman', pages: ['Three sunstone shards in one pack! When you\'ve finished saving the world, come back — I want to weave that light into a sail. First one\'s yours.'] };
+        return { speaker: 'Lila', portrait: 'npc_woman', pages: ['I weave sailcloth. Or I did, when there were ships worth the thread. Wake\'s little ferry doesn\'t need sails — she needs luck, mostly. We all chip in.'] };
+
+      case 'isle_koa':
+        if (F.flag('d5_done')) return { speaker: 'Koa', portrait: 'npc_kid', pages: ['You went INSIDE the dead king\'s tomb? On PURPOSE? You\'re officially the coolest person to ever visit this island. The bar was low but STILL.'] };
+        return { speaker: 'Koa', portrait: 'npc_kid', pages: ['I\'ve been to the mainland TWICE. There\'s a mountain that BREATHES SMOKE east of here — Wake sails past it! He says nobody\'s ever cracked the rock open. Somebody should crack the rock open.'] };
+
       case 'fairy':
         return {
           speaker: 'Great Fairy', portrait: 'npc_fairy',

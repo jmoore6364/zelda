@@ -37,6 +37,9 @@ sword, talk, bow, bomb, boomerang, fire rod, plus pause/inventory/map up top.
 
 ## The World
 
+A 192×184-tile overworld — four times the land it launched with — plus five
+dungeons, caves, interiors, and an archipelago served by ferry.
+
 - **Elden Village** — your home; Elder Rowan starts your quest and gives you the sword.
   Cottages with smoking chimneys and flower-box windows
 - **Bramblewick Town** — slate-blue roofs and iron balconies; shop (bombs, arrows,
@@ -63,6 +66,14 @@ sword, talk, bow, bomb, boomerang, fire rod, plus pause/inventory/map up top.
   blue-roofed fishing hamlet, a pier over the sea, Old Tide's sandbar treasure
   (swimmers only), and **Saltmere Light** — bring the Fire Rod and relight the
   beacon for Keeper Elio
+- **East through the Spine** (two mountain passes) — half of Hyrule you've never seen:
+  the **Auran Highlands** (Rosa's waystation, the Standing Stones, a hollow crag),
+  the ancient **Elderwood** (one winding road, an old shrine, a hidden fairy glade),
+  and the **Gilded Meadow** rolling down to the sea
+- **The Shattered Sea** — the entire southern half of the world is ocean. Pay
+  **Wake the Ferryman** 5 rupees at any dock and sail between **Saltmere Pier**,
+  **Windfall Village** on the Isle of Winds (Mayor Palm owes you for that beacon…),
+  smoking **Ember Isle** and its Cinder Vault, and the treasure-strewn **Gull Rocks**
 - **Shadow Keep** (NW ruins, needs all 3 shards) — final boss: **THE SHADE** (two phases)
 - Plus: a fairy spring under a bush, secret rupee caves behind cracked walls, a heart
   vessel grotto, a love-letter side quest that earns you the Knight's Shield, and a
