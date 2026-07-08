@@ -39,6 +39,7 @@ const Items = {
     sailcloth:       { name: 'Fine Sailcloth', sprite: 'sailcloth', msg: 'FINE SAILCLOTH with a red stripe, woven by Lila. "For an old man who dreams in canvas."' },
     spyglass:        { name: 'Captain\'s Spyglass', sprite: 'spyglass', msg: 'The CAPTAIN\'S SPYGLASS, polished by forty years of squinting. "For the fellow who watches the sea for all of us."' },
     hero_charm:      { name: 'Hero\'s Charm', sprite: 'hero_charm', msg: 'The HERO\'S CHARM! While your hearts are full, your sword looses a blade of light with every swing!' },
+    mirror_shield:   { name: 'Mirror Shield', sprite: 'mirror_shield', msg: 'The MIRROR SHIELD! Enemy bolts that strike you are hurled back at their senders.' },
     tideplate:       { name: 'Tideplate', sprite: 'tideplate', msg: 'The TIDEPLATE! Armor of the drowned choir — the sea\'s own scales turn half of every blow.' }
   },
 
@@ -139,6 +140,7 @@ const Items = {
         AudioSys.sfx('item');
         break;
       case 'tideplate': p.hasTideplate = true; AudioSys.sfx('item'); break;
+      case 'mirror_shield': p.hasMirror = true; AudioSys.sfx('item'); break;
     }
 
     if (msg && !opts.silent) {

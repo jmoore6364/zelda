@@ -3100,6 +3100,84 @@ Sprites.def('vampire', { K: '#1c1424', k: '#2e2438', S: '#e8e0e8', E: '#e83048',
   ]
 ]);
 
+// Boss: VARKOLAC — the Crimson Count
+Sprites.def('boss_varkolac', { K: '#1c1424', k: '#2e2438', S: '#e8e0e8', E: '#e83048', R: '#802030', r: '#a83048', W: '#f8f8ff', G: '#c8a030' }, [
+  [
+    '..KK......................KK....',
+    '..KKKK..KKKKKKKKKKKK..KKKK.....',
+    '...KKKKKKKKKKKKKKKKKKKKKK......',
+    '.....KKKKSSSSSSSSSSKKKK........',
+    '......KKSSSSSSSSSSSSKK.........',
+    '......KSSEESSSSSSEESSK.........',
+    '......KSSEESSSSSSEESSK.........',
+    '......KSSSSSSSSSSSSSSK.........',
+    '......KSSSWWSSSSWWSSSK.........',
+    '.......KSSSWWSSWWSSSK..........',
+    '.......KKSSSSSSSSSSKK..........',
+    '.....RRKKKKKKKKKKKKKKRR........',
+    '....RRRKKKKKGGKKKKKKKRRR.......',
+    '...RRKKKKKKKGGKKKKKKKKKRR......',
+    '...RKKKKKRRRRRRRRKKKKKKKR......',
+    '...RKKKKRRRRRRRRRRKKKKKKR......',
+    '...RKKKKRRRRRRRRRRKKKKKKR......',
+    '...rKKKKKRRRRRRRRKKKKKKKr......',
+    '...rKKKKKKKKKKKKKKKKKKKKr......',
+    '....rKKKKKKKKKKKKKKKKKKr.......',
+    '....rrKKKKKKKKKKKKKKKKrr.......',
+    '.....rrKKKKKKKKKKKKKKrr........',
+    '......rrKKKKKKKKKKKKrr.........',
+    '.......KKKK......KKKK..........',
+    '......KKKK........KKKK.........',
+    '................................'
+  ],
+  [
+    '.KK........................KK...',
+    '.KKKKK..KKKKKKKKKKKK..KKKKK....',
+    '...KKKKKKKKKKKKKKKKKKKKKK......',
+    '.....KKKKSSSSSSSSSSKKKK........',
+    '......KKSSSSSSSSSSSSKK.........',
+    '......KSSEESSSSSSEESSK.........',
+    '......KSSEESSSSSSEESSK.........',
+    '......KSSSSSSSSSSSSSSK.........',
+    '......KSSSWWSSSSWWSSSK.........',
+    '.......KSSSWWSSWWSSSK..........',
+    '.......KKSSSSSSSSSSKK..........',
+    '.....RRKKKKKKKKKKKKKKRR........',
+    '....RRRKKKKKGGKKKKKKKRRR.......',
+    '...RRKKKKKKKGGKKKKKKKKKRR......',
+    '...RKKKKKRRRRRRRRKKKKKKKR......',
+    '...RKKKKRRRRRRRRRRKKKKKKR......',
+    '...RKKKKRRRRRRRRRRKKKKKKR......',
+    '...rKKKKKRRRRRRRRKKKKKKKr......',
+    '...rKKKKKKKKKKKKKKKKKKKKr......',
+    '....rKKKKKKKKKKKKKKKKKKr.......',
+    '....rrKKKKKKKKKKKKKKKKrr.......',
+    '.....rrKKKKKKKKKKKKKKrr........',
+    '......rrKKKKKKKKKKKKrr.........',
+    '......KKKK........KKKK.........',
+    '.......KKKK......KKKK..........',
+    '................................'
+  ]
+]);
+
+// Mirror Shield — throws their spite back at them
+Sprites.def('mirror_shield', { M: '#a8c8e8', m: '#6890c0', W: '#f0f8ff', G: '#c8a030' }, [
+  [
+    '....GGGGGG......',
+    '...GMMMMMMG.....',
+    '...GMWMMMMG.....',
+    '...GMWWMMMG.....',
+    '...GMMWWMMG.....',
+    '...GMMMWWMG.....',
+    '...GMMMMWMG.....',
+    '...GmMMMMmG.....',
+    '....GmMMmG......',
+    '.....GmmG.......',
+    '......GG........',
+    '................'
+  ]
+]);
+
 // Elite aliases — the editor and tools look sprites up by enemy type name
 Sprites.defs.direwolf = Sprites.defs.wolfos;
 Sprites.defs.dunetyrant = Sprites.defs.sandwurm;

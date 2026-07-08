@@ -38,6 +38,7 @@ const Story = {
 
   // ---------------- boss defeat hooks ----------------
   onBossDefeated(boss, x, y) {
+    if (Game.bossRush) { Game.rushNext(); return; } // trial refights change nothing
     this.set('boss:' + boss);
     switch (boss) {
       case 'gloomspore':
@@ -63,6 +64,17 @@ const Story = {
         setTimeout(() => {
           if (Game.state === 'play') {
             Dialogue.start({ pages: ['The Hollow King crumbles to still sand. Somewhere far above, the wind over the dunes softens to a whisper... and sounds almost grateful.'] });
+          }
+        }, 900);
+        break;
+      case 'varkolac':
+        this.set('manor_done');
+        Game.pickups.push(new Pickup(x, y, 'fairy'));
+        Game.pickups.push(new Pickup(x - 12, y + 6, 'rupee20'));
+        Game.pickups.push(new Pickup(x + 14, y + 6, 'rupee20'));
+        setTimeout(() => {
+          if (Game.state === 'play') {
+            Dialogue.start({ pages: ['The Count comes apart into bats, and the bats come apart into dusk, and the dusk — for once — just settles. The Gloamwood exhales.'] });
           }
         }, 900);
         break;

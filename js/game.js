@@ -62,6 +62,38 @@ const Game = {
     requestAnimationFrame(t => this.loop(t));
   },
 
+  // gamepad -> Input keys (standard mapping)
+  pollGamepad() {
+    const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+    const gp = pads && pads[0];
+    if (!gp) return;
+    this._gpHeld = this._gpHeld || {};
+    const press = (code, on) => {
+      if (on) {
+        if (!Input.keys[code]) Input.pressed[code] = true;
+        Input.keys[code] = true;
+        this._gpHeld[code] = true;
+      } else if (this._gpHeld[code]) {
+        Input.keys[code] = false;
+        this._gpHeld[code] = false;
+      }
+    };
+    const ax = gp.axes || [], bt = gp.buttons || [];
+    const b = i => !!(bt[i] && bt[i].pressed);
+    press('ArrowLeft', ax[0] < -0.4 || b(14));
+    press('ArrowRight', ax[0] > 0.4 || b(15));
+    press('ArrowUp', ax[1] < -0.4 || b(12));
+    press('ArrowDown', ax[1] > 0.4 || b(13));
+    press('Space', b(0));
+    press('KeyE', b(1));
+    press('KeyX', b(2));
+    press('KeyR', b(3));
+    press('KeyC', b(4));
+    press('KeyF', b(5));
+    press('Tab', b(8));
+    press('Escape', b(9));
+  },
+
   // ---------------- game lifecycle ----------------
   newGame(slot) {
     this.data = SaveSys.defaultData();
@@ -113,7 +145,7 @@ const Game = {
     this.data = SaveSys.defaultData();
     const p = this.data.player;
     p.hasSword = true; p.hasMasterSword = true; p.hasBow = true; p.hasBombs = true; p.hasLantern = true; p.hasShield = true;
-    p.hasBoomerang = true; p.hasFireRod = true; p.hasFlippers = true; p.hasPearl = true; p.hasCharm = true; p.hasTideplate = true;
+    p.hasBoomerang = true; p.hasFireRod = true; p.hasFlippers = true; p.hasPearl = true; p.hasCharm = true; p.hasTideplate = true; p.hasMirror = true;
     p.bombs = 20; p.arrows = 30; p.maxHearts = 10; p.hearts = 10; p.rupees = 100; p.potions = 2;
     const copy = MapBuilder.deserialize(JSON.stringify(mapData));
     this.loadMap(copy, copy.respawn.x, copy.respawn.y);
@@ -238,7 +270,7 @@ const Game = {
     const px = this.player.tileX(), py = this.player.tileY();
     if (py >= 70) return 'sea';                            // coast, ocean, isles
     if (px < 15 && py >= 5 && py < 47) return 'glacier';   // Frostpeak Hollow
-    if (px >= 189 && py < 70) return 'elderwood';   // the Gloamwood
+    if (px >= 189 && py < 70) return 'gloam';       // the Gloamwood
     if (px >= 94 && py < 25) return 'highlands';           // Auran Highlands
     if (px >= 94 && py < 53) return 'elderwood';           // the Elderwood
     return 'overworld';
@@ -417,6 +449,17 @@ const Game = {
         case 'shopitem':
           this.tryBuy(o);
           return;
+        case 'rush_stone': {
+          Dialogue.start({
+            speaker: 'The Trial Stone',
+            pages: ['EVERY TYRANT. AGAIN. ONE AFTER ANOTHER. NO REWARD BUT PROOF... and three hundred rupees. The stone is warm. It is waiting.'],
+            choices: [
+              { label: 'Begin the trial', cb: () => Game.startBossRush() },
+              { label: 'Walk away', cb: () => {} }
+            ]
+          });
+          return;
+        }
         case 'waystone': {
           if (!o.active) {
             o.active = true;
@@ -552,7 +595,7 @@ const Game = {
         if (this.bossIntroT >= 3.0) {
           this._roared = false;
           this.state = 'play';
-          AudioSys.play(this.boss.id === 'shade' ? 'finalboss' : 'boss');
+          AudioSys.play(this.boss && this.boss.id === 'shade' ? 'finalboss' : 'boss');
         }
         break;
       case 'transition': {
@@ -667,6 +710,13 @@ const Game = {
         color: Story.flag('game_complete') ? '#f8e8a0' : '#b8a0e8', size: 1
       });
     }
+    // rain on the strand and the open sea
+    if (this.map.id === 'overworld' && this.player.tileY() >= 70 && Math.random() < 0.35) {
+      Particles.spawn(this.camX + U.rand(0, VIEW_W), this.camY - 4, {
+        vx: -18, vy: U.rand(120, 170), g: 0, life: U.rand(1.2, 1.8),
+        color: U.pick(['#6a98c8', '#88b0d8']), size: 1
+      });
+    }
     // falling snow in Frostpeak Hollow (west overworld)
     if (this.map.id === 'overworld' && this.player.cx() < 15 * 16 && this.player.cy() > 5 * 16 && this.player.cy() < 47 * 16 && Math.random() < 0.3) {
       Particles.spawn(this.camX + U.rand(0, VIEW_W), this.camY - 4, {
@@ -728,6 +778,44 @@ const Game = {
     this.fishing = { phase: 'cast', t: 0, msg: '', biteWindow: 0, castsLeft: Infinity };
     this.state = 'fishing';
     AudioSys.sfx('splash');
+  },
+
+  // the Trial Stone — every tyrant, again
+  RUSH_ORDER: ['gloomspore', 'magmadon', 'wraithlord', 'frostmaw', 'pharaghast', 'karstag', 'thalassa', 'shade'],
+  bossRush: false,
+  rushIdx: 0,
+
+  startBossRush() {
+    this.bossRush = true;
+    this.rushIdx = 0;
+    this.loadMap('arena', 10, 12);
+    this.state = 'play';
+    this.rushSpawn();
+  },
+
+  rushSpawn() {
+    const id = this.RUSH_ORDER[this.rushIdx];
+    this.boss = spawnBoss(id, { x: 4 * 16, y: 3 * 16, w: 12 * 16, h: 8 * 16 });
+    this.bossIntroT = 0;
+    this.state = 'bossintro';
+    AudioSys.stop();
+  },
+
+  rushNext() {
+    this.rushIdx++;
+    this.projectiles = [];
+    this.enemies = [];
+    const p = this.data.player;
+    p.hearts = Math.min(p.maxHearts, p.hearts + 3);
+    if (this.rushIdx >= this.RUSH_ORDER.length) {
+      this.bossRush = false;
+      Items.grant({ type: 'rupees', amount: 300 }, { silent: true });
+      Story.set('rush_done');
+      AudioSys.play('ending');
+      Dialogue.start({ pages: ['PROOF, the stone rumbles, satisfied. Every tyrant, twice-beaten. Three hundred rupees, and the story is yours to exaggerate.'], onEnd: () => { Game.loadMap('overworld', 13, 18); Game.state = 'play'; } });
+      return;
+    }
+    setTimeout(() => { if (this.bossRush && this.state === 'play') this.rushSpawn(); }, 900);
   },
 
   // Wake's ferry — sail (fade) to another dock on the same map
@@ -862,6 +950,15 @@ const Game = {
           if (!o.open) for (let i = 0; i < (o.w || 1); i++) Sprites.draw(ctx, 'door_boss', 0, ox + i * 16, oy);
           break;
         case 'switch_crystal': Sprites.draw(ctx, 'switch_crystal', o.hit ? 1 : 0, ox, oy + 3); break;
+        case 'rush_stone': {
+          Sprites.draw(ctx, 'waystone', 1, ox, oy + 3);
+          const rg2 = ctx.createRadialGradient(ox + 8, oy + 8, 1, ox + 8, oy + 8, 14 + Math.sin(Tiles.animTime * 3) * 2);
+          rg2.addColorStop(0, 'rgba(232,48,72,0.3)');
+          rg2.addColorStop(1, 'rgba(232,48,72,0)');
+          ctx.fillStyle = rg2;
+          ctx.fillRect(ox - 10, oy - 10, 36, 36);
+          break;
+        }
         case 'waystone': {
           Sprites.draw(ctx, 'waystone', o.active ? 1 : 0, ox, oy + 3);
           if (o.active) {
@@ -964,6 +1061,9 @@ const Game = {
       let tint = null;
       if (m.id === 'overworld') {
         tint = Story.flag('game_complete') ? 'rgba(255,214,120,0.08)' : 'rgba(66,44,110,0.16)';
+        const ptx = this.player ? this.player.tileX() : 0, pty = this.player ? this.player.tileY() : 0;
+        if (ptx >= 189 && pty < 70) tint = 'rgba(70,30,110,0.30)';
+        else if (ptx >= 62 && ptx < 94 && pty >= 55 && pty < 70) tint = 'rgba(255,170,60,0.10)'; // dune haze
       } else if (m.ambient === 'cave') tint = 'rgba(18,14,38,0.30)';
       else if (m.ambient === 'dungeon') tint = 'rgba(14,12,42,0.26)';
       else if (m.indoor) tint = 'rgba(255,190,110,0.06)';

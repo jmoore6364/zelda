@@ -631,6 +631,7 @@ const UI = {
     if (p.hasLantern) list.push({ spr: 'lantern', name: 'Lantern', desc: 'Lights dark places automatically.' });
     if (p.hasShield) list.push({ spr: 'shield_item', name: 'Knight\'s Shield', desc: 'Halves all damage taken.' });
     if (p.hasTideplate) list.push({ spr: 'tideplate', name: 'Tideplate', desc: 'Armor of the drowned choir. Halves damage again.' });
+    if (p.hasMirror) list.push({ spr: 'mirror_shield', name: 'Mirror Shield', desc: 'Hurls enemy bolts back at their senders.' });
     if (p.potions > 0) list.push({
       spr: 'potion', name: `Red Potion x${p.potions}`, desc: 'ENTER to drink: restores all hearts.',
       use: () => {
@@ -833,13 +834,14 @@ const UI = {
   },
 
   // ---------------- SETTINGS ----------------
-  SET_OPTS: ['MUSIC VOLUME', 'SOUND VOLUME', 'SCREEN SHAKE', 'MINIMAP', 'BACK'],
+  SET_OPTS: ['MUSIC VOLUME', 'SOUND VOLUME', 'SCREEN SHAKE', 'MINIMAP', 'DAMAGE TAKEN', 'TEXT SPEED', 'BACK'],
 
   updateSettings(dt) {
     const s = SaveSys.settings;
     if (Input.cancel()) { SaveSys.saveSettings(); Game.state = this.settingsReturn || 'title'; AudioSys.sfx('menu'); return; }
-    if (Input.menuUp()) { this.setIdx = (this.setIdx + 4) % 5; AudioSys.sfx('menu'); }
-    if (Input.menuDown()) { this.setIdx = (this.setIdx + 1) % 5; AudioSys.sfx('menu'); }
+    const nOpts = this.SET_OPTS.length;
+    if (Input.menuUp()) { this.setIdx = (this.setIdx + nOpts - 1) % nOpts; AudioSys.sfx('menu'); }
+    if (Input.menuDown()) { this.setIdx = (this.setIdx + 1) % nOpts; AudioSys.sfx('menu'); }
     const adj = (Input.menuRight() ? 1 : 0) - (Input.menuLeft() ? 1 : 0);
     switch (this.setIdx) {
       case 0:
@@ -854,7 +856,26 @@ const UI = {
       case 3:
         if (adj || Input.confirm()) { s.showMinimap = !s.showMinimap; AudioSys.sfx('menu'); }
         break;
-      case 4:
+      case 4: { // damage taken: 0.5 / 1 / 2 (hero mode)
+        if (adj) {
+          const steps = [0.5, 1, 2];
+          const i = Math.max(0, steps.indexOf(s.damageMul || 1));
+          s.damageMul = steps[U.clamp(i + adj, 0, 2)];
+          AudioSys.sfx('menu');
+        }
+        break;
+      }
+      case 5: { // text speed
+        if (adj) {
+          const steps = [0.6, 1, 1.8];
+          const i = Math.max(0, steps.indexOf(s.textSpeed || 1));
+          s.textSpeed = steps[U.clamp(i + adj, 0, 2)];
+          SaveSys.applySettings();
+          AudioSys.sfx('menu');
+        }
+        break;
+      }
+      case 6:
         if (Input.confirm()) { SaveSys.saveSettings(); Game.state = this.settingsReturn || 'title'; AudioSys.sfx('select'); }
         break;
     }
@@ -874,6 +895,8 @@ const UI = {
       '◀ ' + '■'.repeat(s.sfxVol) + '□'.repeat(10 - s.sfxVol) + ' ▶',
       s.screenShake ? 'ON' : 'OFF',
       s.showMinimap ? 'ON' : 'OFF',
+      (s.damageMul || 1) === 0.5 ? 'HALF' : (s.damageMul || 1) === 2 ? 'DOUBLE (HERO)' : 'NORMAL',
+      (s.textSpeed || 1) === 0.6 ? 'SLOW' : (s.textSpeed || 1) === 1.8 ? 'FAST' : 'NORMAL',
       ''
     ];
     this.SET_OPTS.forEach((o, i) => {

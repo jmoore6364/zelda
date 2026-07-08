@@ -823,3 +823,79 @@ function spawnBoss(id, arenaRect) {
   b.arena = arenaRect;
   return b;
 }
+
+
+// ------------------------------------------------------------
+// VARKOLAC — the Crimson Count (Crimson Manor). Flesh only while
+// hunting; his court answers when he claps.
+// ------------------------------------------------------------
+class Varkolac extends Boss {
+  constructor(x, y) {
+    super(x, y, {
+      id: 'varkolac', name: 'VARKOLAC', title: 'The Crimson Count',
+      sprite: 'boss_varkolac', hp: 44, touchDmg: 2, w: 28, h: 24
+    });
+    this.form = 'hunt';
+    this.formT = 4;
+    this.stateT = 1.5;
+  }
+
+  invulnerable() { return this.form !== 'hunt'; }
+
+  update(dt) {
+    if (!this.baseUpdate(dt)) return;
+    this.formT -= dt;
+    this.stateT -= dt;
+
+    if (this.form === 'mist') {
+      if (Math.random() < 0.2) Particles.spawn(this.cx() + U.rand(-14, 14), this.cy() + U.rand(-10, 10), { vx: 0, vy: -6, g: 0, life: 0.5, color: '#8888a0', size: 2 });
+      if (this.formT <= 0) {
+        const pl = Game.player;
+        const a = U.rand(0, Math.PI * 2);
+        const nx = pl.cx() + Math.cos(a) * 55 - this.w / 2;
+        const ny = pl.cy() + Math.sin(a) * 55 - this.h / 2;
+        if (!Game.solidAtRect({ x: nx, y: ny, w: this.w, h: this.h })) { this.x = nx; this.y = ny; }
+        Particles.burst(this.cx(), this.cy(), 14, { color: ['#1c1424', '#802030'], life: 0.5 });
+        AudioSys.sfx('charge');
+        this.form = 'hunt';
+        this.formT = 4.2;
+        this.stateT = 0.4;
+      }
+      return;
+    }
+
+    if (this.formT <= 0) {
+      this.form = 'mist';
+      this.formT = 1.6;
+      Particles.burst(this.cx(), this.cy(), 12, { color: ['#c8c8d8', '#8888a0'], life: 0.6, speedMax: 30 });
+      return;
+    }
+    this.moveToward(this.angleToPlayer(), 34, dt);
+    this.flip = Game.player.cx() < this.cx();
+    if (this.stateT <= 0) {
+      const r = Math.random();
+      const court = Game.enemies.filter(e => !e.dead).length;
+      if (r < 0.35) {
+        this.shootRing(8, 90, 'magic_bolt', this.animT);
+        AudioSys.sfx('fire');
+        this.stateT = U.rand(1.2, 1.9);
+      } else if (r < 0.6) {
+        this.shootSpread(4, 130, 'magic_bolt', 0.3);
+        AudioSys.sfx('fire');
+        this.stateT = U.rand(1, 1.6);
+      } else if (court < 2) {
+        const e = spawnEnemy('vampire', Math.floor(this.cx() / 16) + (Math.random() < 0.5 ? -2 : 2), Math.floor(this.cy() / 16) + 1);
+        if (e) Game.enemies.push(e);
+        AudioSys.sfx('boss_roar');
+        this.stateT = U.rand(1.6, 2.4);
+      } else this.stateT = 0.8;
+    }
+  }
+
+  draw(ctx) {
+    ctx.globalAlpha = this.form === 'mist' ? 0.25 : 1;
+    this.drawSprite(ctx, Math.floor(this.animT * 3) % 2);
+    ctx.globalAlpha = 1;
+  }
+}
+BOSS_TYPES.varkolac = Varkolac;

@@ -15,7 +15,7 @@ const SaveSys = {
       hasLantern: false, hasShield: false, hasBombs: false,
       hasBoomerang: false, hasFireRod: false, hasFlippers: false, hasPearl: false,
       potions: 0, letter: false, soup: false, lure: false,
-      tradeItem: null, hasCharm: false, hasTideplate: false,
+      tradeItem: null, hasCharm: false, hasTideplate: false, hasMirror: false,
       shards: { emerald: false, ruby: false, sapphire: false },
       keys: {}, bosskeys: {}, dmaps: {}, dcompass: {}
     };
@@ -86,7 +86,7 @@ const SaveSys = {
 
   // ---- settings ----
   settings: {
-    musicVol: 5, sfxVol: 7, screenShake: true, showMinimap: true
+    musicVol: 5, sfxVol: 7, screenShake: true, showMinimap: true, damageMul: 1, textSpeed: 1
   },
 
   loadSettings() {
@@ -105,5 +105,6 @@ const SaveSys = {
   applySettings() {
     AudioSys.setMusicVolume(this.settings.musicVol / 10 * 0.8);
     AudioSys.setSfxVolume(this.settings.sfxVol / 10);
+    if (typeof Dialogue !== 'undefined') Dialogue.SPEED = 40 * (this.settings.textSpeed || 1);
   }
 };

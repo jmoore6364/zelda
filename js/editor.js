@@ -23,7 +23,7 @@ const Editor = {
 
   ENEMY_LIST: ['octorok', 'moblin', 'keese', 'stalfos', 'chu', 'leever', 'wizzrobe', 'darknut', 'peahat', 'zora', 'armos', 'poe', 'wolfos', 'freezard', 'blade_trap', 'gibdo', 'vulture', 'sandwurm', 'direwolf', 'dunetyrant', 'ogre', 'grimroot', 'vampire'],
   NPC_LIST: ['elder', 'marin', 'shopkeep', 'innkeep', 'traveler_finn', 'guard_bex', 'oldman_sage', 'scholar_ivo', 'townwoman_ella', 'townman_dole', 'kid_pip', 'kid_nell', 'mother_ana', 'granny_lu', 'villager_meg', 'villager_tomm', 'fairy', 'princess', 'hermit_yeta', 'fisherman_odon', 'nomad_zaffa', 'digger_dan', 'lorelei', 'rancher_elda', 'cucco_pella', 'fisher_bjorn', 'trader_sami', 'harbor_brine', 'salt_nan', 'salt_tide', 'keeper_elio', 'kid_shell', 'ferryman_wake', 'waykeeper_rosa', 'mayor_palm', 'isle_lila', 'isle_koa', 'druid_ash', 'herbalist_fern', 'hunter_vey'],
-  OBJ_LIST: ['chest', 'pot', 'sign', 'torch', 'locked_door', 'boss_door', 'switch_crystal', 'boss_trigger', 'shard_gate', 'crypt_gate', 'tomb_gate', 'beacon', 'waystone'],
+  OBJ_LIST: ['chest', 'pot', 'sign', 'torch', 'locked_door', 'boss_door', 'switch_crystal', 'boss_trigger', 'shard_gate', 'crypt_gate', 'tomb_gate', 'beacon', 'waystone', 'rush_stone'],
   CUSTOM_KEY: 'zelda2_custom_maps',
   OVERRIDE_KEY: 'zelda2_map_overrides',
 
@@ -264,7 +264,7 @@ const Editor = {
         const type = this.OBJ_LIST[this.objIdx];
         const obj = { type, x: t.x, y: t.y };
         if (type === 'chest') {
-          const c = window.prompt('Chest contents (rupees N | key | bosskey | dungeon_map | compass | bow | lantern | master_sword | heart_container | potion | bombs N | arrows N | shield | boomerang | fire_rod | flippers | big_quiver | bomb_bag | lure | pearl | tideplate):', 'rupees 20');
+          const c = window.prompt('Chest contents (rupees N | key | bosskey | dungeon_map | compass | bow | lantern | master_sword | heart_container | potion | bombs N | arrows N | shield | boomerang | fire_rod | flippers | big_quiver | bomb_bag | lure | pearl | tideplate | mirror_shield):', 'rupees 20');
           if (!c) return;
           const [ct, amt] = c.trim().split(/\s+/);
           obj.contents = { type: ct, amount: amt ? Number(amt) : undefined };
@@ -275,7 +275,7 @@ const Editor = {
           obj.text = txt;
         }
         if (type === 'boss_trigger') {
-          const bs = window.prompt('Boss (gloomspore | magmadon | wraithlord | frostmaw | pharaghast | karstag | thalassa | shade):', 'gloomspore');
+          const bs = window.prompt('Boss (gloomspore | magmadon | wraithlord | frostmaw | pharaghast | karstag | thalassa | varkolac | shade):', 'gloomspore');
           if (!bs) return;
           obj.boss = bs.trim();
           obj.w = 8; obj.h = 8;

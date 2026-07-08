@@ -120,6 +120,7 @@ function buildOverworld() {
   b.portal(15, 8, 2, 1, 'keep', 17, 26, 'up', { sfx: 'stairs' });
   b.enemy('armos', 13, 17); b.enemy('armos', 18, 17);
   b.object('sign', 13, 18, { text: 'The old castle... sealed since the Twilight fell. Three shards shall open the way.' });
+  b.object('rush_stone', 12, 17, {});
   b.object('torch', 14, 16); b.object('torch', 17, 16);
 
   // ============ NE: MOUNTAINS + EMBER DEPTHS ============
@@ -525,6 +526,11 @@ function buildOverworld() {
   b.portal(226, 36, 1, 1, 'cave_gloam', 6, 8, 'up', { sfx: 'stairs', hidden: true, underBush: true });
   // waystone by the crossroads
   b.object('waystone', 201, 21, { id: 'gloamwood', label: 'The Gloamwood', tx: 201, ty: 22 });
+  // CRIMSON MANOR — the Count keeps an open door
+  b.rect(212, 55, 12, 5, T.GRASS);
+  b.house(213, 55, 10, 4, { to: 'dungeon8', tx: 20, ty: 30, style: 'blue', balcony: true });
+  b.object('sign', 219, 59, { text: 'CRIMSON MANOR. The lamps are always lit. The host is always home. The guests never leave.' });
+  b.path([[220, 50], [218, 55]], T.DIRT, 2);
   // the wood's teeth
   b.enemy('grimroot', 195, 40); b.enemy('grimroot', 205, 30); b.enemy('grimroot', 214, 22);
   b.enemy('grimroot', 218, 44); b.enemy('grimroot', 228, 52);
@@ -1416,6 +1422,76 @@ function buildDungeon7() {
 }
 
 // ------------------------------------------------------------
+// DUNGEON 8 — CRIMSON MANOR  (mirror shield, Varkolac — optional)
+// ------------------------------------------------------------
+function buildDungeon8() {
+  const b = new MapBuilder('dungeon8', 42, 34, T.WALL_BRICK, {
+    name: 'Crimson Manor', music: 'gloam', ambient: 'dungeon', dark: true, seed: 909,
+    respawn: { x: 20, y: 30 }
+  });
+  b.rect(16, 25, 9, 7, T.FLOOR_WOOD);
+  b.rect(19, 26, 4, 5, T.CARPET);
+  b.set(20, 31, T.STAIRS_UP);
+  b.portal(20, 31, 1, 1, 'overworld', 218, 60, 'down', { sfx: 'door' });
+  b.object('torch', 17, 26); b.object('torch', 23, 26);
+  b.object('sign', 18, 30, { text: 'Welcome, the guestbook reads, in four hundred hands. Every entry ends mid-sentence.' });
+  b.rect(13, 13, 16, 9, T.FLOOR_WOOD);
+  b.rect(15, 15, 12, 5, T.CARPET);
+  b.set(14, 14, T.PILLAR); b.set(27, 14, T.PILLAR);
+  b.set(14, 20, T.PILLAR); b.set(27, 20, T.PILLAR);
+  b.rect(20, 22, 2, 3, T.FLOOR_WOOD);
+  b.enemy('vampire', 17, 16); b.enemy('vampire', 24, 18);
+  b.enemy('keese', 20, 15); b.enemy('poe', 22, 20);
+  b.chest(26, 21, { type: 'key' });
+  b.rect(4, 13, 8, 8, T.FLOOR_WOOD);
+  b.rect(12, 17, 2, 2, T.FLOOR_WOOD);
+  b.enemy('poe', 6, 16); b.enemy('blade_trap', 9, 18);
+  b.chest(5, 20, { type: 'key' });
+  b.chest(10, 20, { type: 'dungeon_map' });
+  b.rect(30, 13, 8, 8, T.FLOOR_STONE);
+  b.rect(28, 17, 2, 2, T.FLOOR_WOOD);
+  b.set(31, 14, T.GRAVE); b.set(36, 14, T.GRAVE);
+  b.enemy('gibdo', 33, 16); b.enemy('vampire', 35, 19);
+  b.chest(36, 20, { type: 'bosskey' });
+  b.chest(32, 20, { type: 'compass' });
+  b.rect(5, 3, 8, 8, T.FLOOR_WOOD);
+  b.rect(8, 11, 2, 3, T.FLOOR_WOOD);
+  b.object('locked_door', 8, 12, { w: 2, h: 1 });
+  b.rect(7, 4, 4, 1, T.CARPET);
+  b.enemy('darknut', 7, 6); b.enemy('vampire', 10, 8);
+  b.chest(8, 4, { type: 'mirror_shield' }, { big: true });
+  b.object('torch', 6, 4); b.object('torch', 11, 4);
+  b.rect(29, 3, 8, 8, T.FLOOR_STONE);
+  b.rect(32, 11, 2, 3, T.FLOOR_WOOD);
+  b.object('locked_door', 32, 12, { w: 2, h: 1 });
+  b.enemy('poe', 33, 6); b.enemy('keese', 31, 5);
+  b.chest(34, 4, { type: 'rupees', amount: 100 });
+  b.chest(30, 4, { type: 'potion' });
+  b.object('pot', 30, 8); b.object('pot', 36, 8);
+  b.rect(17, 3, 8, 8, T.FLOOR_WOOD);
+  b.rect(18, 4, 6, 6, T.CARPET);
+  b.rect(20, 11, 2, 2, T.FLOOR_WOOD);
+  b.object('boss_door', 20, 12, { w: 2, h: 1 });
+  b.object('boss_trigger', 17, 3, { w: 8, h: 8, boss: 'varkolac' });
+  b.object('torch', 18, 4); b.object('torch', 23, 4);
+  registerMap(b.build());
+}
+
+// ------------------------------------------------------------
+// THE TRIAL ARENA — boss rush grounds
+// ------------------------------------------------------------
+function buildArena() {
+  const b = new MapBuilder('arena', 20, 16, T.DUNGEON_WALL, {
+    name: 'The Trial', music: 'boss', ambient: 'dungeon', seed: 111,
+    respawn: { x: 10, y: 12 }
+  });
+  b.rect(3, 2, 14, 12, T.FLOOR_STONE);
+  b.object('torch', 4, 3); b.object('torch', 15, 3);
+  b.object('torch', 4, 12); b.object('torch', 15, 12);
+  registerMap(b.build());
+}
+
+// ------------------------------------------------------------
 // SHADOW KEEP — final dungeon
 // ------------------------------------------------------------
 function buildKeep() {
@@ -1476,5 +1552,7 @@ function buildWorld() {
   buildDungeon5();
   buildDungeon6();
   buildDungeon7();
+  buildDungeon8();
+  buildArena();
   buildKeep();
 }

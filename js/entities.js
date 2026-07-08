@@ -304,6 +304,7 @@ class Player extends Entity {
     if (this.invuln > 0 || this.falling > 0 || Game.state !== 'play') return;
     if (this.data.hasShield) amount = Math.max(0.5, amount * 0.5);
     if (this.data.hasTideplate) amount = Math.max(0.25, amount * 0.5);
+    amount *= (SaveSys.settings.damageMul || 1); // accessibility / hero mode
     this.data.hearts -= amount;
     this.invuln = 1.0;
     AudioSys.sfx('hurt');
@@ -456,6 +457,16 @@ class Projectile extends Entity {
     } else {
       const pl = Game.player;
       if (pl && U.overlap(this.rect(), pl.rect())) {
+        if (Game.data.player.hasMirror && !this.reflected) {
+          // the Mirror Shield hurls it back
+          this.reflected = true;
+          this.owner = 'player';
+          this.vx = -this.vx; this.vy = -this.vy;
+          this.life = 2;
+          AudioSys.sfx('switch');
+          Particles.burst(this.cx(), this.cy(), 5, { color: ['#a8c8e8', '#f0f8ff'], life: 0.3 });
+          return;
+        }
         pl.damage(this.dmg, this);
         this.dead = true;
       }
