@@ -72,7 +72,21 @@ const SaveSys = {
     const d = this.load(slot);
     if (!d) return null;
     const shards = (d.player.shards.emerald ? 1 : 0) + (d.player.shards.ruby ? 1 : 0) + (d.player.shards.sapphire ? 1 : 0);
+    let location = '';
+    try {
+      if (d.mapId === 'overworld' && typeof UI !== 'undefined') {
+        let best = null, bd = 1e9;
+        for (const L of UI.LOCATIONS) {
+          const dd = Math.abs(L.x - d.px / 16) + Math.abs(L.y - d.py / 16);
+          if (dd < bd) { bd = dd; best = L; }
+        }
+        if (best) location = best.name;
+      } else if (typeof WORLD !== 'undefined' && WORLD[d.mapId]) {
+        location = WORLD[d.mapId].name;
+      }
+    } catch (e) { /* cosmetic only */ }
     return {
+      location,
       hearts: d.player.maxHearts,
       rupees: d.player.rupees,
       shards,

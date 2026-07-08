@@ -196,6 +196,7 @@ const UI = {
         ctx.fillStyle = '#8888a0';
         ctx.textAlign = 'right';
         ctx.fillText(`${hrs}h${String(mins).padStart(2, '0')}m`, 316, y + 14);
+        if (info.location && this.saveMode !== 'new') ctx.fillText(info.location, 316, y + 26);
         ctx.textAlign = 'left';
         if (this.saveMode === 'new') {
           ctx.fillStyle = '#e08080';
@@ -319,11 +320,14 @@ const UI = {
     ctx.globalAlpha = 0.82;
     ctx.fillStyle = '#101018';
     ctx.fillRect(mx - 1, my - 1, mw + 2, mh + 2);
-    // downsample tiles
-    const stepX = map.w / mw, stepY = map.h / mh;
+    // big maps show a local window centered on the player; small maps show all
+    const winW = Math.min(map.w, 70), winH = Math.min(map.h, 52);
+    const wx = U.clamp(Game.player.tileX() - Math.floor(winW / 2), 0, map.w - winW);
+    const wy = U.clamp(Game.player.tileY() - Math.floor(winH / 2), 0, map.h - winH);
+    const stepX = winW / mw, stepY = winH / mh;
     for (let j = 0; j < mh; j++) {
       for (let i = 0; i < mw; i++) {
-        const tid = Game.tileAt(Math.floor(i * stepX), Math.floor(j * stepY));
+        const tid = Game.tileAt(wx + Math.floor(i * stepX), wy + Math.floor(j * stepY));
         const d = Tiles.def(tid);
         if (d) {
           ctx.fillStyle = d.minimap;
@@ -332,8 +336,8 @@ const UI = {
       }
     }
     // player blip
-    const px = mx + (Game.player.cx() / (map.w * 16)) * mw;
-    const py = my + (Game.player.cy() / (map.h * 16)) * mh;
+    const px = mx + ((Game.player.cx() / 16 - wx) / winW) * mw;
+    const py = my + ((Game.player.cy() / 16 - wy) / winH) * mh;
     if (Math.floor(performance.now() / 300) % 2) {
       ctx.fillStyle = '#fff';
       ctx.fillRect(px - 1, py - 1, 3, 3);
@@ -996,6 +1000,7 @@ const UI = {
     ['Pharaghast', 'Sandsear Tomb'],
     ['Karstag', 'The Seventh Barrow'],
     ['Thalassa', 'The Drowned Cathedral'],
+    ['Varkolac', 'Crimson Manor'],
     ['The Shade', 'Shadow Keep'],
     ['', ''],
     ['Made with the MapBuilder engine', ''],

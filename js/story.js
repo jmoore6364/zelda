@@ -208,6 +208,24 @@ const Story = {
         doneText: 'Pharaghast is still sand. The dunes have gone quiet.'
       },
       {
+        title: 'Rumor: the Drowned Bell',
+        started: () => p.hasPearl, done: () => F.flag('d7_done'),
+        hint: () => 'A bell tolls in the deep heart of the Shattered Sea. A cathedral sank there, choir and all.',
+        doneText: 'The choir sleeps. The sea sings alone now.'
+      },
+      {
+        title: 'Rumor: the Crimson Count',
+        started: () => F.flag('seen:gloamwood'), done: () => F.flag('manor_done'),
+        hint: () => 'A manor in the Gloamwood keeps its lamps lit and its door open. The guests never leave.',
+        doneText: 'The Count came apart into bats, and the bats into dusk. The Gloamwood exhales.'
+      },
+      {
+        title: 'The Trial Stone',
+        started: () => F.flag('boss:gloomspore'), done: () => F.flag('rush_done'),
+        hint: () => 'A red stone by Shadow Keep offers every tyrant again, one after another. No reward but proof. And rupees.',
+        doneText: 'Every tyrant, twice-beaten. The story is yours to exaggerate.'
+      },
+      {
         title: 'Rumor: the Seventh Stone',
         started: () => true, done: () => F.flag('d6_done'),
         hint: () => 'The ground beneath the Standing Stones grinds its teeth at night.',
